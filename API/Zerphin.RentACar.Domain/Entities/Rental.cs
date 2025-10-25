@@ -1,3 +1,5 @@
+using Zerphin.RentACar.Domain.ValueObjects;
+
 namespace Zerphin.RentACar.Domain.Entities;
 
 public class Rental : BaseEntity
