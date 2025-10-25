@@ -30,9 +30,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(255);
             
-        builder.Property(e => e.Role)
-            .HasMaxLength(50)
-            .HasDefaultValue("Customer");
+        builder.Property(e => e.RoleId)
+            .IsRequired();
+            
+        builder.HasOne(e => e.Role)
+            .WithMany(r => r.Users)
+            .HasForeignKey(e => e.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
             
         builder.Property(e => e.Address)
             .HasMaxLength(500);

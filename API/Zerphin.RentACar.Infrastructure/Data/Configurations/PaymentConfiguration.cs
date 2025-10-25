@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Zerphin.RentACar.Domain.Entities;
+using Zerphin.RentACar.Domain.ValueObjects;
 
 namespace Zerphin.RentACar.Infrastructure.Data.Configurations;
 
