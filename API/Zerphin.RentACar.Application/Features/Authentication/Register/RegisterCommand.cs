@@ -1,5 +1,6 @@
 using MediatR;
 using Zerphin.RentACar.Application.Common;
+using Zerphin.RentACar.Domain.ValueObjects;
 
 namespace Zerphin.RentACar.Application.Features.Authentication.Register;
 
@@ -13,5 +14,5 @@ public class RegisterCommand : IRequest<ServiceResult<RegisterResponse>>
     public string? Address { get; set; }
     public string? IdentityNumber { get; set; }
     public DateTime? BirthDate { get; set; }
-    public int RoleId { get; set; } = 4; // Default to Customer role
+    public UserRole Role { get; set; } = UserRole.Customer; // Default to Customer role
 }

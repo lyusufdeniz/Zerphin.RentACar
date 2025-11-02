@@ -14,6 +14,6 @@ public class LoginMapping : Profile
             .ForMember(dest => dest.User, opt => opt.MapFrom(src => src));
 
         CreateMap<User, UserInfo>()
-            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name));
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.ToString()));
     }
 }

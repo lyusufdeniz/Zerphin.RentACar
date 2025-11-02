@@ -11,15 +11,13 @@ namespace Zerphin.RentACar.Application.Features.Authentication.Register;
 public class RegisterHandler : IRequestHandler<RegisterCommand, ServiceResult<RegisterResponse>>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IRoleRepository _roleRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IPasswordService _passwordService;
 
-    public RegisterHandler(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork, IMapper mapper, IPasswordService passwordService)
+    public RegisterHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IPasswordService passwordService)
     {
         _userRepository = userRepository;
-        _roleRepository = roleRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _passwordService = passwordService;
@@ -37,13 +35,6 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, ServiceResult<Re
         if (!string.IsNullOrEmpty(request.IdentityNumber) && await _userRepository.IsIdentityNumberExistsAsync(request.IdentityNumber))
         {
             return ServiceResult<RegisterResponse>.Fail($"User with identity number '{request.IdentityNumber}' already exists.", HttpStatusCode.Conflict);
-        }
-
-        // Check if role exists
-        var role = await _roleRepository.GetByIdAsync(request.RoleId);
-        if (role == null)
-        {
-            return ServiceResult<RegisterResponse>.Fail($"Role with ID {request.RoleId} not found.", HttpStatusCode.NotFound);
         }
 
         // Validate password strength

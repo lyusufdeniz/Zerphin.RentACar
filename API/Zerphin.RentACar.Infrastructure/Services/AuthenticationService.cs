@@ -33,7 +33,7 @@ public class AuthenticationService : IAuthenticationService
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-            new(ClaimTypes.Role, user.Role.Name)
+            new(ClaimTypes.Role, user.Role.ToString())
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -89,7 +89,7 @@ public class AuthenticationService : IAuthenticationService
             var jwtToken = tokenHandler.ReadJwtToken(token);
             var userIdClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
 
-            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
             {
                 return await _userRepository.GetByIdAsync(userId);
             }

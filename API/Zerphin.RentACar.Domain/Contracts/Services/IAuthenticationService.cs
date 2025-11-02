@@ -9,5 +9,5 @@ public interface IAuthenticationService
     Task<bool> ValidateTokenAsync(string token);
     Task<User?> GetUserFromTokenAsync(string token);
     Task<bool> IsTokenExpiredAsync(string token);
-    Task<string> RefreshTokenAsync(string refreshToken);
+    Task<string?> RefreshTokenAsync(string refreshToken);
 }
