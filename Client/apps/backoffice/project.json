@@ -1,26 +1,26 @@
 {
   "name": "backoffice",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/Client/backoffice/src",
+  "sourceRoot": "apps/backoffice/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/Client/backoffice",
-        "browser": "apps/Client/backoffice/src/main.ts",
-        "polyfills": ["zone.js"],
-        "tsConfig": "apps/Client/backoffice/tsconfig.app.json",
+        "outputPath": "dist/apps/backoffice",
+        "browser": "apps/backoffice/src/main.ts",
+        "polyfills": [],
+        "tsConfig": "apps/backoffice/tsconfig.app.json",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/Client/backoffice/public"
+            "input": "apps/backoffice/public"
           }
         ],
-        "styles": ["apps/Client/backoffice/src/styles.css"]
+        "styles": ["apps/backoffice/src/styles.css"]
       },
       "configurations": {
         "production": {
@@ -73,7 +73,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "backoffice:build",
-        "staticFilePath": "dist/apps/Client/backoffice/browser",
+        "staticFilePath": "dist/apps/backoffice/browser",
         "spa": true
       }
     }
