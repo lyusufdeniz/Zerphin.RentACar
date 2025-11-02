@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zerphin.RentACar.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Zerphin.RentACar.Infrastructure.Data;
 namespace Zerphin.RentACar.Infrastructure.Migrations
 {
     [DbContext(typeof(RentACarDbContext))]
-    partial class RentACarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102192736_RemoveRoleEntityUseUserRoleEnum")]
+    partial class RemoveRoleEntityUseUserRoleEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,9 +27,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Customer", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -96,8 +101,8 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("VerificationDate")
                         .HasColumnType("datetime2");
@@ -116,9 +121,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Insurance", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContactInfo")
                         .HasMaxLength(500)
@@ -186,8 +193,8 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -199,9 +206,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Invoice", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BillingAddress")
                         .HasMaxLength(500)
@@ -259,8 +268,8 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("RentalId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RentalId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("SubTotal")
                         .HasPrecision(10, 2)
@@ -297,9 +306,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Payment", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(10, 2)
@@ -349,8 +360,8 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("RentalId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RentalId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
@@ -376,9 +387,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.RefreshToken", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -400,8 +413,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -409,13 +421,10 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Token")
-                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -424,9 +433,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Rental", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ActualReturnDate")
                         .HasColumnType("datetime2");
@@ -437,11 +448,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CustomerId1")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CustomerId1")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("DailyRate")
                         .HasPrecision(10, 2)
@@ -503,8 +514,8 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -519,9 +530,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(500)
@@ -601,10 +614,10 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Id = 1,
                             Address = "Istanbul, Turkey",
                             BirthDate = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 2, 20, 0, 17, 16, DateTimeKind.Utc).AddTicks(1555),
+                            CreatedAt = new DateTime(2025, 11, 2, 19, 27, 34, 762, DateTimeKind.Utc).AddTicks(235),
                             CreatedBy = "System",
                             Email = "admin@zerphinrentacar.com",
                             FirstName = "Admin",
@@ -612,16 +625,16 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "User",
-                            PasswordHash = "4KKTeIaebEiVlWPQP+v0qWL/73HY8DuYl7Isb2YiMmMI82uC4SIGNI3gwsWw9Mkk",
+                            PasswordHash = "e+PQMd23KHy9F5pUQjxZadBxqb+4qGSvl4vm2fWLn4dRepiie33puqjXhm3tQbX9",
                             PhoneNumber = "+905551234567",
                             Role = 4
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Id = 2,
                             Address = "Ankara, Turkey",
                             BirthDate = new DateTime(1988, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 2, 20, 0, 17, 18, DateTimeKind.Utc).AddTicks(1241),
+                            CreatedAt = new DateTime(2025, 11, 2, 19, 27, 34, 764, DateTimeKind.Utc).AddTicks(1298),
                             CreatedBy = "System",
                             Email = "manager@zerphinrentacar.com",
                             FirstName = "Manager",
@@ -629,16 +642,16 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "User",
-                            PasswordHash = "6Twu/AwPQKKSW1vpjRuLgzzEoGL+Fd0JI72mTn6NxTVoVeTFL/D4/38ZDcrCBBD+",
+                            PasswordHash = "HAGQW4n4pHgGtLIX/QvPSKalk1ZmVN+6Dkf6jMbBDz+F/D/8hjXaxMtv2oTi0Pgp",
                             PhoneNumber = "+905551234568",
                             Role = 3
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Id = 3,
                             Address = "Izmir, Turkey",
                             BirthDate = new DateTime(1990, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 2, 20, 0, 17, 19, DateTimeKind.Utc).AddTicks(9493),
+                            CreatedAt = new DateTime(2025, 11, 2, 19, 27, 34, 765, DateTimeKind.Utc).AddTicks(8584),
                             CreatedBy = "System",
                             Email = "employee@zerphinrentacar.com",
                             FirstName = "Employee",
@@ -646,16 +659,16 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "User",
-                            PasswordHash = "NlpuAx8uyneDcu5BqjRxpAcRtOtmC2wsHppY2QrHSFrRs8TcYuapLze7m7T6q3lu",
+                            PasswordHash = "Ni01aEcoRm4uJ/OAvJlPDqZuO8XgIjpEBIl4cGqqLKfXRcCjX9moBZ5ibGv0sWpl",
                             PhoneNumber = "+905551234569",
                             Role = 2
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            Id = 4,
                             Address = "Bursa, Turkey",
                             BirthDate = new DateTime(1992, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 2, 20, 0, 17, 21, DateTimeKind.Utc).AddTicks(9628),
+                            CreatedAt = new DateTime(2025, 11, 2, 19, 27, 34, 767, DateTimeKind.Utc).AddTicks(5521),
                             CreatedBy = "System",
                             Email = "john.doe@email.com",
                             FirstName = "John",
@@ -663,16 +676,16 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Doe",
-                            PasswordHash = "8MqnppBOVTx7pHxgNg9JTQ1+Ab3dBhOqSSL8zyblxUMFOYVR3ikIbYLQnzq3wLKj",
+                            PasswordHash = "goRmWew0rWLUQtUsbKAkvP546pT7tQCWnudKcbf1CeKu+UC6kmzyaLt9dURaOxUB",
                             PhoneNumber = "+905551234570",
                             Role = 1
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
+                            Id = 5,
                             Address = "Antalya, Turkey",
                             BirthDate = new DateTime(1995, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 2, 20, 0, 17, 23, DateTimeKind.Utc).AddTicks(8021),
+                            CreatedAt = new DateTime(2025, 11, 2, 19, 27, 34, 769, DateTimeKind.Utc).AddTicks(2515),
                             CreatedBy = "System",
                             Email = "jane.smith@email.com",
                             FirstName = "Jane",
@@ -680,7 +693,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Smith",
-                            PasswordHash = "07NA44zpFqMYrBWKVgExbvwWxHwAD8eQ3yMqX8n16DRW7UkOQaby/5zWoAClTlIh",
+                            PasswordHash = "5vqM82bu4K/3KlnXqS0wOBeGVFmLycw8h71fXST56HtqISXd3hHo/NO0AXNLnEQQ",
                             PhoneNumber = "+905551234571",
                             Role = 1
                         });
@@ -688,9 +701,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Vehicle", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Brand")
                         .IsRequired()
