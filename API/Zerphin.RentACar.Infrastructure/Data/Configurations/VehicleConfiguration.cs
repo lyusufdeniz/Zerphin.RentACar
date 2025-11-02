@@ -56,10 +56,5 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             
         builder.HasIndex(e => e.LicensePlate)
             .IsUnique();
-            
-        builder.HasOne(e => e.Location)
-            .WithMany(e => e.Vehicles)
-            .HasForeignKey(e => e.LocationId)
-            .OnDelete(DeleteBehavior.SetNull);
     }
 }
