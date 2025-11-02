@@ -6,8 +6,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
 {
     public UpdateUserValidator()
     {
-        RuleFor(x => x.Id)
-            .GreaterThan(0).WithMessage("User ID must be greater than 0");
+        RuleFor(x => x.Id).NotEmpty().WithMessage("User ID must be greater than 0");
 
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required")
@@ -26,8 +25,8 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
             .NotEmpty().WithMessage("Phone number is required")
             .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format");
 
-        RuleFor(x => x.RoleId)
-            .GreaterThan(0).WithMessage("Role ID must be greater than 0");
+        RuleFor(x => x.Role)
+            .IsInEnum().WithMessage("Invalid role");
 
         RuleFor(x => x.Address)
             .MaximumLength(200).WithMessage("Address cannot exceed 200 characters")

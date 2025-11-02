@@ -1,3 +1,5 @@
+using Zerphin.RentACar.Domain.ValueObjects;
+
 namespace Zerphin.RentACar.Domain.Entities;
 
 public class User : BaseEntity
@@ -12,7 +14,7 @@ public class User : BaseEntity
     
     public string PasswordHash { get; set; } = string.Empty;
     
-    public int RoleId { get; set; }
+    public UserRole Role { get; set; } = UserRole.Customer;
     
     public bool IsActive { get; set; } = true;
     
@@ -24,7 +26,6 @@ public class User : BaseEntity
     
     public DateTime? BirthDate { get; set; }
     
-    public virtual Role Role { get; set; } = null!;
     public virtual ICollection<Rental> Rentals { get; set; } = new List<Rental>();
     public virtual Customer? Customer { get; set; }
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();

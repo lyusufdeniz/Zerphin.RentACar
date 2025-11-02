@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Zerphin.RentACar.Domain.Entities;
+using Zerphin.RentACar.Domain.ValueObjects;
 using Zerphin.RentACar.Infrastructure.Services;
 
 namespace Zerphin.RentACar.Infrastructure.Data.Seed;
@@ -12,13 +13,13 @@ public class UserSeed : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                Id = 1,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 FirstName = "Admin",
                 LastName = "User",
                 Email = "admin@zerphinrentacar.com",
                 PhoneNumber = "+905551234567",
                 PasswordHash = PasswordService.HashPasswordStatic("Admin123!"),
-                RoleId = 1,
+                Role = UserRole.Admin,
                 IsActive = true,
                 Address = "Istanbul, Turkey",
                 IdentityNumber = "12345678901",
@@ -28,13 +29,13 @@ public class UserSeed : IEntityTypeConfiguration<User>
             },
             new User
             {
-                Id = 2,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
                 FirstName = "Manager",
                 LastName = "User",
                 Email = "manager@zerphinrentacar.com",
                 PhoneNumber = "+905551234568",
                 PasswordHash = PasswordService.HashPasswordStatic("Manager123!"),
-                RoleId = 2,
+                Role = UserRole.Manager,
                 IsActive = true,
                 Address = "Ankara, Turkey",
                 IdentityNumber = "12345678902",
@@ -44,13 +45,13 @@ public class UserSeed : IEntityTypeConfiguration<User>
             },
             new User
             {
-                Id = 3,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
                 FirstName = "Employee",
                 LastName = "User",
                 Email = "employee@zerphinrentacar.com",
                 PhoneNumber = "+905551234569",
                 PasswordHash = PasswordService.HashPasswordStatic("Employee123!"),
-                RoleId = 3,
+                Role = UserRole.Employee,
                 IsActive = true,
                 Address = "Izmir, Turkey",
                 IdentityNumber = "12345678903",
@@ -60,13 +61,13 @@ public class UserSeed : IEntityTypeConfiguration<User>
             },
             new User
             {
-                Id = 4,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
                 FirstName = "John",
                 LastName = "Doe",
                 Email = "john.doe@email.com",
                 PhoneNumber = "+905551234570",
                 PasswordHash = PasswordService.HashPasswordStatic("Customer123!"),
-                RoleId = 4,
+                Role = UserRole.Customer,
                 IsActive = true,
                 Address = "Bursa, Turkey",
                 IdentityNumber = "12345678904",
@@ -76,13 +77,13 @@ public class UserSeed : IEntityTypeConfiguration<User>
             },
             new User
             {
-                Id = 5,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000005"),
                 FirstName = "Jane",
                 LastName = "Smith",
                 Email = "jane.smith@email.com",
                 PhoneNumber = "+905551234571",
                 PasswordHash = PasswordService.HashPasswordStatic("Customer123!"),
-                RoleId = 4,
+                Role = UserRole.Customer,
                 IsActive = true,
                 Address = "Antalya, Turkey",
                 IdentityNumber = "12345678905",

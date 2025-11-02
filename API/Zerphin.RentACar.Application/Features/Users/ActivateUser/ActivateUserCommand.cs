@@ -5,6 +5,6 @@ namespace Zerphin.RentACar.Application.Features.Users.ActivateUser;
 
 public class ActivateUserCommand : IRequest<ServiceResult<ActivateUserResponse>>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }
 

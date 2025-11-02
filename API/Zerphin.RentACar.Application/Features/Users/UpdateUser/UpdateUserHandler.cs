@@ -9,14 +9,12 @@ namespace Zerphin.RentACar.Application.Features.Users.UpdateUser;
 public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, ServiceResult<UpdateUserResponse>>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IRoleRepository _roleRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UpdateUserHandler(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork, IMapper mapper)
+    public UpdateUserHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _userRepository = userRepository;
-        _roleRepository = roleRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -44,13 +42,6 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, ServiceResul
             {
                 return ServiceResult<UpdateUserResponse>.Fail($"User with identity number '{request.IdentityNumber}' already exists.", HttpStatusCode.Conflict);
             }
-        }
-
-        // Check if role exists
-        var role = await _roleRepository.GetByIdAsync(request.RoleId);
-        if (role == null)
-        {
-            return ServiceResult<UpdateUserResponse>.Fail($"Role with ID {request.RoleId} not found.", HttpStatusCode.NotFound);
         }
 
         _mapper.Map(request, user);

@@ -18,6 +18,6 @@ public interface IUserRepository : IRepository<User>
     Task<PagedResult<User>> GetPagedUsersAsync(int pageNumber, int pageSize, Expression<Func<User, object>> orderBy, bool isDescending = false);
     
     // Business logic methods
-    Task<bool> ActivateUserAsync(int userId);
-    Task<bool> DeactivateUserAsync(int userId);
+    Task<bool> ActivateUserAsync(Guid userId);
+    Task<bool> DeactivateUserAsync(Guid userId);
 }

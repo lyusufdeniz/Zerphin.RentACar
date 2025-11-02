@@ -8,7 +8,7 @@ public class GetAllUsersMapping : Profile
     public GetAllUsersMapping()
     {
         CreateMap<User, GetAllUsersResponse.UserDto>()
-            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.Name : string.Empty));
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.ToString()));
     }
 }
 

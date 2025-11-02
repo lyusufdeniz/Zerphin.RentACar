@@ -25,6 +25,6 @@ public class CreateUserMapping : Profile
             .ForMember(dest => dest.RefreshTokens, opt => opt.Ignore());
 
         CreateMap<User, CreateUserResponse>()
-            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name));
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.ToString()));
     }
 }

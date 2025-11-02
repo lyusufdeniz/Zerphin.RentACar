@@ -14,9 +14,9 @@ public class UsersController : BaseController
 
     [HttpPost]
     [RequireRole("admin", "manager")]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command) => CreateActionResult(await _mediator.Send(command));
+    public async Task<IActionResult> CreateUser(CreateUserCommand command) => CreateActionResult(await _mediator.Send(command));
 
     [HttpPut("change-password")]
     [RequireRole("admin", "manager", "employee", "customer")]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command) => CreateActionResult(await _mediator.Send(command));
+    public async Task<IActionResult> ChangePassword(ChangePasswordCommand command) => CreateActionResult(await _mediator.Send(command));
 }

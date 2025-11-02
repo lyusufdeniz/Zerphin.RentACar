@@ -5,6 +5,6 @@ namespace Zerphin.RentACar.Application.Features.Users.DeleteUser;
 
 public class DeleteUserCommand : IRequest<ServiceResult<DeleteUserResponse>>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }
 

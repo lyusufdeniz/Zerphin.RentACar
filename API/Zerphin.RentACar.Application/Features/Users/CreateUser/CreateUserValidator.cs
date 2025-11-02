@@ -29,8 +29,8 @@ public class CreateUserValidator : AbstractValidator<CreateUserCommand>
             .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]")
             .WithMessage("Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character");
 
-        RuleFor(x => x.RoleId)
-            .GreaterThan(0).WithMessage("Role ID must be greater than 0");
+        RuleFor(x => x.Role)
+            .IsInEnum().WithMessage("Invalid role");
 
         RuleFor(x => x.Address)
             .MaximumLength(200).WithMessage("Address cannot exceed 200 characters")

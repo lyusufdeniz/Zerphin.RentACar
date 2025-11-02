@@ -24,7 +24,7 @@ public class UpdateUserMapping : Profile
             .ForMember(dest => dest.RefreshTokens, opt => opt.Ignore());
 
         CreateMap<User, UpdateUserResponse>()
-            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.Name : string.Empty));
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.ToString()));
     }
 }
 

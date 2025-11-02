@@ -8,7 +8,7 @@ public class GetUserByIdMapping : Profile
     public GetUserByIdMapping()
     {
         CreateMap<User, GetUserByIdResponse>()
-            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.Name : string.Empty));
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.ToString()));
     }
 }
 
