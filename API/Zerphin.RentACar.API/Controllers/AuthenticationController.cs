@@ -14,11 +14,11 @@ public class AuthenticationController : BaseController
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginCommand command) => Ok(await _mediator.Send(command));
+    public async Task<IActionResult> Login([FromBody] LoginCommand command) => CreateActionResult(await _mediator.Send(command));
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterCommand command) => Ok(await _mediator.Send(command));
+    public async Task<IActionResult> Register([FromBody] RegisterCommand command) => CreateActionResult(await _mediator.Send(command));
 
     [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command) => Ok(await _mediator.Send(command));
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command) => CreateActionResult(await _mediator.Send(command));
 }
