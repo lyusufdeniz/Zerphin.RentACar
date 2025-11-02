@@ -6,7 +6,7 @@ public class RefreshToken : BaseEntity
     
     public DateTime ExpiresAt { get; set; }
     
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
     
     public virtual User User { get; set; } = null!;
     
