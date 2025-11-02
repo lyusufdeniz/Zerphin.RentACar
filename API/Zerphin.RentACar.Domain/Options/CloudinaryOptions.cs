@@ -10,3 +10,4 @@ public class CloudinaryOptions
     public bool UseSecureUrl { get; set; } = true;
 }
 
+

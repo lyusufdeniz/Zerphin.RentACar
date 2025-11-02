@@ -19,3 +19,4 @@ public class CreateInsuranceCommand : IRequest<ServiceResult<CreateInsuranceResp
     public Guid VehicleId { get; set; }
 }
 
+

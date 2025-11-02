@@ -31,3 +31,4 @@ public class GetVehicleByIdHandler : IRequestHandler<GetVehicleByIdCommand, Serv
     }
 }
 
+

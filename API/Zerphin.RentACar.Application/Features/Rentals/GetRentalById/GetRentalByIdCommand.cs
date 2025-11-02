@@ -8,3 +8,4 @@ public class GetRentalByIdCommand : IRequest<ServiceResult<GetRentalByIdResponse
     public Guid Id { get; set; }
 }
 
+

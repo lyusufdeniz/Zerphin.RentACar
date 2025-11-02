@@ -22,3 +22,4 @@ public class SearchCustomersCommand : IRequest<ServiceResult<SearchCustomersResp
     public bool IsDescending { get; set; } = false;
 }
 
+

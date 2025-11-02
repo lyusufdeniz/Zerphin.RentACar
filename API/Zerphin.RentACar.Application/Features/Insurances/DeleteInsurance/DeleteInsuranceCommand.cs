@@ -8,3 +8,4 @@ public class DeleteInsuranceCommand : IRequest<ServiceResult<DeleteInsuranceResp
     public Guid Id { get; set; }
 }
 
+

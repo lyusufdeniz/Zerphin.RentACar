@@ -9,3 +9,4 @@ public class UpdateRentalStatusResponse
     public string Message { get; set; } = "Rental status updated successfully.";
 }
 
+

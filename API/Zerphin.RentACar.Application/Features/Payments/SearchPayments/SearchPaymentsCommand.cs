@@ -17,3 +17,4 @@ public class SearchPaymentsCommand : IRequest<ServiceResult<SearchPaymentsRespon
     public bool IsDescending { get; set; } = false;
 }
 
+

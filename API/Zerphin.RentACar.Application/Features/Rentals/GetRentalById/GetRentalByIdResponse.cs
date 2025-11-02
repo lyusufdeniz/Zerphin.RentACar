@@ -27,3 +27,4 @@ public class GetRentalByIdResponse
     public string? VehicleLicensePlate { get; set; }
 }
 
+

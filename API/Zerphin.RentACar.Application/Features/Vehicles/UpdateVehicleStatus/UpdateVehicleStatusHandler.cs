@@ -39,3 +39,4 @@ public class UpdateVehicleStatusHandler : IRequestHandler<UpdateVehicleStatusCom
     }
 }
 
+

@@ -18,3 +18,4 @@ public class SearchInsurancesCommand : IRequest<ServiceResult<SearchInsurancesRe
     public bool IsDescending { get; set; } = false;
 }
 
+

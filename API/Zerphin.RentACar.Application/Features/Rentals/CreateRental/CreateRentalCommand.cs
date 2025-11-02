@@ -19,3 +19,4 @@ public class CreateRentalCommand : IRequest<ServiceResult<CreateRentalResponse>>
     public Guid VehicleId { get; set; }
 }
 
+

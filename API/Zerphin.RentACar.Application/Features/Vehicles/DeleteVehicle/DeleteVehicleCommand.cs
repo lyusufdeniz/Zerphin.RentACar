@@ -8,3 +8,4 @@ public class DeleteVehicleCommand : IRequest<ServiceResult<DeleteVehicleResponse
     public Guid Id { get; set; }
 }
 
+

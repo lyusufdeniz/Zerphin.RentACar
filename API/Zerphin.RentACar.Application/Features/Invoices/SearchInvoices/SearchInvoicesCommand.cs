@@ -16,3 +16,4 @@ public class SearchInvoicesCommand : IRequest<ServiceResult<SearchInvoicesRespon
     public bool IsDescending { get; set; } = false;
 }
 
+

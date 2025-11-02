@@ -6,3 +6,4 @@ public class DeleteInvoiceResponse
     public string Message { get; set; } = "Invoice deleted successfully.";
 }
 
+

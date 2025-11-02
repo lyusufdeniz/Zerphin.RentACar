@@ -6,6 +6,7 @@ using Zerphin.RentACar.Application.Features.Vehicles.GetVehicleById;
 using Zerphin.RentACar.Application.Features.Vehicles.SearchVehicles;
 using Zerphin.RentACar.Application.Features.Vehicles.UpdateVehicle;
 using Zerphin.RentACar.Application.Features.Vehicles.UpdateVehicleStatus;
+using Zerphin.RentACar.Application.Features.Vehicles.GetVehicleStatistics;
 using Zerphin.RentACar.Domain.Attributes;
 
 namespace Zerphin.RentACar.API.Controllers;
@@ -44,5 +45,9 @@ public class VehiclesController : BaseController
     [HttpPatch]
     [RequireRole("admin", "manager")]
     public async Task<IActionResult> UpdateVehicleStatus([FromBody] UpdateVehicleStatusCommand command) => CreateActionResult(await _mediator.Send(command));
-    
+
+    [HttpGet("statistics")]
+    [RequireRole("admin", "manager", "employee")]
+    public async Task<IActionResult> GetVehicleStatistics([FromQuery] GetVehicleStatisticsCommand command)
+        => CreateActionResult(await _mediator.Send(command));
 }

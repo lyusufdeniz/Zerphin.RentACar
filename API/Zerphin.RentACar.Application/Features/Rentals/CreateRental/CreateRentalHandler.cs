@@ -78,3 +78,4 @@ public class CreateRentalHandler : IRequestHandler<CreateRentalCommand, ServiceR
     }
 }
 
+

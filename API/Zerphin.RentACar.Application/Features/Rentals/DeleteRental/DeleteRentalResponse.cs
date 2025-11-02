@@ -6,3 +6,4 @@ public class DeleteRentalResponse
     public string Message { get; set; } = "Rental deleted successfully.";
 }
 
+

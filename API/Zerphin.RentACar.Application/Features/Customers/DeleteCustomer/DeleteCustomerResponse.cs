@@ -6,3 +6,4 @@ public class DeleteCustomerResponse
     public string Message { get; set; } = "Customer deleted successfully.";
 }
 
+

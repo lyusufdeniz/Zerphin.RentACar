@@ -50,3 +50,4 @@ public class DeleteVehicleHandler : IRequestHandler<DeleteVehicleCommand, Servic
     }
 }
 
+

@@ -20,3 +20,4 @@ public class UpdatePaymentCommand : IRequest<ServiceResult<UpdatePaymentResponse
     public string? BankName { get; set; }
 }
 
+

@@ -10,3 +10,4 @@ public class UpdateVehicleStatusCommand : IRequest<ServiceResult<UpdateVehicleSt
     public VehicleStatus Status { get; set; }
 }
 
+

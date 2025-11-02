@@ -6,6 +6,7 @@ using Zerphin.RentACar.Application.Features.Rentals.GetRentalById;
 using Zerphin.RentACar.Application.Features.Rentals.SearchRentals;
 using Zerphin.RentACar.Application.Features.Rentals.UpdateRental;
 using Zerphin.RentACar.Application.Features.Rentals.UpdateRentalStatus;
+using Zerphin.RentACar.Application.Features.Rentals.GetRentalStatistics;
 using Zerphin.RentACar.Domain.Attributes;
 
 namespace Zerphin.RentACar.API.Controllers;
@@ -45,5 +46,11 @@ public class RentalsController : BaseController
     [RequireRole("admin", "manager", "employee")]
     public async Task<IActionResult> UpdateRentalStatus([FromBody] UpdateRentalStatusCommand command)
         => CreateActionResult(await _mediator.Send(command));
+
+    [HttpGet("statistics")]
+    [RequireRole("admin", "manager", "employee")]
+    public async Task<IActionResult> GetRentalStatistics([FromQuery] GetRentalStatisticsCommand command)
+        => CreateActionResult(await _mediator.Send(command));
 }
+
 

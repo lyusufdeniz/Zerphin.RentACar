@@ -20,3 +20,4 @@ public class CreatePaymentCommand : IRequest<ServiceResult<CreatePaymentResponse
     public Guid RentalId { get; set; }
 }
 
+

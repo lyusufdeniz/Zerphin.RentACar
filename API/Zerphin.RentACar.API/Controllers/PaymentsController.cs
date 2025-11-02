@@ -5,6 +5,7 @@ using Zerphin.RentACar.Application.Features.Payments.DeletePayment;
 using Zerphin.RentACar.Application.Features.Payments.GetPaymentById;
 using Zerphin.RentACar.Application.Features.Payments.SearchPayments;
 using Zerphin.RentACar.Application.Features.Payments.UpdatePayment;
+using Zerphin.RentACar.Application.Features.Payments.GetPaymentStatistics;
 using Zerphin.RentACar.Domain.Attributes;
 
 namespace Zerphin.RentACar.API.Controllers;
@@ -39,5 +40,11 @@ public class PaymentsController : BaseController
     [RequireRole("admin", "manager")]
     public async Task<IActionResult> DeletePayment([FromQuery] DeletePaymentCommand command)
         => CreateActionResult(await _mediator.Send(command));
+
+    [HttpGet("statistics")]
+    [RequireRole("admin", "manager", "employee")]
+    public async Task<IActionResult> GetPaymentStatistics([FromQuery] GetPaymentStatisticsCommand command)
+        => CreateActionResult(await _mediator.Send(command));
 }
+
 

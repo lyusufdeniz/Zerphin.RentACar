@@ -5,6 +5,7 @@ using Zerphin.RentACar.Application.Features.Insurances.DeleteInsurance;
 using Zerphin.RentACar.Application.Features.Insurances.GetInsuranceById;
 using Zerphin.RentACar.Application.Features.Insurances.SearchInsurances;
 using Zerphin.RentACar.Application.Features.Insurances.UpdateInsurance;
+using Zerphin.RentACar.Application.Features.Insurances.GetInsuranceStatistics;
 using Zerphin.RentACar.Domain.Attributes;
 
 namespace Zerphin.RentACar.API.Controllers;
@@ -39,5 +40,11 @@ public class InsurancesController : BaseController
     [RequireRole("admin", "manager")]
     public async Task<IActionResult> DeleteInsurance([FromQuery] DeleteInsuranceCommand command)
         => CreateActionResult(await _mediator.Send(command));
+
+    [HttpGet("statistics")]
+    [RequireRole("admin", "manager", "employee")]
+    public async Task<IActionResult> GetInsuranceStatistics([FromQuery] GetInsuranceStatisticsCommand command)
+        => CreateActionResult(await _mediator.Send(command));
 }
+
 

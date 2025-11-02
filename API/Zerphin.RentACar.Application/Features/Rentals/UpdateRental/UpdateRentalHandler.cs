@@ -49,3 +49,4 @@ public class UpdateRentalHandler : IRequestHandler<UpdateRentalCommand, ServiceR
     }
 }
 
+

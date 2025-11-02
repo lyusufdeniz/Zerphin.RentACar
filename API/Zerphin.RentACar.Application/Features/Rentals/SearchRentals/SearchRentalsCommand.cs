@@ -24,3 +24,4 @@ public class SearchRentalsCommand : IRequest<ServiceResult<SearchRentalsResponse
     public bool IsDescending { get; set; } = false;
 }
 
+

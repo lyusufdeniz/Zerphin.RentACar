@@ -152,3 +152,4 @@ public class SearchRentalsHandler : IRequestHandler<SearchRentalsCommand, Servic
     }
 }
 
+

@@ -6,3 +6,4 @@ public class DeleteInsuranceResponse
     public string Message { get; set; } = "Insurance deleted successfully.";
 }
 
+

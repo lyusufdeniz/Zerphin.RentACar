@@ -19,3 +19,4 @@ public class UpdateInsuranceCommand : IRequest<ServiceResult<UpdateInsuranceResp
     public string? ContactInfo { get; set; }
 }
 
+

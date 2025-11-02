@@ -5,6 +5,7 @@ using Zerphin.RentACar.Application.Features.Invoices.DeleteInvoice;
 using Zerphin.RentACar.Application.Features.Invoices.GetInvoiceById;
 using Zerphin.RentACar.Application.Features.Invoices.SearchInvoices;
 using Zerphin.RentACar.Application.Features.Invoices.UpdateInvoice;
+using Zerphin.RentACar.Application.Features.Invoices.GetInvoiceStatistics;
 using Zerphin.RentACar.Domain.Attributes;
 
 namespace Zerphin.RentACar.API.Controllers;
@@ -39,5 +40,11 @@ public class InvoicesController : BaseController
     [RequireRole("admin", "manager")]
     public async Task<IActionResult> DeleteInvoice([FromQuery] DeleteInvoiceCommand command)
         => CreateActionResult(await _mediator.Send(command));
+
+    [HttpGet("statistics")]
+    [RequireRole("admin", "manager", "employee")]
+    public async Task<IActionResult> GetInvoiceStatistics([FromQuery] GetInvoiceStatisticsCommand command)
+        => CreateActionResult(await _mediator.Send(command));
 }
+
 

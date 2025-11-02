@@ -21,3 +21,4 @@ public class CreateCustomerCommand : IRequest<ServiceResult<CreateCustomerRespon
     public Guid UserId { get; set; }
 }
 
+

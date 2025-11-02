@@ -38,3 +38,4 @@ public class DeletePaymentHandler : IRequestHandler<DeletePaymentCommand, Servic
     }
 }
 
+

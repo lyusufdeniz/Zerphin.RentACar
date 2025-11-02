@@ -5,6 +5,7 @@ using Zerphin.RentACar.Application.Features.Customers.DeleteCustomer;
 using Zerphin.RentACar.Application.Features.Customers.GetCustomerById;
 using Zerphin.RentACar.Application.Features.Customers.SearchCustomers;
 using Zerphin.RentACar.Application.Features.Customers.UpdateCustomer;
+using Zerphin.RentACar.Application.Features.Customers.GetCustomerStatistics;
 using Zerphin.RentACar.Domain.Attributes;
 
 namespace Zerphin.RentACar.API.Controllers;
@@ -39,5 +40,11 @@ public class CustomersController : BaseController
     [RequireRole("admin", "manager")]
     public async Task<IActionResult> DeleteCustomer([FromQuery] DeleteCustomerCommand command)
         => CreateActionResult(await _mediator.Send(command));
+
+    [HttpGet("statistics")]
+    [RequireRole("admin", "manager", "employee")]
+    public async Task<IActionResult> GetCustomerStatistics([FromQuery] GetCustomerStatisticsCommand command)
+        => CreateActionResult(await _mediator.Send(command));
 }
+
 

@@ -8,3 +8,4 @@ public class GetInsuranceByIdCommand : IRequest<ServiceResult<GetInsuranceByIdRe
     public Guid Id { get; set; }
 }
 
+

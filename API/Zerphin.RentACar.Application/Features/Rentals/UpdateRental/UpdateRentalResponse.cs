@@ -27,3 +27,4 @@ public class UpdateRentalResponse
     public string? VehicleLicensePlate { get; set; }
 }
 
+

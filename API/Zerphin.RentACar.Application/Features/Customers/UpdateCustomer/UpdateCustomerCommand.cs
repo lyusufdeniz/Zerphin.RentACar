@@ -21,3 +21,4 @@ public class UpdateCustomerCommand : IRequest<ServiceResult<UpdateCustomerRespon
     public string? InsurancePolicyNumber { get; set; }
 }
 
+

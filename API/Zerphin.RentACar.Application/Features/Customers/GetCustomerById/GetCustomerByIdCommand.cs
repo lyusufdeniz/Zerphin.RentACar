@@ -8,3 +8,4 @@ public class GetCustomerByIdCommand : IRequest<ServiceResult<GetCustomerByIdResp
     public Guid Id { get; set; }
 }
 
+

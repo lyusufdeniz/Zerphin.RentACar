@@ -8,3 +8,4 @@ public class GetPaymentByIdCommand : IRequest<ServiceResult<GetPaymentByIdRespon
     public Guid Id { get; set; }
 }
 
+

@@ -8,3 +8,4 @@ public class DeleteCustomerCommand : IRequest<ServiceResult<DeleteCustomerRespon
     public Guid Id { get; set; }
 }
 
+

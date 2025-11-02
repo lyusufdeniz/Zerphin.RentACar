@@ -38,3 +38,4 @@ public class DeleteInsuranceHandler : IRequestHandler<DeleteInsuranceCommand, Se
     }
 }
 
+

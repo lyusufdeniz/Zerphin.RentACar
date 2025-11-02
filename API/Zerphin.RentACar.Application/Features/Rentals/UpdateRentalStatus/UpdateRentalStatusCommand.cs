@@ -10,3 +10,4 @@ public class UpdateRentalStatusCommand : IRequest<ServiceResult<UpdateRentalStat
     public RentalStatus Status { get; set; }
 }
 
+

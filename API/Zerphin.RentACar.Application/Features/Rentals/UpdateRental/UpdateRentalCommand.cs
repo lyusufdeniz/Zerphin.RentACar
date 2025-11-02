@@ -20,3 +20,4 @@ public class UpdateRentalCommand : IRequest<ServiceResult<UpdateRentalResponse>>
     public int? KmAtReturn { get; set; }
 }
 
+

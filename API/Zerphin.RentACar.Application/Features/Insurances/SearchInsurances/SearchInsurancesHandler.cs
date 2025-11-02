@@ -151,3 +151,4 @@ public class SearchInsurancesHandler : IRequestHandler<SearchInsurancesCommand, 
     }
 }
 
+

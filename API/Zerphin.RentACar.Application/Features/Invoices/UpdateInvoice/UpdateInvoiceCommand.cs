@@ -21,3 +21,4 @@ public class UpdateInvoiceCommand : IRequest<ServiceResult<UpdateInvoiceResponse
     public string? Notes { get; set; }
 }
 
+

@@ -20,3 +20,4 @@ public class GetInsuranceByIdResponse
     public string? VehicleLicensePlate { get; set; }
 }
 
+

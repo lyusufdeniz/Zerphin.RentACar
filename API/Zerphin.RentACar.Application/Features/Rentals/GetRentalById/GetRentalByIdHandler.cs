@@ -31,3 +31,4 @@ public class GetRentalByIdHandler : IRequestHandler<GetRentalByIdCommand, Servic
     }
 }
 
+

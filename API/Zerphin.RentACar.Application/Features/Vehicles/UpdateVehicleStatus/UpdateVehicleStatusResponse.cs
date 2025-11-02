@@ -9,3 +9,4 @@ public class UpdateVehicleStatusResponse
     public string Message { get; set; } = "Vehicle status updated successfully.";
 }
 
+
