@@ -4,7 +4,7 @@ namespace Zerphin.RentACar.Domain.Contracts.Repositories;
 
 public interface IInsuranceRepository : IRepository<Insurance>
 {
-    Task<Insurance?> GetByVehicleIdAsync(int vehicleId);
+    Task<Insurance?> GetByVehicleIdAsync(Guid vehicleId);
     Task<Insurance?> GetByPolicyNumberAsync(string policyNumber);
     Task<IEnumerable<Insurance>> GetActiveInsurancesAsync();
     Task<IEnumerable<Insurance>> GetExpiredInsurancesAsync();
