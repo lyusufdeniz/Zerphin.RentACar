@@ -7,3 +7,4 @@
 *.gitkeep
 /.gitignore
 /API/Zerphin.RentACar.API/appsettings.json
+*.md
