@@ -42,6 +42,9 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(e => e.CustomerName)
             .HasMaxLength(100);
             
+        builder.Property(e => e.CustomerEmail)
+            .HasMaxLength(255);
+            
         builder.Property(e => e.CustomerTaxNumber)
             .HasMaxLength(20);
             

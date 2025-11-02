@@ -30,13 +30,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(255);
             
-        builder.Property(e => e.RoleId)
-            .IsRequired();
-            
-        builder.HasOne(e => e.Role)
-            .WithMany(r => r.Users)
-            .HasForeignKey(e => e.RoleId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.Property(e => e.Role)
+            .IsRequired()
+            .HasConversion<int>(); // Store enum as int in database
             
         builder.Property(e => e.Address)
             .HasMaxLength(500);
