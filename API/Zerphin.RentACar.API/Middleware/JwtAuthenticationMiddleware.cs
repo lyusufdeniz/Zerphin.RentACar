@@ -39,9 +39,16 @@ public class JwtAuthenticationMiddleware
     {
         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
         
-        if (authHeader != null && authHeader.StartsWith("Bearer "))
+        if (!string.IsNullOrEmpty(authHeader))
         {
-            return authHeader.Substring("Bearer ".Length).Trim();
+            // Case-insensitive kontrol (Bearer, bearer, BEARER gibi)
+            if (authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                return authHeader.Substring("Bearer ".Length).Trim();
+            }
+            // Eğer Bearer prefix'i yoksa, tüm header'ı token olarak kabul et
+            // (bazı client'lar Bearer prefix'i eklemeden gönderebilir)
+            return authHeader.Trim();
         }
 
         return null;
@@ -63,14 +70,37 @@ public class JwtAuthenticationMiddleware
                 ValidateAudience = _jwtOptions.ValidateAudience,
                 ValidAudience = _jwtOptions.Audience,
                 ValidateLifetime = _jwtOptions.ValidateLifetime,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
+                // JWT claim'lerini .NET ClaimTypes'e map et
+                NameClaimType = ClaimTypes.NameIdentifier,
+                RoleClaimType = ClaimTypes.Role
             };
 
             var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            
+            // Principal'in Identity'sine AuthenticationType ekle (IsAuthenticated için gerekli)
+            // JWT token validate edildikten sonra AuthenticationType null olabilir
+            if (principal?.Identity is ClaimsIdentity identity)
+            {
+                if (string.IsNullOrEmpty(identity.AuthenticationType))
+                {
+                    // NameIdentifier için ClaimTypes.NameIdentifier, Role için ClaimTypes.Role kullan
+                    var claimsIdentity = new ClaimsIdentity(
+                        identity.Claims, 
+                        "Bearer", 
+                        ClaimTypes.NameIdentifier, 
+                        ClaimTypes.Role);
+                    principal = new ClaimsPrincipal(claimsIdentity);
+                }
+            }
+            
             return principal;
         }
-        catch
+        catch (Exception ex)
         {
+            // Debug için exception detayları
+            // Token validation başarısız olduğunda null dön
+            // Gelecekte logger eklenebilir: _logger.LogWarning(ex, "Token validation failed");
             return null;
         }
     }

@@ -46,10 +46,16 @@ public class AuthorizationMiddleware
 
     private async Task<ServiceResult> CheckRoleAuthorization(HttpContext context, string[] requiredRoles, IUserRepository userRepository)
     {
-        var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+        // Önce authentication durumunu kontrol et
+        if (context.User?.Identity == null || !context.User.Identity.IsAuthenticated)
         {
             return ServiceResult.Fail("User not authenticated.", System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
+        {
+            return ServiceResult.Fail("User not authenticated. Invalid token claims.", System.Net.HttpStatusCode.Unauthorized);
         }
 
         var user = await userRepository.GetByIdAsync(userId);
@@ -58,7 +64,7 @@ public class AuthorizationMiddleware
             return ServiceResult.Fail("User not found.", System.Net.HttpStatusCode.Unauthorized);
         }
 
-        var userRole = user.Role.Name.ToLower();
+        var userRole = user.Role.ToString().ToLower();
         
         // Check if user has any of the required roles or higher
         var hasAccess = requiredRoles.Any(requiredRole => 
@@ -66,7 +72,7 @@ public class AuthorizationMiddleware
 
         if (!hasAccess)
         {
-            return ServiceResult.Fail($"Access denied. Required roles: {string.Join(", ", requiredRoles)}. Your role: {user.Role.Name}", System.Net.HttpStatusCode.Forbidden);
+            return ServiceResult.Fail($"Access denied. Required roles: {string.Join(", ", requiredRoles)}. Your role: {user.Role}", System.Net.HttpStatusCode.Forbidden);
         }
 
         return ServiceResult.Success();
