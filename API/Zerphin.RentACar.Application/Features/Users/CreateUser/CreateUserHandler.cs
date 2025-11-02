@@ -5,7 +5,6 @@ using Zerphin.RentACar.Application.Common;
 using Zerphin.RentACar.Domain.Contracts.Repositories;
 using Zerphin.RentACar.Domain.Contracts.Services;
 using Zerphin.RentACar.Domain.Entities;
-using Zerphin.RentACar.Domain.Exceptions;
 
 namespace Zerphin.RentACar.Application.Features.Users.CreateUser;
 
@@ -28,50 +27,43 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand, ServiceResul
 
     public async Task<ServiceResult<CreateUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        try
+        // Check if email already exists
+        if (await _userRepository.IsEmailExistsAsync(request.Email))
         {
-            // Check if email already exists
-            if (await _userRepository.IsEmailExistsAsync(request.Email))
-            {
-                throw new ConflictException($"User with email '{request.Email}' already exists.");
-            }
-
-            // Check if identity number already exists
-            if (!string.IsNullOrEmpty(request.IdentityNumber) && await _userRepository.IsIdentityNumberExistsAsync(request.IdentityNumber))
-            {
-                throw new ConflictException($"User with identity number '{request.IdentityNumber}' already exists.");
-            }
-
-            // Check if role exists
-            var role = await _roleRepository.GetByIdAsync(request.RoleId);
-            if (role == null)
-            {
-                throw new NotFoundException(nameof(Role), request.RoleId);
-            }
-
-            // Validate password strength
-            if (!_passwordService.IsPasswordStrong(request.Password))
-            {
-                throw new ValidationException("Password does not meet security requirements.");
-            }
-
-            // Create user entity
-            var user = _mapper.Map<User>(request);
-            user.PasswordHash = _passwordService.HashPassword(request.Password);
-            user.IsActive = true;
-            
-            var createdUser = await _userRepository.AddAsync(user);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            // Map to response
-            var response = _mapper.Map<CreateUserResponse>(createdUser);
-
-            return ServiceResult<CreateUserResponse>.Success(response, HttpStatusCode.OK);
+            return ServiceResult<CreateUserResponse>.Fail($"User with email '{request.Email}' already exists.", HttpStatusCode.Conflict);
         }
-        catch (Exception ex)
+
+        // Check if identity number already exists
+        if (!string.IsNullOrEmpty(request.IdentityNumber) && await _userRepository.IsIdentityNumberExistsAsync(request.IdentityNumber))
         {
-            throw new BusinessException("An error occurred while creating the user.", ex);
+            return ServiceResult<CreateUserResponse>.Fail($"User with identity number '{request.IdentityNumber}' already exists.", HttpStatusCode.Conflict);
         }
+
+        // Check if role exists
+        var role = await _roleRepository.GetByIdAsync(request.RoleId);
+        if (role == null)
+        {
+            return ServiceResult<CreateUserResponse>.Fail($"Role with ID {request.RoleId} not found.", HttpStatusCode.NotFound);
+        }
+
+        // Validate password strength
+        if (!_passwordService.IsPasswordStrong(request.Password))
+        {
+            return ServiceResult<CreateUserResponse>.Fail("Password does not meet security requirements.", HttpStatusCode.BadRequest);
+        }
+
+        // Create user entity
+        var user = _mapper.Map<User>(request);
+        user.PasswordHash = _passwordService.HashPassword(request.Password);
+        user.IsActive = true;
+        
+        var createdUser = await _userRepository.AddAsync(user);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        // Map to response
+        var response = _mapper.Map<CreateUserResponse>(createdUser);
+
+        return ServiceResult<CreateUserResponse>.Success(response, HttpStatusCode.Created);
     }
 }
