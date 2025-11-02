@@ -13,7 +13,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddHttpContextAccessor();
 
 // CORS configuration
-builder.Services.AddCorsConfiguration();
+builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddSwagger();
 builder.Services.AddEntityFramework(builder.Configuration);
 builder.Services.AddApplication();
