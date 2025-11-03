@@ -193,7 +193,7 @@ public class InsuranceRepository : IInsuranceRepository
         var now = DateTime.UtcNow;
         return await _context.Insurances
             .Include(i => i.Vehicle)
-            .Where(i => i.IsActive && i.StartDate <= now && i.EndDate >= now && !i.IsDeleted)
+            .Where(i => i.StartDate <= now && i.EndDate >= now && !i.IsDeleted)
             .ToListAsync();
     }
 
