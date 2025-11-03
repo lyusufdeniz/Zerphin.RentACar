@@ -1,0 +1,145 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1 class="login-logo">RentACar</h1>
+      <p class="login-subtitle">Yönetim Paneline Hoş Geldiniz</p>
+    </div>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-wrapper">
+          <svg
+            class="input-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+            />
+          </svg>
+          <input
+            id="email"
+            type="email"
+            class="form-input"
+            formControlName="email"
+            placeholder="Email adresinizi girin"
+            [class.error]="hasError('email', 'required') || hasError('email', 'email')"
+          />
+        </div>
+        <div class="error-message" *ngIf="hasError('email', 'required')">
+          Email gereklidir
+        </div>
+        <div class="error-message" *ngIf="hasError('email', 'email') && !hasError('email', 'required')">
+          Geçerli bir email adresi giriniz
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Şifre</label>
+        <div class="input-wrapper">
+          <svg
+            class="input-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-input"
+            formControlName="password"
+            placeholder="Şifrenizi girin"
+            [class.error]="hasError('password', 'required') || hasError('password', 'minlength')"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+          >
+            <svg
+              class="toggle-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              *ngIf="!showPassword"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            <svg
+              class="toggle-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              *ngIf="showPassword"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.29 3.29m0 0L3 3m3.29 3.29L12 12m6-6l3.29 3.29M21 21l-3.29-3.29m0 0L21 21m-3.29-3.29L12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="hasError('password', 'required')">
+          Şifre gereklidir
+        </div>
+        <div class="error-message" *ngIf="hasError('password', 'minlength') && !hasError('password', 'required')">
+          Şifre en az 6 karakter olmalıdır
+        </div>
+      </div>
+
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            class="checkbox"
+            formControlName="rememberMe"
+          />
+          <span>Beni Hatırla</span>
+        </label>
+        <a href="#" class="forgot-password">Şifremi Unuttum</a>
+      </div>
+
+      <button
+        type="submit"
+        class="login-button"
+        [disabled]="isLoading || loginForm.invalid"
+      >
+        <span *ngIf="!isLoading">Giriş Yap</span>
+        <span *ngIf="isLoading">Giriş yapılıyor...</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p class="footer-text">
+        Hesabınız yok mu?
+        <a routerLink="/register" class="footer-link">Kayıt Ol</a>
+      </p>
+    </div>
+  </div>
+</div>
+

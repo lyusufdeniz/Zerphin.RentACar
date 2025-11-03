@@ -1,0 +1,304 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Araçlar</h1>
+    <app-favorite-button
+      title="Araçlar"
+      icon="🚗"
+      path="/cars"
+    ></app-favorite-button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <div class="filter-item">
+        <label>Marka</label>
+        <input
+          type="text"
+          [(ngModel)]="searchBrand"
+          placeholder="Marka ara..."
+          (keyup.enter)="search()"
+        />
+      </div>
+      <div class="filter-item">
+        <label>Model</label>
+        <input
+          type="text"
+          [(ngModel)]="searchModel"
+          placeholder="Model ara..."
+          (keyup.enter)="search()"
+        />
+      </div>
+      <div class="filter-item">
+        <label>Plaka</label>
+        <input
+          type="text"
+          [(ngModel)]="searchLicensePlate"
+          placeholder="Plaka ara..."
+          (keyup.enter)="search()"
+        />
+      </div>
+      <div class="filter-item">
+        <label>Kategori</label>
+        <select [(ngModel)]="selectedCategory">
+          <option [value]="undefined">Tümü</option>
+          <option *ngFor="let cat of categories" [value]="cat">
+            {{ categoryNames[cat] }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label>Durum</label>
+        <select [(ngModel)]="selectedStatus">
+          <option [value]="undefined">Tümü</option>
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ statusNames[status] }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label>Min Fiyat</label>
+        <input
+          type="number"
+          [(ngModel)]="minPrice"
+          placeholder="Min"
+          min="0"
+        />
+      </div>
+      <div class="filter-item">
+        <label>Max Fiyat</label>
+        <input
+          type="number"
+          [(ngModel)]="maxPrice"
+          placeholder="Max"
+          min="0"
+        />
+      </div>
+      <div class="filter-actions">
+        <button class="btn-primary" (click)="search()">Ara</button>
+        <button class="btn-secondary" (click)="clearFilters()">Temizle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Araçlar yükleniyor...</p>
+  </div>
+
+  <!-- Vehicles Table -->
+  <div *ngIf="!isLoading" class="table-container">
+    <div class="table-header">
+      <div class="table-info">
+        <span>Toplam: {{ totalCount }} araç</span>
+      </div>
+      <div class="table-actions">
+        <button class="btn-primary" (click)="openAddVehicleModal()">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="btn-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Yeni Araç
+        </button>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="image-column">Resim</th>
+          <th (click)="sortBy('brand')" class="sortable">
+            Marka
+            <span
+              *ngIf="orderBy === 'brand'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th (click)="sortBy('model')" class="sortable">
+            Model
+            <span
+              *ngIf="orderBy === 'model'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th>Plaka</th>
+          <th>Kategori</th>
+          <th>Durum</th>
+          <th (click)="sortBy('dailyRentalPrice')" class="sortable">
+            Günlük Fiyat
+            <span
+              *ngIf="orderBy === 'dailyRentalPrice'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th>Yıl</th>
+          <th>KM</th>
+          <th class="actions-column">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of vehicles" class="table-row">
+          <td class="image-column">
+            <img
+              [src]="getVehicleImage(vehicle)"
+              [alt]="vehicle.brand + ' ' + vehicle.model"
+              class="vehicle-thumbnail"
+              (error)="onImageError($event)"
+            />
+          </td>
+          <td>{{ vehicle.brand }}</td>
+          <td>{{ vehicle.model }}</td>
+          <td>
+            <span class="license-plate">{{ vehicle.licensePlate }}</span>
+          </td>
+          <td>
+            <span class="badge category">{{
+              categoryNames[vehicle.category]
+            }}</span>
+          </td>
+          <td>
+            <span 
+              class="badge status" 
+              [class]="getStatusClass(vehicle.status)"
+            >
+              {{ statusNames[vehicle.status] }}
+            </span>
+          </td>
+          <td>
+            <span class="price">{{ vehicle.dailyRentalPrice | number: '1.2-2' }} TL</span>
+          </td>
+          <td>{{ vehicle.year }}</td>
+          <td>{{ vehicle.km || 0 | number }}</td>
+          <td class="actions-column">
+            <div class="action-buttons">
+              <button
+                class="btn-icon-view"
+                title="Detay Görüntüle"
+                (click)="viewVehicleDetail(vehicle)"
+                type="button"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </button>
+              <button
+                class="btn-icon-edit"
+                title="Düzenle"
+                (click)="editVehicle(vehicle)"
+                type="button"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </button>
+              <button
+                class="btn-icon-delete"
+                title="Sil"
+                (click)="deleteVehicle(vehicle)"
+                type="button"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="vehicles.length === 0" class="empty-state">
+      <p>Araç bulunamadı</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 0" class="pagination">
+      <div class="pagination-info">
+        <span>
+          Sayfa {{ currentPage }} / {{ totalPages }} 
+          (Toplam: {{ totalCount }} kayıt)
+        </span>
+      </div>
+      <div class="pagination-controls">
+        <button
+          class="pagination-btn"
+          [disabled]="currentPage === 1"
+          (click)="changePage(currentPage - 1)"
+        >
+          Önceki
+        </button>
+        <div class="pagination-pages">
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="pagination-page"
+            [class.active]="page === currentPage"
+            (click)="changePage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+        <button
+          class="pagination-btn"
+          [disabled]="currentPage === totalPages"
+          (click)="changePage(currentPage + 1)"
+        >
+          Sonraki
+        </button>
+        <select
+          class="page-size-select"
+          [value]="pageSize"
+          (change)="changePageSize(+$any($event.target).value)"
+        >
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+          <option [value]="500">500</option>
+          <option [value]="1000">1000</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+

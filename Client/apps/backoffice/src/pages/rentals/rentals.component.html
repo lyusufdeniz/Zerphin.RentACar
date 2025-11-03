@@ -1,0 +1,301 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Kiralamalar</h1>
+    <app-favorite-button
+      title="Kiralamalar"
+      path="/rentals"
+    ></app-favorite-button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filters-grid">
+      <div class="filter-item">
+        <label>Müşteri ID</label>
+        <input
+          type="text"
+          [(ngModel)]="searchCustomerId"
+          placeholder="Müşteri ID ara..."
+          (keyup.enter)="search()"
+        />
+      </div>
+      <div class="filter-item">
+        <label>Araç</label>
+        <select [(ngModel)]="searchVehicleId">
+          <option [value]="''">Tümü</option>
+          <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">
+            {{ vehicle.licensePlate }} - {{ vehicle.brand }} {{ vehicle.model }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label>Durum</label>
+        <select [(ngModel)]="selectedStatus">
+          <option [value]="undefined">Tümü</option>
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ statusNames[status] }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <app-datepicker
+          label="Başlangıç Tarihi (Başlangıç)"
+          [(ngModel)]="startDateFrom"
+        ></app-datepicker>
+      </div>
+      <div class="filter-item">
+        <app-datepicker
+          label="Başlangıç Tarihi (Bitiş)"
+          [(ngModel)]="startDateTo"
+        ></app-datepicker>
+      </div>
+      <div class="filter-item">
+        <app-datepicker
+          label="Bitiş Tarihi (Başlangıç)"
+          [(ngModel)]="endDateFrom"
+        ></app-datepicker>
+      </div>
+      <div class="filter-item">
+        <app-datepicker
+          label="Bitiş Tarihi (Bitiş)"
+          [(ngModel)]="endDateTo"
+        ></app-datepicker>
+      </div>
+      <div class="filter-actions">
+        <button class="btn-primary" (click)="search()">Ara</button>
+        <button class="btn-secondary" (click)="clearFilters()">Temizle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Kiralamalar yükleniyor...</p>
+  </div>
+
+  <!-- Rentals Table -->
+  <div *ngIf="!isLoading" class="table-container">
+    <div class="table-header">
+      <div class="table-info">
+        <span>Toplam: {{ totalCount }} kiralama</span>
+      </div>
+      <div class="table-actions">
+        <button class="btn-primary" (click)="openAddRentalModal()">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="btn-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Yeni Kiralama
+        </button>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th (click)="sortBy('startDate')" class="sortable">
+            Başlangıç Tarihi
+            <span
+              *ngIf="orderBy === 'startDate'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th (click)="sortBy('endDate')" class="sortable">
+            Bitiş Tarihi
+            <span
+              *ngIf="orderBy === 'endDate'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th>Müşteri</th>
+          <th>Araç</th>
+          <th (click)="sortBy('dailyRate')" class="sortable">
+            Günlük Fiyat
+            <span
+              *ngIf="orderBy === 'dailyRate'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th (click)="sortBy('totalAmount')" class="sortable">
+            Toplam Tutar
+            <span
+              *ngIf="orderBy === 'totalAmount'"
+              class="sort-icon"
+              [class.desc]="isDescending"
+            >
+              {{ isDescending ? '↓' : '↑' }}
+            </span>
+          </th>
+          <th>Durum</th>
+          <th class="actions-column">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rental of rentals" class="table-row">
+          <td>{{ formatDate(rental.startDate) }}</td>
+          <td>{{ formatDate(rental.endDate) }}</td>
+          <td>
+            <span *ngIf="rental.customerName">{{ rental.customerName }}</span>
+            <span *ngIf="!rental.customerName" class="vehicle-info">{{ rental.customerId }}</span>
+          </td>
+          <td>
+            <span *ngIf="rental.vehicleLicensePlate" class="license-plate">
+              {{ rental.vehicleLicensePlate }}
+            </span>
+            <span *ngIf="!rental.vehicleLicensePlate && rental.vehicleId">
+              {{ rental.vehicleId }}
+            </span>
+            <span *ngIf="rental.vehicleBrand && rental.vehicleModel">
+              <br />
+              <small class="vehicle-info">
+                {{ rental.vehicleBrand }} {{ rental.vehicleModel }}
+              </small>
+            </span>
+          </td>
+          <td>
+            <span class="price">{{ rental.dailyRate | number: '1.2-2' }} TL</span>
+          </td>
+          <td>
+            <span class="price">{{ rental.totalAmount | number: '1.2-2' }} TL</span>
+          </td>
+          <td>
+            <span 
+              class="badge status" 
+              [class]="getStatusClass(rental.status)"
+            >
+              {{ statusNames[rental.status] }}
+            </span>
+          </td>
+          <td class="actions-column">
+            <div class="action-buttons">
+              <button
+                class="btn-icon-view"
+                title="Detay Görüntüle"
+                (click)="viewRentalDetails(rental)"
+                type="button"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </button>
+              <button
+                class="btn-icon-edit"
+                title="Düzenle"
+                (click)="editRental(rental)"
+                type="button"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </button>
+              <button
+                class="btn-icon-delete"
+                title="Sil"
+                (click)="deleteRental(rental)"
+                type="button"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="rentals.length === 0" class="empty-state">
+      <p>Kiralama bulunamadı</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 0" class="pagination">
+      <div class="pagination-info">
+        <span>
+          Sayfa {{ currentPage }} / {{ totalPages }} 
+          (Toplam: {{ totalCount }} kayıt)
+        </span>
+      </div>
+      <div class="pagination-controls">
+        <button
+          class="pagination-btn"
+          [disabled]="currentPage === 1"
+          (click)="changePage(currentPage - 1)"
+        >
+          Önceki
+        </button>
+        <div class="pagination-pages">
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="pagination-page"
+            [class.active]="page === currentPage"
+            (click)="changePage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+        <button
+          class="pagination-btn"
+          [disabled]="currentPage === totalPages"
+          (click)="changePage(currentPage + 1)"
+        >
+          Sonraki
+        </button>
+        <select
+          class="page-size-select"
+          [value]="pageSize"
+          (change)="changePageSize(+$any($event.target).value)"
+        >
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+          <option [value]="500">500</option>
+          <option [value]="1000">1000</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
