@@ -20,8 +20,6 @@ public class Insurance : BaseEntity
     
     public string? CoverageDetails { get; set; }
     
-    public bool IsActive { get; set; } = true;
-    
     public string? ContactInfo { get; set; }
     
     public Guid VehicleId { get; set; }
