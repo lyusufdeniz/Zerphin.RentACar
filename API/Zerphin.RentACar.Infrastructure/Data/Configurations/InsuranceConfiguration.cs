@@ -43,9 +43,6 @@ public class InsuranceConfiguration : IEntityTypeConfiguration<Insurance>
         builder.Property(e => e.ContactInfo)
             .HasMaxLength(500);
             
-        builder.Property(e => e.IsActive)
-            .HasDefaultValue(true);
-            
         builder.HasOne(e => e.Vehicle)
             .WithOne(e => e.Insurance)
             .HasForeignKey<Insurance>(e => e.VehicleId)
