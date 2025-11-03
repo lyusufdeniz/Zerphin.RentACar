@@ -21,10 +21,8 @@ public static class ServiceCollectionExtensions
         // Specific Repositories
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVehicleRepository, VehicleRepository>();
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IRentalRepository, RentalRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
-        services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
 
         // Services
@@ -32,8 +30,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserContext, UserContext>();
         services.AddScoped<ICloudinaryService, CloudinaryService>();
-        services.AddScoped<IInvoiceNumberGenerator, InvoiceNumberGeneratorService>();
 
+        // Background Services
+        services.AddHostedService<Services.RentalExpirationService>();
 
         return services;
     }
