@@ -30,9 +30,6 @@ public class CreateVehicleValidator : AbstractValidator<CreateVehicleCommand>
         RuleFor(x => x.Category)
             .IsInEnum().WithMessage("Invalid vehicle category");
 
-        RuleFor(x => x.Status)
-            .IsInEnum().WithMessage("Invalid vehicle status");
-
         RuleFor(x => x.DailyRentalPrice)
             .GreaterThan(0).WithMessage("Daily rental price must be greater than 0");
 

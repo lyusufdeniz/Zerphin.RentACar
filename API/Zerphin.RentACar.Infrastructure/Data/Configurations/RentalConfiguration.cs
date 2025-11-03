@@ -41,7 +41,7 @@ public class RentalConfiguration : IEntityTypeConfiguration<Rental>
             .HasMaxLength(500);
             
         builder.Property(e => e.Status)
-            .HasDefaultValue(RentalStatus.Pending);
+            .HasDefaultValue(RentalStatus.Active);
             
         builder.HasOne(e => e.Customer)
             .WithMany(e => e.Rentals)

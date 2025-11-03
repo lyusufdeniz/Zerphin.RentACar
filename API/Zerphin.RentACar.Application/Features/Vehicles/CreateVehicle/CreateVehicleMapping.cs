@@ -1,5 +1,6 @@
 using AutoMapper;
 using Zerphin.RentACar.Domain.Entities;
+using Zerphin.RentACar.Domain.ValueObjects;
 
 namespace Zerphin.RentACar.Application.Features.Vehicles.CreateVehicle;
 
@@ -10,6 +11,7 @@ public class CreateVehicleMapping : Profile
         CreateMap<CreateVehicleCommand, Vehicle>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => VehicleStatus.Available)) // Status is always Available by default, managed by system
             .ForMember(dest => dest.Rentals, opt => opt.Ignore())
             .ForMember(dest => dest.Insurance, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())

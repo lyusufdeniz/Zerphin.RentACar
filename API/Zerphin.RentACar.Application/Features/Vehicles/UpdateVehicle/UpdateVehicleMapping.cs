@@ -9,6 +9,7 @@ public class UpdateVehicleMapping : Profile
     {
         CreateMap<UpdateVehicleCommand, Vehicle>()
             .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())
+            .ForMember(dest => dest.Status, opt => opt.Ignore()) // Status can only be updated by system (rentals)
             .ForMember(dest => dest.Rentals, opt => opt.Ignore())
             .ForMember(dest => dest.Insurance, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())

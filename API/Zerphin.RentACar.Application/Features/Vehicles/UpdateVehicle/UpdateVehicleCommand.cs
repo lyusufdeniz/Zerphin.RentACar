@@ -13,7 +13,6 @@ public class UpdateVehicleCommand : IRequest<ServiceResult<UpdateVehicleResponse
     public int Year { get; set; }
     public string Color { get; set; } = string.Empty;
     public VehicleCategory Category { get; set; }
-    public VehicleStatus Status { get; set; }
     public decimal DailyRentalPrice { get; set; }
     public int SeatingCapacity { get; set; }
     public string? FuelType { get; set; }

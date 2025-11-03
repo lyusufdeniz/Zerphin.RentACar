@@ -29,16 +29,12 @@ public class GetVehicleStatisticsHandler : IRequestHandler<GetVehicleStatisticsC
         // Duruma göre araç sayıları
         response.AvailableVehicles = await _vehicleRepository.CountAsync(v => v.Status == VehicleStatus.Available);
         response.RentedVehicles = await _vehicleRepository.CountAsync(v => v.Status == VehicleStatus.Rented);
-        response.MaintenanceVehicles = await _vehicleRepository.CountAsync(v => v.Status == VehicleStatus.Maintenance);
-        response.OutOfServiceVehicles = await _vehicleRepository.CountAsync(v => v.Status == VehicleStatus.OutOfService);
 
         // Durum istatistikleri
         response.StatusStatistics = new List<VehicleStatusStatistics>
         {
             new() { Status = VehicleStatus.Available, StatusName = "Müsait", Count = response.AvailableVehicles },
-            new() { Status = VehicleStatus.Rented, StatusName = "Kiralanmış", Count = response.RentedVehicles },
-            new() { Status = VehicleStatus.Maintenance, StatusName = "Bakımda", Count = response.MaintenanceVehicles },
-            new() { Status = VehicleStatus.OutOfService, StatusName = "Hizmet Dışı", Count = response.OutOfServiceVehicles }
+            new() { Status = VehicleStatus.Rented, StatusName = "Kiralanmış", Count = response.RentedVehicles }
         };
 
         // Kategoriye göre araç sayıları
