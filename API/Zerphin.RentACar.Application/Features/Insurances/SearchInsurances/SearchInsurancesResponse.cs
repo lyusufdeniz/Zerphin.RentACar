@@ -20,7 +20,6 @@ public class SearchInsurancesResponse
         public decimal? CoverageLimit { get; set; }
         public decimal? Deductible { get; set; }
         public string? CoverageDetails { get; set; }
-        public bool IsActive { get; set; }
         public string? ContactInfo { get; set; }
         public Guid VehicleId { get; set; }
         public string? VehicleBrand { get; set; }
@@ -28,5 +27,6 @@ public class SearchInsurancesResponse
         public string? VehicleLicensePlate { get; set; }
     }
 }
+
 
 

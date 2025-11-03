@@ -7,3 +7,4 @@ public class GetInsuranceStatisticsCommand : IRequest<ServiceResult<GetInsurance
 {
 }
 
+

@@ -23,18 +23,11 @@ public class SearchInsurancesHandler : IRequestHandler<SearchInsurancesCommand, 
     {
         Expression<Func<Insurance, bool>>? predicate = null;
 
-        if (request.VehicleId.HasValue)
+        if (!string.IsNullOrWhiteSpace(request.LicensePlate))
         {
-            var vehicleId = request.VehicleId.Value;
-            Expression<Func<Insurance, bool>> vehicleFilter = i => i.VehicleId == vehicleId;
-            predicate = predicate == null ? vehicleFilter : CombineExpressions(predicate, vehicleFilter);
-        }
-
-        if (request.IsActive.HasValue)
-        {
-            var isActive = request.IsActive.Value;
-            Expression<Func<Insurance, bool>> activeFilter = i => i.IsActive == isActive;
-            predicate = predicate == null ? activeFilter : CombineExpressions(predicate, activeFilter);
+            var licensePlate = request.LicensePlate.Trim();
+            Expression<Func<Insurance, bool>> licensePlateFilter = i => i.Vehicle != null && i.Vehicle.LicensePlate.Contains(licensePlate);
+            predicate = predicate == null ? licensePlateFilter : CombineExpressions(predicate, licensePlateFilter);
         }
 
         if (request.StartDateFrom.HasValue)
@@ -150,5 +143,6 @@ public class SearchInsurancesHandler : IRequestHandler<SearchInsurancesCommand, 
         };
     }
 }
+
 
 

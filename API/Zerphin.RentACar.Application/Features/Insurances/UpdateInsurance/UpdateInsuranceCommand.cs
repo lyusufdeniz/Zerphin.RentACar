@@ -15,8 +15,8 @@ public class UpdateInsuranceCommand : IRequest<ServiceResult<UpdateInsuranceResp
     public decimal? CoverageLimit { get; set; }
     public decimal? Deductible { get; set; }
     public string? CoverageDetails { get; set; }
-    public bool IsActive { get; set; }
     public string? ContactInfo { get; set; }
 }
+
 
 

@@ -9,3 +9,4 @@ public class GetInsuranceStatisticsResponse
     public decimal TotalPremiumAmount { get; set; }
 }
 
+

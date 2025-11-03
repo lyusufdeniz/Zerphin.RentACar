@@ -7,8 +7,7 @@ public class SearchInsurancesCommand : IRequest<ServiceResult<SearchInsurancesRe
 {
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 10;
-    public Guid? VehicleId { get; set; }
-    public bool? IsActive { get; set; }
+    public string? LicensePlate { get; set; }
     public DateTime? StartDateFrom { get; set; }
     public DateTime? StartDateTo { get; set; }
     public DateTime? EndDateFrom { get; set; }
@@ -17,5 +16,6 @@ public class SearchInsurancesCommand : IRequest<ServiceResult<SearchInsurancesRe
     public string? OrderBy { get; set; } = "Id";
     public bool IsDescending { get; set; } = false;
 }
+
 
 

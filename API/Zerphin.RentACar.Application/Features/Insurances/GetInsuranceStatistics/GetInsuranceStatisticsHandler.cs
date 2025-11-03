@@ -19,9 +19,9 @@ public class GetInsuranceStatisticsHandler : IRequestHandler<GetInsuranceStatist
         var response = new GetInsuranceStatisticsResponse();
 
         response.TotalInsurances = await _insuranceRepository.CountAsync();
-        response.ActiveInsurances = await _insuranceRepository.CountAsync(i => i.IsActive && i.EndDate >= DateTime.UtcNow);
         
         var now = DateTime.UtcNow;
+        response.ActiveInsurances = await _insuranceRepository.CountAsync(i => i.StartDate <= now && i.EndDate >= now);
         response.ExpiredInsurances = await _insuranceRepository.CountAsync(i => i.EndDate < now);
         response.ExpiringSoonInsurances = await _insuranceRepository.CountAsync(i => i.EndDate >= now && i.EndDate <= now.AddDays(30));
 
@@ -35,4 +35,5 @@ public class GetInsuranceStatisticsHandler : IRequestHandler<GetInsuranceStatist
         return ServiceResult<GetInsuranceStatisticsResponse>.Success(response);
     }
 }
+
 
