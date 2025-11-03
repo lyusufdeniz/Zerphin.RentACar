@@ -12,3 +12,4 @@ public class GetInvoiceStatisticsResponse
     public decimal OverdueAmount { get; set; }
 }
 
+

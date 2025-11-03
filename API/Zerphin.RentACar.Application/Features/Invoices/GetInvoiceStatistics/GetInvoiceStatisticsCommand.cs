@@ -7,3 +7,4 @@ public class GetInvoiceStatisticsCommand : IRequest<ServiceResult<GetInvoiceStat
 {
 }
 
+
