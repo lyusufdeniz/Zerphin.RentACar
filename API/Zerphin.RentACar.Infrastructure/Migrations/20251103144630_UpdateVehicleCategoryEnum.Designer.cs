@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zerphin.RentACar.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Zerphin.RentACar.Infrastructure.Data;
 namespace Zerphin.RentACar.Infrastructure.Migrations
 {
     [DbContext(typeof(RentACarDbContext))]
-    partial class RentACarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251103144630_UpdateVehicleCategoryEnum")]
+    partial class UpdateVehicleCategoryEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,6 +162,11 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -599,7 +607,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Address = "Istanbul, Turkey",
                             BirthDate = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 15, 21, 27, 237, DateTimeKind.Utc).AddTicks(7797),
+                            CreatedAt = new DateTime(2025, 11, 3, 14, 46, 27, 997, DateTimeKind.Utc).AddTicks(6858),
                             CreatedBy = "System",
                             Email = "admin@zerphinrentacar.com",
                             FirstName = "Admin",
@@ -607,7 +615,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "User",
-                            PasswordHash = "d9Cn5nwiM9dCDCCDDduoQh0bUbrrC3qRCmEgAErtlbf5KIzLHPe4U2FMZUUjc/I4",
+                            PasswordHash = "HNs8kNtSm/Pd7QBLfuXkWwT3pKUavIadI8FUU5Ec3Fb6TsuUCgF8EgPBy73jGvZC",
                             PhoneNumber = "+905551234567",
                             Role = 4
                         },
@@ -616,7 +624,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             Address = "Ankara, Turkey",
                             BirthDate = new DateTime(1988, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 15, 21, 27, 239, DateTimeKind.Utc).AddTicks(5602),
+                            CreatedAt = new DateTime(2025, 11, 3, 14, 46, 27, 999, DateTimeKind.Utc).AddTicks(5496),
                             CreatedBy = "System",
                             Email = "manager@zerphinrentacar.com",
                             FirstName = "Manager",
@@ -624,7 +632,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "User",
-                            PasswordHash = "hKZY5PqUzzQH7rXQhjAjZglHA+8l7JkJaOPtfiK9C477PgaiUP0FA9XSAFLqVahY",
+                            PasswordHash = "tG5ShKsnB/jts7hILNcRQlzykqOGsSgReTZkIdlIaLMMmUHQsSbTTH5asYorBipJ",
                             PhoneNumber = "+905551234568",
                             Role = 3
                         },
@@ -633,7 +641,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             Address = "Izmir, Turkey",
                             BirthDate = new DateTime(1990, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 15, 21, 27, 241, DateTimeKind.Utc).AddTicks(2424),
+                            CreatedAt = new DateTime(2025, 11, 3, 14, 46, 28, 1, DateTimeKind.Utc).AddTicks(2752),
                             CreatedBy = "System",
                             Email = "employee@zerphinrentacar.com",
                             FirstName = "Employee",
@@ -641,7 +649,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "User",
-                            PasswordHash = "P7hVkoGFjkxOwV8KOIWVYKlwqNU8GNsazjgHfUXoTtHPXB/ig1FIiIwE1ijnM6Wg",
+                            PasswordHash = "XHFqnsJzRGW6E4sld/cVViNan52pCAcaLFvjg9WhyxsmrJ1F0ubIgxi1WYzskB3R",
                             PhoneNumber = "+905551234569",
                             Role = 2
                         },
@@ -650,7 +658,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             Address = "Bursa, Turkey",
                             BirthDate = new DateTime(1992, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 15, 21, 27, 242, DateTimeKind.Utc).AddTicks(9323),
+                            CreatedAt = new DateTime(2025, 11, 3, 14, 46, 28, 3, DateTimeKind.Utc).AddTicks(160),
                             CreatedBy = "System",
                             Email = "john.doe@email.com",
                             FirstName = "John",
@@ -658,7 +666,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Doe",
-                            PasswordHash = "W5itn9+OrnvFx2KDbwi408wqOP/NS7Z8B+T1NtuKBUCMX0kSQNyEDs2s/JVTRkOf",
+                            PasswordHash = "kU9lg2dE+CWF6beaM2sLefvWSsy9fD+GuYtDbpT6U+fkSWMZSDV6XPgX+dTiv4DW",
                             PhoneNumber = "+905551234570",
                             Role = 1
                         },
@@ -667,7 +675,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
                             Address = "Antalya, Turkey",
                             BirthDate = new DateTime(1995, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 15, 21, 27, 244, DateTimeKind.Utc).AddTicks(6216),
+                            CreatedAt = new DateTime(2025, 11, 3, 14, 46, 28, 4, DateTimeKind.Utc).AddTicks(6965),
                             CreatedBy = "System",
                             Email = "jane.smith@email.com",
                             FirstName = "Jane",
@@ -675,7 +683,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsActive = true,
                             IsDeleted = false,
                             LastName = "Smith",
-                            PasswordHash = "WAdwcCGlKcnic9zZ3BJAgD4zX5/0TlvxfqDfx5puYvUb0hR1eHpWppa8xD+e79K2",
+                            PasswordHash = "1f6zmO6RsFg5bHFxDlbD1fi3v4PHw2b2ls5pdH6PP7P7L7I2KZMHfFDYsdYzuSqi",
                             PhoneNumber = "+905551234571",
                             Role = 1
                         });
