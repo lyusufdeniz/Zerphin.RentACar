@@ -22,7 +22,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IRentalRepository, RentalRepository>();
-        services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IInsuranceRepository, InsuranceRepository>();
 
         // Services

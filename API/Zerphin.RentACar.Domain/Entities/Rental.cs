@@ -35,5 +35,4 @@ public class Rental : BaseEntity
     
     public virtual User Customer { get; set; } = null!;
     public virtual Vehicle Vehicle { get; set; } = null!;
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }
