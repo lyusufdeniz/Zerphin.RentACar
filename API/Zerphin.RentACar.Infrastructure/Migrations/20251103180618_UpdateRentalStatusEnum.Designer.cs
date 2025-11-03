@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zerphin.RentACar.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Zerphin.RentACar.Infrastructure.Data;
 namespace Zerphin.RentACar.Infrastructure.Migrations
 {
     [DbContext(typeof(RentACarDbContext))]
-    partial class RentACarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251103180618_UpdateRentalStatusEnum")]
+    partial class UpdateRentalStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,6 +101,104 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Insurances");
+                });
+
+            modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BillingAddress")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerEmail")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CustomerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CustomerTaxNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("TaxAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("TaxNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceNumber")
+                        .IsUnique();
+
+                    b.HasIndex("RentalId")
+                        .IsUnique();
+
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Payment", b =>
@@ -457,7 +558,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Address = "Istanbul, Turkey",
                             BirthDate = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 18, 30, 22, 379, DateTimeKind.Utc).AddTicks(1381),
+                            CreatedAt = new DateTime(2025, 11, 3, 18, 6, 17, 572, DateTimeKind.Utc).AddTicks(2775),
                             CreatedBy = "System",
                             CreditScore = 0,
                             Email = "admin@zerphinrentacar.com",
@@ -468,7 +569,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsDeleted = false,
                             IsVerified = false,
                             LastName = "User",
-                            PasswordHash = "nJaDz/B4PIIqm5YvVXVe9PyxNfLoHXbNSWJz/LlOVUdGfhXWd12/qyDQhr5hv+nn",
+                            PasswordHash = "N5AN7t/ei0ZRlRcGeb4yx3W81tWYEBmh4U1uROjXMwXRJ6TzAMfg84WATyyt3ChH",
                             PhoneNumber = "+905551234567",
                             Role = 4
                         },
@@ -477,7 +578,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             Address = "Ankara, Turkey",
                             BirthDate = new DateTime(1988, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 18, 30, 22, 381, DateTimeKind.Utc).AddTicks(2785),
+                            CreatedAt = new DateTime(2025, 11, 3, 18, 6, 17, 574, DateTimeKind.Utc).AddTicks(2320),
                             CreatedBy = "System",
                             CreditScore = 0,
                             Email = "manager@zerphinrentacar.com",
@@ -488,7 +589,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsDeleted = false,
                             IsVerified = false,
                             LastName = "User",
-                            PasswordHash = "qL3aRRGgvDjUeo0Cx2wNRN8bHpvwX9EG9+e0T43/tPmrCg1Tcesd64JY9ODlJq7s",
+                            PasswordHash = "ACEHxfOGBsvw6Xzix0idj6ic0sPepJjj94TI95rO/njQPduF3kfJwHptjlRUNvc3",
                             PhoneNumber = "+905551234568",
                             Role = 3
                         },
@@ -497,7 +598,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             Address = "Izmir, Turkey",
                             BirthDate = new DateTime(1990, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 18, 30, 22, 383, DateTimeKind.Utc).AddTicks(1179),
+                            CreatedAt = new DateTime(2025, 11, 3, 18, 6, 17, 576, DateTimeKind.Utc).AddTicks(3237),
                             CreatedBy = "System",
                             CreditScore = 0,
                             Email = "employee@zerphinrentacar.com",
@@ -508,7 +609,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsDeleted = false,
                             IsVerified = false,
                             LastName = "User",
-                            PasswordHash = "CBAR6njPwfWTKw5lSmIZegiUHl+VSFBtjJgsevGAtA6VnMQD4lecOsbuEFOOR4xy",
+                            PasswordHash = "TL0tbKevmTYUL0cfGcqM5ory2sCA+eee09mVML+QF7xEBtWqCZfcBuR+Bnk15TO0",
                             PhoneNumber = "+905551234569",
                             Role = 2
                         },
@@ -517,7 +618,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             Address = "Bursa, Turkey",
                             BirthDate = new DateTime(1992, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 18, 30, 22, 385, DateTimeKind.Utc).AddTicks(4397),
+                            CreatedAt = new DateTime(2025, 11, 3, 18, 6, 17, 578, DateTimeKind.Utc).AddTicks(576),
                             CreatedBy = "System",
                             CreditScore = 0,
                             Email = "john.doe@email.com",
@@ -528,7 +629,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsDeleted = false,
                             IsVerified = false,
                             LastName = "Doe",
-                            PasswordHash = "qev7L23CvD32lZpBWH9foujs1NJBGdrCipn+WEUutoaCNP3ln2mTpbfKirpM5aHw",
+                            PasswordHash = "yjZAHO7mWrJutHymDw11lKDxIkEFNLpAJJqVNXvjDQm9k4gYc0kCWbzW3qixJsES",
                             PhoneNumber = "+905551234570",
                             Role = 1
                         },
@@ -537,7 +638,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
                             Address = "Antalya, Turkey",
                             BirthDate = new DateTime(1995, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2025, 11, 3, 18, 30, 22, 387, DateTimeKind.Utc).AddTicks(2080),
+                            CreatedAt = new DateTime(2025, 11, 3, 18, 6, 17, 580, DateTimeKind.Utc).AddTicks(769),
                             CreatedBy = "System",
                             CreditScore = 0,
                             Email = "jane.smith@email.com",
@@ -548,7 +649,7 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                             IsDeleted = false,
                             IsVerified = false,
                             LastName = "Smith",
-                            PasswordHash = "Nv0EcsALDrYg2EpBrb0//HCv5jzZMQIO2DHfU5gbb4VMcEuKsBcO647UqtCBYSEz",
+                            PasswordHash = "Nez2Twm3UHWb5zdZEXQx5+94ZxeeZIeiBt79rLSAgakylFXWgLw1XpkjLVuqricU",
                             PhoneNumber = "+905551234571",
                             Role = 1
                         });
@@ -672,6 +773,17 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Invoice", b =>
+                {
+                    b.HasOne("Zerphin.RentACar.Domain.Entities.Rental", "Rental")
+                        .WithOne("Invoice")
+                        .HasForeignKey("Zerphin.RentACar.Domain.Entities.Invoice", "RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+                });
+
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Payment", b =>
                 {
                     b.HasOne("Zerphin.RentACar.Domain.Entities.Rental", "Rental")
@@ -715,6 +827,8 @@ namespace Zerphin.RentACar.Infrastructure.Migrations
 
             modelBuilder.Entity("Zerphin.RentACar.Domain.Entities.Rental", b =>
                 {
+                    b.Navigation("Invoice");
+
                     b.Navigation("Payments");
                 });
 
