@@ -23,12 +23,9 @@ public class GetRentalStatisticsHandler : IRequestHandler<GetRentalStatisticsCom
         response.TotalRentals = await _rentalRepository.CountAsync();
 
         // Duruma göre sayılar
-        response.PendingRentals = await _rentalRepository.CountAsync(r => r.Status == RentalStatus.Pending);
-        response.ConfirmedRentals = await _rentalRepository.CountAsync(r => r.Status == RentalStatus.Confirmed);
         response.ActiveRentals = await _rentalRepository.CountAsync(r => r.Status == RentalStatus.Active);
         response.CompletedRentals = await _rentalRepository.CountAsync(r => r.Status == RentalStatus.Completed);
         response.CancelledRentals = await _rentalRepository.CountAsync(r => r.Status == RentalStatus.Cancelled);
-        response.OverdueRentals = await _rentalRepository.CountAsync(r => r.Status == RentalStatus.Overdue);
 
         // Toplam gelir ve ortalama
         var rentals = await _rentalRepository.FindAsync(r => true);
@@ -52,20 +49,6 @@ public class GetRentalStatisticsHandler : IRequestHandler<GetRentalStatisticsCom
         {
             new() 
             { 
-                Status = RentalStatus.Pending, 
-                StatusName = "Beklemede", 
-                Count = response.PendingRentals,
-                TotalAmount = rentalList.Where(r => r.Status == RentalStatus.Pending).Sum(r => r.TotalAmount)
-            },
-            new() 
-            { 
-                Status = RentalStatus.Confirmed, 
-                StatusName = "Onaylandı", 
-                Count = response.ConfirmedRentals,
-                TotalAmount = rentalList.Where(r => r.Status == RentalStatus.Confirmed).Sum(r => r.TotalAmount)
-            },
-            new() 
-            { 
                 Status = RentalStatus.Active, 
                 StatusName = "Aktif", 
                 Count = response.ActiveRentals,
@@ -74,7 +57,7 @@ public class GetRentalStatisticsHandler : IRequestHandler<GetRentalStatisticsCom
             new() 
             { 
                 Status = RentalStatus.Completed, 
-                StatusName = "Tamamlandı", 
+                StatusName = "Bitti", 
                 Count = response.CompletedRentals,
                 TotalAmount = rentalList.Where(r => r.Status == RentalStatus.Completed).Sum(r => r.TotalAmount)
             },
@@ -84,13 +67,6 @@ public class GetRentalStatisticsHandler : IRequestHandler<GetRentalStatisticsCom
                 StatusName = "İptal Edildi", 
                 Count = response.CancelledRentals,
                 TotalAmount = rentalList.Where(r => r.Status == RentalStatus.Cancelled).Sum(r => r.TotalAmount)
-            },
-            new() 
-            { 
-                Status = RentalStatus.Overdue, 
-                StatusName = "Süresi Geçmiş", 
-                Count = response.OverdueRentals,
-                TotalAmount = rentalList.Where(r => r.Status == RentalStatus.Overdue).Sum(r => r.TotalAmount)
             }
         };
 

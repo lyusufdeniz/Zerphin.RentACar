@@ -16,7 +16,6 @@ public class CreateRentalMapping : Profile
             .ForMember(dest => dest.Customer, opt => opt.Ignore())
             .ForMember(dest => dest.Vehicle, opt => opt.Ignore())
             .ForMember(dest => dest.Payments, opt => opt.Ignore())
-            .ForMember(dest => dest.Invoice, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())

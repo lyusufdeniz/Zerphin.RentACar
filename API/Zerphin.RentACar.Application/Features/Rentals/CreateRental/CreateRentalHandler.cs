@@ -3,6 +3,7 @@ using MediatR;
 using System.Net;
 using Zerphin.RentACar.Application.Common;
 using Zerphin.RentACar.Domain.Contracts.Repositories;
+using Zerphin.RentACar.Domain.ValueObjects;
 
 namespace Zerphin.RentACar.Application.Features.Rentals.CreateRental;
 
@@ -65,6 +66,14 @@ public class CreateRentalHandler : IRequestHandler<CreateRentalCommand, ServiceR
         // Create rental entity
         var rental = _mapper.Map<Domain.Entities.Rental>(request);
         var createdRental = await _rentalRepository.AddAsync(rental);
+
+        // Update vehicle status based on rental status
+        // If rental is Active, set vehicle to Rented
+        if (rental.Status == RentalStatus.Active)
+        {
+            vehicle.Status = VehicleStatus.Rented;
+            await _vehicleRepository.UpdateAsync(vehicle);
+        }
 
         await _unitOfWork.SaveChangesAsync();
 

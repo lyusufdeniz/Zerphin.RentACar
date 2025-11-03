@@ -18,7 +18,7 @@ public class Rental : BaseEntity
     
     public decimal? DamageFee { get; set; }
     
-    public RentalStatus Status { get; set; } = RentalStatus.Pending;
+    public RentalStatus Status { get; set; } = RentalStatus.Active;
     
     public string? Notes { get; set; }
     
@@ -36,5 +36,4 @@ public class Rental : BaseEntity
     public virtual User Customer { get; set; } = null!;
     public virtual Vehicle Vehicle { get; set; } = null!;
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-    public virtual Invoice? Invoice { get; set; }
 }

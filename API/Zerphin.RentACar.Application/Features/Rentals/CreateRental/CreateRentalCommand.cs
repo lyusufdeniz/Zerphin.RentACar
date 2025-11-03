@@ -10,7 +10,7 @@ public class CreateRentalCommand : IRequest<ServiceResult<CreateRentalResponse>>
     public DateTime EndDate { get; set; }
     public decimal DailyRate { get; set; }
     public decimal TotalAmount { get; set; }
-    public RentalStatus Status { get; set; } = RentalStatus.Pending;
+    public RentalStatus Status { get; set; } = RentalStatus.Active;
     public string? Notes { get; set; }
     public string? PickupLocation { get; set; }
     public string? ReturnLocation { get; set; }
