@@ -1,0 +1,75 @@
+<div class="customer-select">
+  <!-- Search -->
+  <div class="search-section">
+    <div class="search-input-wrapper">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="search()"
+        placeholder="Ad, soyad, email, telefon veya ehliyet no ile ara..."
+        class="search-input"
+      />
+      <button class="btn-primary search-btn" (click)="search()" type="button">
+        Ara
+      </button>
+      <button
+        class="btn-secondary clear-btn"
+        (click)="clearSearch()"
+        type="button"
+        *ngIf="searchQuery"
+      >
+        Temizle
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Müşteriler yükleniyor...</p>
+  </div>
+
+  <!-- Customers List -->
+  <div *ngIf="!isLoading" class="customers-list">
+    <div
+      *ngFor="let customer of customers"
+      class="customer-item"
+      (click)="selectCustomer(customer)"
+    >
+      <div class="customer-info">
+        <div class="customer-name">{{ getCustomerDisplayName(customer) }}</div>
+        <div class="customer-details">{{ getCustomerDetailsText(customer) }}</div>
+      </div>
+      <div class="customer-id">
+        <small>{{ customer.id }}</small>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="customers.length === 0" class="empty-state">
+      <p>Müşteri bulunamadı</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1 && !isLoading" class="pagination">
+    <button
+      class="pagination-btn"
+      [disabled]="currentPage === 1"
+      (click)="changePage(currentPage - 1)"
+    >
+      Önceki
+    </button>
+    <span class="pagination-info">
+      Sayfa {{ currentPage }} / {{ totalPages }} (Toplam: {{ totalCount }})
+    </span>
+    <button
+      class="pagination-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="changePage(currentPage + 1)"
+    >
+      Sonraki
+    </button>
+  </div>
+</div>
+

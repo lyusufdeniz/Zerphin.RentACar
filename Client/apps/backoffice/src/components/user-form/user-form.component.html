@@ -1,0 +1,320 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+  <div class="form-grid">
+    <!-- First Name -->
+    <div class="form-group">
+      <label for="firstName" class="form-label">Ad <span class="required">*</span></label>
+      <input
+        id="firstName"
+        type="text"
+        formControlName="firstName"
+        class="form-input"
+        [class.error]="hasError('firstName', 'required') || hasError('firstName', 'maxlength')"
+        placeholder="Ad"
+      />
+      <div class="error-message" *ngIf="hasError('firstName', 'required') || hasError('firstName', 'maxlength')">
+        {{ getErrorMessage('firstName') }}
+      </div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-group">
+      <label for="lastName" class="form-label">Soyad <span class="required">*</span></label>
+      <input
+        id="lastName"
+        type="text"
+        formControlName="lastName"
+        class="form-input"
+        [class.error]="hasError('lastName', 'required') || hasError('lastName', 'maxlength')"
+        placeholder="Soyad"
+      />
+      <div class="error-message" *ngIf="hasError('lastName', 'required') || hasError('lastName', 'maxlength')">
+        {{ getErrorMessage('lastName') }}
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email" class="form-label">Email <span class="required">*</span></label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="form-input"
+        [class.error]="hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'maxlength')"
+        placeholder="email@example.com"
+      />
+      <div class="error-message" *ngIf="hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'maxlength')">
+        {{ getErrorMessage('email') }}
+      </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="form-group">
+      <label for="phoneNumber" class="form-label">Telefon <span class="required">*</span></label>
+      <input
+        id="phoneNumber"
+        type="text"
+        formControlName="phoneNumber"
+        class="form-input"
+        [class.error]="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')"
+        placeholder="+905551234567"
+      />
+      <div class="error-message" *ngIf="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')">
+        {{ getErrorMessage('phoneNumber') }}
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group" *ngIf="!isEditMode">
+      <label for="password" class="form-label">Şifre <span class="required">*</span></label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        class="form-input"
+        [class.error]="hasError('password', 'required') || hasError('password', 'minlength') || hasError('password', 'pattern')"
+        placeholder="Minimum 8 karakter (büyük/küçük harf, rakam, özel karakter)"
+      />
+      <div class="error-message" *ngIf="hasError('password', 'required') || hasError('password', 'minlength') || hasError('password', 'pattern')">
+        {{ getErrorMessage('password') }}
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="form-group">
+      <label for="role" class="form-label">Rol <span class="required">*</span></label>
+      <select id="role" formControlName="role" class="form-input">
+        <option *ngFor="let role of roles" [ngValue]="role">
+          {{ getRoleName(role) }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group full-width">
+      <label for="address" class="form-label">Adres</label>
+      <textarea
+        id="address"
+        formControlName="address"
+        class="form-input"
+        [class.error]="hasError('address', 'maxlength')"
+        rows="3"
+        placeholder="Adres"
+      ></textarea>
+      <div class="error-message" *ngIf="hasError('address', 'maxlength')">
+        {{ getErrorMessage('address') }}
+      </div>
+    </div>
+
+    <!-- Identity Number -->
+    <div class="form-group">
+      <label for="identityNumber" class="form-label">TC Kimlik No</label>
+      <input
+        id="identityNumber"
+        type="text"
+        formControlName="identityNumber"
+        class="form-input"
+        [class.error]="hasError('identityNumber', 'maxlength')"
+        placeholder="TC Kimlik No"
+        maxlength="11"
+      />
+      <div class="error-message" *ngIf="hasError('identityNumber', 'maxlength')">
+        {{ getErrorMessage('identityNumber') }}
+      </div>
+    </div>
+
+    <!-- Birth Date -->
+    <div class="form-group">
+      <app-datepicker
+        label="Doğum Tarihi"
+        formControlName="birthDate"
+      ></app-datepicker>
+      <div class="error-message" *ngIf="hasError('birthDate', 'minimumAge')">
+        {{ getErrorMessage('birthDate') }}
+      </div>
+    </div>
+
+    <!-- Customer Fields Section -->
+    <ng-container *ngIf="isCustomerRole() && !isEditMode">
+      <div class="form-group full-width">
+        <h3 class="section-title">Müşteri Bilgileri</h3>
+      </div>
+
+      <!-- License Number -->
+      <div class="form-group">
+        <label for="licenseNumber" class="form-label">Ehliyet Numarası</label>
+        <input
+          id="licenseNumber"
+          type="text"
+          formControlName="licenseNumber"
+          class="form-input"
+          [class.error]="hasError('licenseNumber', 'maxlength')"
+          placeholder="Ehliyet numarası"
+        />
+        <div class="error-message" *ngIf="hasError('licenseNumber', 'maxlength')">
+          {{ getErrorMessage('licenseNumber') }}
+        </div>
+      </div>
+
+      <!-- License Expiry Date -->
+      <div class="form-group">
+        <app-datepicker
+          label="Ehliyet Geçerlilik Tarihi"
+          formControlName="licenseExpiryDate"
+          [required]="true"
+        ></app-datepicker>
+        <div class="error-message" *ngIf="hasError('licenseExpiryDate', 'required')">
+          {{ getErrorMessage('licenseExpiryDate') }}
+        </div>
+      </div>
+
+      <!-- License Class -->
+      <div class="form-group">
+        <label for="licenseClass" class="form-label">Ehliyet Sınıfı</label>
+        <input
+          id="licenseClass"
+          type="text"
+          formControlName="licenseClass"
+          class="form-input"
+          [class.error]="hasError('licenseClass', 'maxlength')"
+          placeholder="B, B1, vb."
+        />
+        <div class="error-message" *ngIf="hasError('licenseClass', 'maxlength')">
+          {{ getErrorMessage('licenseClass') }}
+        </div>
+      </div>
+
+      <!-- Emergency Contact Name -->
+      <div class="form-group">
+        <label for="emergencyContactName" class="form-label">Acil Durum İletişim Adı</label>
+        <input
+          id="emergencyContactName"
+          type="text"
+          formControlName="emergencyContactName"
+          class="form-input"
+          [class.error]="hasError('emergencyContactName', 'maxlength')"
+          placeholder="Acil durum kişi adı"
+        />
+        <div class="error-message" *ngIf="hasError('emergencyContactName', 'maxlength')">
+          {{ getErrorMessage('emergencyContactName') }}
+        </div>
+      </div>
+
+      <!-- Emergency Contact Phone -->
+      <div class="form-group">
+        <label for="emergencyContactPhone" class="form-label">Acil Durum İletişim Telefonu</label>
+        <input
+          id="emergencyContactPhone"
+          type="text"
+          formControlName="emergencyContactPhone"
+          class="form-input"
+          [class.error]="hasError('emergencyContactPhone', 'maxlength')"
+          placeholder="0555 123 45 67"
+        />
+        <div class="error-message" *ngIf="hasError('emergencyContactPhone', 'maxlength')">
+          {{ getErrorMessage('emergencyContactPhone') }}
+        </div>
+      </div>
+
+      <!-- Credit Score -->
+      <div class="form-group">
+        <label for="creditScore" class="form-label">Kredi Skoru <span class="required">*</span></label>
+        <input
+          id="creditScore"
+          type="number"
+          formControlName="creditScore"
+          class="form-input"
+          [class.error]="hasError('creditScore', 'required') || hasError('creditScore', 'min') || hasError('creditScore', 'max')"
+          placeholder="0"
+          min="0"
+          max="1000"
+        />
+        <div class="error-message" *ngIf="hasError('creditScore', 'required') || hasError('creditScore', 'min') || hasError('creditScore', 'max')">
+          {{ getErrorMessage('creditScore') }}
+        </div>
+      </div>
+
+      <!-- Is Verified -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="isVerified"
+          />
+          <span>Doğrulandı</span>
+        </label>
+      </div>
+
+      <!-- Has Insurance -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="hasInsurance"
+          />
+          <span>Sigortası Var</span>
+        </label>
+      </div>
+
+      <!-- Insurance Company -->
+      <div class="form-group" *ngIf="userForm.get('hasInsurance')?.value">
+        <label for="insuranceCompany" class="form-label">Sigorta Şirketi</label>
+        <input
+          id="insuranceCompany"
+          type="text"
+          formControlName="insuranceCompany"
+          class="form-input"
+          [class.error]="hasError('insuranceCompany', 'maxlength')"
+          placeholder="Sigorta şirketi adı"
+        />
+        <div class="error-message" *ngIf="hasError('insuranceCompany', 'maxlength')">
+          {{ getErrorMessage('insuranceCompany') }}
+        </div>
+      </div>
+
+      <!-- Insurance Policy Number -->
+      <div class="form-group" *ngIf="userForm.get('hasInsurance')?.value">
+        <label for="insurancePolicyNumber" class="form-label">Sigorta Poliçe Numarası</label>
+        <input
+          id="insurancePolicyNumber"
+          type="text"
+          formControlName="insurancePolicyNumber"
+          class="form-input"
+          [class.error]="hasError('insurancePolicyNumber', 'maxlength')"
+          placeholder="Poliçe numarası"
+        />
+        <div class="error-message" *ngIf="hasError('insurancePolicyNumber', 'maxlength')">
+          {{ getErrorMessage('insurancePolicyNumber') }}
+        </div>
+      </div>
+
+      <!-- Special Notes -->
+      <div class="form-group full-width">
+        <label for="specialNotes" class="form-label">Özel Notlar</label>
+        <textarea
+          id="specialNotes"
+          formControlName="specialNotes"
+          class="form-input"
+          [class.error]="hasError('specialNotes', 'maxlength')"
+          rows="4"
+          placeholder="Özel notlar..."
+        ></textarea>
+        <div class="error-message" *ngIf="hasError('specialNotes', 'maxlength')">
+          {{ getErrorMessage('specialNotes') }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Form Footer -->
+  <div modal-footer class="form-footer">
+    <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">
+      İptal
+    </button>
+    <button type="submit" class="btn-primary" [disabled]="isLoading">
+      <span *ngIf="isLoading">Kaydediliyor...</span>
+      <span *ngIf="!isLoading">{{ isEditMode ? 'Güncelle' : 'Kaydet' }}</span>
+    </button>
+  </div>
+</form>
+

@@ -1,0 +1,42 @@
+<div class="swal-backdrop" (click)="onBackdropClick($event)">
+  <div class="swal-modal" [class]="'swal-' + type">
+    <div class="swal-icon">
+      <svg
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        [style.color]="getIconColor()"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          [attr.d]="getIconPath()"
+        />
+      </svg>
+    </div>
+    
+    <h2 class="swal-title">{{ title }}</h2>
+    
+    <p class="swal-text" *ngIf="text">{{ text }}</p>
+    
+    <div class="swal-actions">
+      <button
+        *ngIf="showCancelButton"
+        class="swal-button swal-button-cancel"
+        (click)="onCancel()"
+        [style.background-color]="cancelButtonColor"
+      >
+        {{ cancelButtonText }}
+      </button>
+      <button
+        class="swal-button swal-button-confirm"
+        (click)="onConfirm()"
+        [style.background-color]="confirmButtonColor"
+      >
+        {{ confirmButtonText }}
+      </button>
+    </div>
+  </div>
+</div>
+

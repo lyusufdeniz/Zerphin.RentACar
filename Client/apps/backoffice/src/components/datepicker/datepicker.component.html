@@ -1,0 +1,188 @@
+<div class="datepicker-wrapper">
+  <label *ngIf="label" class="datepicker-label">
+    {{ label }}
+    <span *ngIf="required" class="required">*</span>
+  </label>
+  
+  <div class="datepicker-input-wrapper" [class.disabled]="disabled">
+    <input
+      type="date"
+      #dateInput
+      [value]="value"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [min]="min"
+      [max]="max"
+      (input)="onInputChange($event)"
+      (blur)="onTouched()"
+      class="datepicker-hidden-input"
+    />
+    
+    <div
+      class="datepicker-display"
+      (click)="toggleCalendar()"
+      [class.disabled]="disabled"
+      [class.has-value]="displayValue"
+    >
+      <span class="datepicker-display-text" *ngIf="displayValue">{{ displayValue }}</span>
+      <span class="datepicker-placeholder" *ngIf="!displayValue">{{ placeholder }}</span>
+      <svg
+        class="datepicker-icon"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <div class="datepicker-dropdown" #dropdown *ngIf="isOpen && !disabled">
+    <!-- Year Picker View -->
+    <div *ngIf="showYearPicker" class="datepicker-year-view">
+      <div class="datepicker-header">
+        <button
+          type="button"
+          class="datepicker-nav-btn"
+          (click)="previousMonth()"
+          aria-label="Önceki yıllar"
+        >
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="datepicker-nav-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        
+        <div class="datepicker-year-range">
+          {{ yearList[0] }} - {{ yearList[yearList.length - 1] }}
+        </div>
+        
+        <button
+          type="button"
+          class="datepicker-nav-btn"
+          (click)="nextMonth()"
+          aria-label="Sonraki yıllar"
+        >
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="datepicker-nav-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </div>
+      
+      <div class="datepicker-years-grid" #yearGrid>
+        <button
+          *ngFor="let year of yearList"
+          type="button"
+          class="datepicker-year-item"
+          [class.today]="isCurrentYear(year)"
+          [class.selected]="isSelectedYear(year)"
+          (click)="selectYear(year)"
+        >
+          {{ year }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Month/Calendar View -->
+    <div *ngIf="!showYearPicker">
+      <div class="datepicker-header">
+        <button
+          type="button"
+          class="datepicker-nav-btn"
+          (click)="previousMonth()"
+          aria-label="Önceki ay"
+        >
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="datepicker-nav-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        
+        <div class="datepicker-month-year">
+          <span class="datepicker-month">{{ months[currentMonth] }}</span>
+          <span class="datepicker-year clickable" (click)="toggleYearPicker()">{{ currentYear }}</span>
+        </div>
+        
+        <button
+          type="button"
+          class="datepicker-nav-btn"
+          (click)="nextMonth()"
+          aria-label="Sonraki ay"
+        >
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            class="datepicker-nav-icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div class="datepicker-weekdays">
+        <div
+          *ngFor="let day of weekDays"
+          class="datepicker-weekday"
+        >
+          {{ day }}
+        </div>
+      </div>
+
+      <div class="datepicker-days">
+        <button
+          *ngFor="let day of calendarDays; let i = index"
+          type="button"
+          class="datepicker-day"
+          [class.today]="isToday(day)"
+          [class.selected]="isSelected(day)"
+          [class.disabled]="isDisabled(day)"
+          [class.empty]="day === null"
+          (click)="selectDate(day!)"
+          [disabled]="day === null || isDisabled(day)"
+        >
+          {{ day }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

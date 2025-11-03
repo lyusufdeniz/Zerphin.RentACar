@@ -1,0 +1,145 @@
+<div class="user-detail">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Kullanıcı detayları yükleniyor...</p>
+  </div>
+
+  <!-- User Details -->
+  <div *ngIf="!isLoading && user" class="detail-content">
+    <div class="detail-grid">
+      <!-- Basic Information -->
+      <div class="detail-section">
+        <h3>Kişisel Bilgiler</h3>
+        <div class="detail-item">
+          <span class="detail-label">Ad:</span>
+          <span class="detail-value">{{ user.firstName }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Soyad:</span>
+          <span class="detail-value">{{ user.lastName }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">{{ user.email }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.phoneNumber">
+          <span class="detail-label">Telefon:</span>
+          <span class="detail-value">{{ user.phoneNumber }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.identityNumber">
+          <span class="detail-label">TC Kimlik No:</span>
+          <span class="detail-value">{{ user.identityNumber }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.birthDate">
+          <span class="detail-label">Doğum Tarihi:</span>
+          <span class="detail-value">{{ formatDate(user.birthDate) }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.address">
+          <span class="detail-label">Adres:</span>
+          <span class="detail-value">{{ user.address }}</span>
+        </div>
+      </div>
+
+      <!-- Account Information -->
+      <div class="detail-section">
+        <h3>Hesap Bilgileri</h3>
+        <div class="detail-item">
+          <span class="detail-label">Rol:</span>
+          <span class="detail-value">
+            <span class="badge category">{{ getRoleName(user.role) }}</span>
+          </span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Durum:</span>
+          <span class="detail-value">
+            <span 
+              class="badge status" 
+              [class.status-active]="user.isActive"
+              [class.status-expired]="!user.isActive"
+            >
+              {{ user.isActive ? 'Aktif' : 'Pasif' }}
+            </span>
+          </span>
+        </div>
+        <div class="detail-item" *ngIf="user.createdAt">
+          <span class="detail-label">Oluşturma Tarihi:</span>
+          <span class="detail-value">{{ formatDateTime(user.createdAt) }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.updatedAt">
+          <span class="detail-label">Güncelleme Tarihi:</span>
+          <span class="detail-value">{{ formatDateTime(user.updatedAt) }}</span>
+        </div>
+      </div>
+
+      <!-- Customer Information (if user is customer) -->
+      <div class="detail-section" *ngIf="user.role === 1">
+        <h3>Müşteri Bilgileri</h3>
+        <div class="detail-item" *ngIf="user.licenseNumber">
+          <span class="detail-label">Ehliyet Numarası:</span>
+          <span class="detail-value">{{ user.licenseNumber }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.licenseExpiryDate">
+          <span class="detail-label">Ehliyet Geçerlilik Tarihi:</span>
+          <span class="detail-value">{{ formatDate(user.licenseExpiryDate) }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.licenseClass">
+          <span class="detail-label">Ehliyet Sınıfı:</span>
+          <span class="detail-value">{{ user.licenseClass }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.emergencyContactName">
+          <span class="detail-label">Acil Durum İletişim Adı:</span>
+          <span class="detail-value">{{ user.emergencyContactName }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.emergencyContactPhone">
+          <span class="detail-label">Acil Durum İletişim Telefonu:</span>
+          <span class="detail-value">{{ user.emergencyContactPhone }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.isVerified !== undefined">
+          <span class="detail-label">Doğrulanmış mı?</span>
+          <span class="detail-value">
+            <span 
+              class="badge status" 
+              [class.status-active]="user.isVerified"
+              [class.status-expired]="!user.isVerified"
+            >
+              {{ user.isVerified ? 'Evet' : 'Hayır' }}
+            </span>
+          </span>
+        </div>
+        <div class="detail-item" *ngIf="user.verificationDate">
+          <span class="detail-label">Doğrulama Tarihi:</span>
+          <span class="detail-value">{{ formatDateTime(user.verificationDate) }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.creditScore !== undefined">
+          <span class="detail-label">Kredi Skoru:</span>
+          <span class="detail-value">{{ user.creditScore }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.hasInsurance">
+          <span class="detail-label">Sigortası Var mı?</span>
+          <span class="detail-value">
+            <span class="badge status status-active">Evet</span>
+          </span>
+        </div>
+        <div class="detail-item" *ngIf="user.insuranceCompany">
+          <span class="detail-label">Sigorta Şirketi:</span>
+          <span class="detail-value">{{ user.insuranceCompany }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.insurancePolicyNumber">
+          <span class="detail-label">Poliçe Numarası:</span>
+          <span class="detail-value">{{ user.insurancePolicyNumber }}</span>
+        </div>
+        <div class="detail-item" *ngIf="user.specialNotes">
+          <span class="detail-label">Özel Notlar:</span>
+          <span class="detail-value">{{ user.specialNotes }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !user" class="empty-state">
+    <p>Kullanıcı detayları bulunamadı</p>
+  </div>
+</div>
+
