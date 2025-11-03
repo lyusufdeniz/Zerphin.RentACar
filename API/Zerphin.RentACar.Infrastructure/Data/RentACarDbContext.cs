@@ -15,11 +15,9 @@ public class RentACarDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<Customer> Customers { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Rental> Rentals { get; set; }
     public DbSet<Payment> Payments { get; set; }
-    public DbSet<Invoice> Invoices { get; set; }
     public DbSet<Insurance> Insurances { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
