@@ -20,7 +20,6 @@ public class UpdateUserMapping : Profile
             .ForMember(dest => dest.DeletedBy, opt => opt.Ignore())
             .ForMember(dest => dest.Role, opt => opt.Ignore())
             .ForMember(dest => dest.Rentals, opt => opt.Ignore())
-            .ForMember(dest => dest.Customer, opt => opt.Ignore())
             .ForMember(dest => dest.RefreshTokens, opt => opt.Ignore());
 
         CreateMap<User, UpdateUserResponse>()

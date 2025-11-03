@@ -45,5 +45,39 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             
         builder.Property(e => e.IsActive)
             .HasDefaultValue(true);
+            
+        // Customer Details
+        builder.Property(e => e.LicenseNumber)
+            .HasMaxLength(20);
+            
+        builder.Property(e => e.LicenseClass)
+            .HasMaxLength(50);
+            
+        builder.Property(e => e.EmergencyContactName)
+            .HasMaxLength(100);
+            
+        builder.Property(e => e.EmergencyContactPhone)
+            .HasMaxLength(20);
+            
+        builder.Property(e => e.SpecialNotes)
+            .HasMaxLength(500);
+            
+        builder.Property(e => e.VerificationDocument)
+            .HasMaxLength(100);
+            
+        builder.Property(e => e.InsuranceCompany)
+            .HasMaxLength(100);
+            
+        builder.Property(e => e.InsurancePolicyNumber)
+            .HasMaxLength(50);
+            
+        builder.Property(e => e.IsVerified)
+            .HasDefaultValue(false);
+            
+        builder.Property(e => e.CreditScore)
+            .HasDefaultValue(0);
+            
+        builder.Property(e => e.HasInsurance)
+            .HasDefaultValue(false);
     }
 }

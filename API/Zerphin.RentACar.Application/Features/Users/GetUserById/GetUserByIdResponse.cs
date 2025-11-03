@@ -17,5 +17,20 @@ public class GetUserByIdResponse
     public DateTime? BirthDate { get; set; }
     public DateTime? LastLoginAt { get; set; }
     public DateTime CreatedAt { get; set; }
+    
+    // Customer Details
+    public string? LicenseNumber { get; set; }
+    public DateTime? LicenseExpiryDate { get; set; }
+    public string? LicenseClass { get; set; }
+    public string? EmergencyContactName { get; set; }
+    public string? EmergencyContactPhone { get; set; }
+    public string? SpecialNotes { get; set; }
+    public bool IsVerified { get; set; }
+    public DateTime? VerificationDate { get; set; }
+    public string? VerificationDocument { get; set; }
+    public int CreditScore { get; set; }
+    public bool HasInsurance { get; set; }
+    public string? InsuranceCompany { get; set; }
+    public string? InsurancePolicyNumber { get; set; }
 }
 
