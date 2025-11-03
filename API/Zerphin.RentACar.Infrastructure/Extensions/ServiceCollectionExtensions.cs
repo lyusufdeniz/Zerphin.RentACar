@@ -32,6 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserContext, UserContext>();
         services.AddScoped<ICloudinaryService, CloudinaryService>();
+        services.AddScoped<IInvoiceNumberGenerator, InvoiceNumberGeneratorService>();
 
 
         return services;
