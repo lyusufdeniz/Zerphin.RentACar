@@ -21,7 +21,6 @@ public class RegisterMapping : Profile
             .ForMember(dest => dest.LastLoginAt, opt => opt.Ignore())
             .ForMember(dest => dest.Role, opt => opt.Ignore())
             .ForMember(dest => dest.Rentals, opt => opt.Ignore())
-            .ForMember(dest => dest.Customer, opt => opt.Ignore())
             .ForMember(dest => dest.RefreshTokens, opt => opt.Ignore());
 
         CreateMap<User, RegisterResponse>()
