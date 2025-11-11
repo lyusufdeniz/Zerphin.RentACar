@@ -1,5 +1,4 @@
 import { InvoiceStatus } from './invoice-status.model';
-
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -26,12 +25,10 @@ export interface Invoice {
   createdAt?: string;
   updatedAt?: string;
 }
-
 export interface InvoiceItem {
   id?: string;
   description: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-}
-
+}

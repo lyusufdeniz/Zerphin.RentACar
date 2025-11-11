@@ -12,7 +12,7 @@ export interface User {
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  // Customer fields (if user is customer)
+
   licenseNumber?: string;
   licenseExpiryDate?: string;
   licenseClass?: string;
@@ -27,5 +27,3 @@ export interface User {
   insuranceCompany?: string;
   insurancePolicyNumber?: string;
 }
-
-

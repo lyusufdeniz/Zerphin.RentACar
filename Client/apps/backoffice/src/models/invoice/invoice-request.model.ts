@@ -60,4 +60,3 @@ export interface PaginatedInvoiceResponse {
 export interface DeleteInvoiceCommand {
   id: string;
 }
-

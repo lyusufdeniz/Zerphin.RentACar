@@ -1,3 +1,2 @@
 export * from './customer.model';
-export * from './customer-request.model';
-
+export * from './customer-request.model';

@@ -1,6 +1,4 @@
-/**
- * Vehicle Statistics Response Models
- */
+
 export interface VehicleStatisticsResponse {
   totalVehicles: number;
   availableVehicles: number;
@@ -10,17 +8,13 @@ export interface VehicleStatisticsResponse {
   categoryStatistics: VehicleCategoryStatistics[];
   statusStatistics: VehicleStatusStatistics[];
 }
-
 export interface VehicleCategoryStatistics {
-  category: number; // VehicleCategory enum (1-8)
+  category: number; 
   categoryName: string;
   count: number;
 }
-
 export interface VehicleStatusStatistics {
-  status: number; // VehicleStatus enum (1-4)
+  status: number; 
   statusName: string;
   count: number;
-}
-
-
+}

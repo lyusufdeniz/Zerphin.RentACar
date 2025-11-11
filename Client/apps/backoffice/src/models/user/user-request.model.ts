@@ -87,5 +87,3 @@ export interface PaginatedUserResponse {
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
 }
-
-

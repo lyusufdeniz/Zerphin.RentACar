@@ -1,5 +1,4 @@
 import { RentalStatus } from './rental-status.model';
-
 export interface Rental {
   id: string;
   customerId: string;
@@ -25,5 +24,4 @@ export interface Rental {
   kmAtReturn?: number;
   createdAt?: string;
   updatedAt?: string;
-}
-
+}

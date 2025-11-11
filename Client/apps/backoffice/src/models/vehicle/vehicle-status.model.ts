@@ -7,4 +7,3 @@ export const VehicleStatusNames: Record<VehicleStatus, string> = {
   [VehicleStatus.Available]: 'Müsait',
   [VehicleStatus.Rented]: 'Kiralanmış',
 };
-

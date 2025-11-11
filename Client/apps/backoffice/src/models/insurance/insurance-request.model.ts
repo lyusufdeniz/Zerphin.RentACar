@@ -51,4 +51,3 @@ export interface PaginatedInsuranceResponse {
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
 }
-

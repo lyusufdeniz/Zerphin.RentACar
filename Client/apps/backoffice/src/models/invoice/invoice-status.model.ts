@@ -5,12 +5,10 @@ export enum InvoiceStatus {
   Overdue = 3,
   Cancelled = 4,
 }
-
 export const InvoiceStatusNames: Record<InvoiceStatus, string> = {
   [InvoiceStatus.Draft]: 'Taslak',
   [InvoiceStatus.Sent]: 'Gönderildi',
   [InvoiceStatus.Paid]: 'Ödendi',
   [InvoiceStatus.Overdue]: 'Vadesi Geçti',
   [InvoiceStatus.Cancelled]: 'İptal Edildi',
-};
-
+};

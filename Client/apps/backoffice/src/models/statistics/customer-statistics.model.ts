@@ -1,6 +1,4 @@
-/**
- * Customer Statistics Response Models
- */
+
 export interface CustomerStatisticsResponse {
   totalCustomers: number;
   verifiedCustomers: number;
@@ -8,6 +6,4 @@ export interface CustomerStatisticsResponse {
   customersWithInsurance: number;
   newCustomersLast30Days: number;
   averageCreditScore: number;
-}
-
-
+}

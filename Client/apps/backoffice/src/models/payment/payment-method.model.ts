@@ -5,12 +5,10 @@ export enum PaymentMethod {
   BankTransfer = 4,
   Other = 5,
 }
-
 export const PaymentMethodNames: Record<PaymentMethod, string> = {
   [PaymentMethod.Cash]: 'Nakit',
   [PaymentMethod.CreditCard]: 'Kredi Kartı',
   [PaymentMethod.DebitCard]: 'Banka Kartı',
   [PaymentMethod.BankTransfer]: 'Banka Transferi',
   [PaymentMethod.Other]: 'Diğer',
-};
-
+};

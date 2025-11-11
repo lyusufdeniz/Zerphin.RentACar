@@ -24,4 +24,3 @@ export interface Vehicle {
   createdAt?: string;
   updatedAt?: string;
 }
-

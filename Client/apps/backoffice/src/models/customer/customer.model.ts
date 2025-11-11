@@ -21,5 +21,4 @@ export interface Customer {
   insurancePolicyNumber?: string;
   createdAt?: string;
   updatedAt?: string;
-}
-
+}

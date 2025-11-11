@@ -16,9 +16,8 @@ export interface Insurance {
   deductible?: number;
   coverageDetails?: string;
   contactInfo?: string;
-  status?: InsuranceStatus; // Optional - can be calculated from dates
+  status?: InsuranceStatus; 
   notes?: string;
   createdAt?: string;
   updatedAt?: string;
 }
-

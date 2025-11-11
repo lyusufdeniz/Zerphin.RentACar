@@ -1,5 +1,4 @@
 import { Customer } from './customer.model';
-
 export interface CreateCustomerCommand {
   userId: string;
   licenseNumber?: string;
@@ -16,7 +15,6 @@ export interface CreateCustomerCommand {
   insuranceCompany?: string;
   insurancePolicyNumber?: string;
 }
-
 export interface UpdateCustomerCommand {
   id: string;
   licenseNumber?: string;
@@ -33,7 +31,6 @@ export interface UpdateCustomerCommand {
   insuranceCompany?: string;
   insurancePolicyNumber?: string;
 }
-
 export interface CustomerSearchParams {
   PageNumber?: number;
   PageSize?: number;
@@ -46,7 +43,6 @@ export interface CustomerSearchParams {
   OrderBy?: string;
   IsDescending?: boolean;
 }
-
 export interface PaginatedCustomerResponse {
   customers: Customer[];
   totalCount: number;
@@ -55,5 +51,4 @@ export interface PaginatedCustomerResponse {
   totalPages: number;
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
-}
-
+}

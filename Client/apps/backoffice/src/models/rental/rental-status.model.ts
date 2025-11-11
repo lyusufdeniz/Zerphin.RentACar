@@ -9,4 +9,3 @@ export const RentalStatusNames: Record<RentalStatus, string> = {
   [RentalStatus.Completed]: 'Tamamlandı',
   [RentalStatus.Cancelled]: 'İptal Edildi',
 };
-

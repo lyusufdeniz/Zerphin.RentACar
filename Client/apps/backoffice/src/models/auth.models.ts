@@ -22,10 +22,8 @@ export interface LoginUserResponse {
   roleName: string;
 }
 
-// Backward compatibility - keep UserResponse as alias
 export type UserResponse = LoginUserResponse;
 
-// RegisterRequest uses the same structure as CreateUserCommand
 export type RegisterRequest = CreateUserCommand;
 
 export interface RefreshTokenRequest {
@@ -38,6 +36,5 @@ export interface RefreshTokenResponse {
   expiresAt: string;
 }
 
-// Re-export for backward compatibility
 export { UserRole };
 export type { ServiceResult };

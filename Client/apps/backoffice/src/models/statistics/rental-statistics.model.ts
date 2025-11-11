@@ -1,6 +1,4 @@
-/**
- * Rental Statistics Response Models
- */
+
 export interface RentalStatisticsResponse {
   totalRentals: number;
   totalRevenue: number;
@@ -15,20 +13,16 @@ export interface RentalStatisticsResponse {
   statusStatistics: RentalStatusStatistics[];
   monthlyStatistics: RentalMonthlyStatistics[];
 }
-
 export interface RentalStatusStatistics {
-  status: number; // RentalStatus enum (1-6)
+  status: number; 
   statusName: string;
   count: number;
   totalAmount: number;
 }
-
 export interface RentalMonthlyStatistics {
   year: number;
   month: number;
   monthName: string;
   count: number;
   totalRevenue: number;
-}
-
-
+}

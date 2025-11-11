@@ -6,7 +6,6 @@ export enum PaymentStatus {
   Refunded = 5,
   Cancelled = 6,
 }
-
 export const PaymentStatusNames: Record<PaymentStatus, string> = {
   [PaymentStatus.Pending]: 'Beklemede',
   [PaymentStatus.Processing]: 'İşleniyor',
@@ -14,5 +13,4 @@ export const PaymentStatusNames: Record<PaymentStatus, string> = {
   [PaymentStatus.Failed]: 'Başarısız',
   [PaymentStatus.Refunded]: 'İade Edildi',
   [PaymentStatus.Cancelled]: 'İptal Edildi',
-};
-
+};

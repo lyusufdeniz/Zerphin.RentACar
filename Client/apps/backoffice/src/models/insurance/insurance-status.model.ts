@@ -4,11 +4,9 @@ export enum InsuranceStatus {
   ExpiringSoon = 3,
   Cancelled = 4,
 }
-
 export const InsuranceStatusNames: Record<InsuranceStatus, string> = {
   [InsuranceStatus.Active]: 'Aktif',
   [InsuranceStatus.Expired]: 'Süresi Dolmuş',
   [InsuranceStatus.ExpiringSoon]: 'Yakında Bitecek',
   [InsuranceStatus.Cancelled]: 'İptal Edilmiş',
-};
-
+};

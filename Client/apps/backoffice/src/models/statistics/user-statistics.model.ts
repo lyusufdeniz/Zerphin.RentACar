@@ -1,6 +1,4 @@
-/**
- * User Statistics Response Models
- */
+
 export interface UserStatisticsResponse {
   totalUsers: number;
   activeUsers: number;
@@ -8,11 +6,8 @@ export interface UserStatisticsResponse {
   newUsersLast30Days: number;
   roleStatistics: UserRoleStatistics[];
 }
-
 export interface UserRoleStatistics {
-  role: number; // UserRole enum (1-4)
+  role: number; 
   roleName: string;
   count: number;
-}
-
-
+}

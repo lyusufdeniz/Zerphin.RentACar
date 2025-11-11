@@ -1,6 +1,4 @@
-/**
- * Invoice Statistics Response Models
- */
+
 export interface InvoiceStatisticsResponse {
   totalInvoices: number;
   paidInvoices: number;
@@ -10,6 +8,4 @@ export interface InvoiceStatisticsResponse {
   unpaidAmount: number;
   overdueInvoices: number;
   overdueAmount: number;
-}
-
-
+}

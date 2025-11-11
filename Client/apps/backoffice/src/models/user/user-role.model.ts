@@ -4,12 +4,9 @@ export enum UserRole {
   Manager = 3,
   Admin = 4,
 }
-
 export const UserRoleNames: Record<UserRole, string> = {
   [UserRole.Customer]: 'Müşteri',
   [UserRole.Employee]: 'Çalışan',
   [UserRole.Manager]: 'Yönetici',
   [UserRole.Admin]: 'Admin',
-};
-
-
+};

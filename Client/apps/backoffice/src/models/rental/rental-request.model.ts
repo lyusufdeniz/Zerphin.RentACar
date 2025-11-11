@@ -1,6 +1,5 @@
 import { Rental } from './rental.model';
 import { RentalStatus } from './rental-status.model';
-
 export interface CreateRentalCommand {
   customerId: string;
   vehicleId: string;
@@ -14,7 +13,6 @@ export interface CreateRentalCommand {
   returnLocation?: string;
   kmAtStart?: number;
 }
-
 export interface UpdateRentalCommand {
   id: string;
   startDate: string;
@@ -30,16 +28,18 @@ export interface UpdateRentalCommand {
   kmAtStart?: number;
   kmAtReturn?: number;
 }
-
 export interface UpdateRentalStatusCommand {
   id: string;
   status: RentalStatus;
 }
-
 export interface RentalSearchParams {
   PageNumber?: number;
   PageSize?: number;
   CustomerId?: string;
+  CustomerIdentityNumber?: string;
+  CustomerLicenseNumber?: string;
+  CustomerFirstName?: string;
+  CustomerLastName?: string;
   VehicleId?: string;
   Status?: RentalStatus;
   StartDateFrom?: string;
@@ -49,7 +49,6 @@ export interface RentalSearchParams {
   OrderBy?: string;
   IsDescending?: boolean;
 }
-
 export interface PaginatedRentalResponse {
   rentals: Rental[];
   totalCount: number;
@@ -58,5 +57,4 @@ export interface PaginatedRentalResponse {
   totalPages: number;
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
-}
-
+}

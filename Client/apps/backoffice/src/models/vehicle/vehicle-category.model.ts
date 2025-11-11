@@ -11,4 +11,3 @@ export const VehicleCategoryNames: Record<VehicleCategory, string> = {
   [VehicleCategory.SUV]: 'SUV',
   [VehicleCategory.Pickup]: 'Pickup',
 };
-
