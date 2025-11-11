@@ -1,8 +1,8 @@
 <form [formGroup]="rentalForm" (ngSubmit)="onSubmit()" class="rental-form">
   <div class="form-grid">
-    <!-- Customer Selection -->
+
     <div class="form-group">
-      <label for="customerId" class="form-label">Müşteri <span class="required">*</span></label>
+      <label for="customerId" class="form-label">{{ translations().customer }} <span class="required">*</span></label>
       <div class="customer-select-wrapper" *ngIf="!isEditMode">
         <button
           type="button"
@@ -11,7 +11,7 @@
           (click)="openCustomerSelectModal()"
         >
           <span *ngIf="selectedCustomer">{{ getSelectedCustomerText() }}</span>
-          <span *ngIf="!selectedCustomer">Müşteri Seç</span>
+          <span *ngIf="!selectedCustomer">{{ translations().customerSelect }}</span>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="select-icon">
             <path
               stroke-linecap="round"
@@ -26,7 +26,7 @@
           type="button"
           class="btn-clear-customer"
           (click)="clearSelectedCustomer()"
-          title="Seçimi Temizle"
+          [title]="translations().clearSelection"
         >
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -50,7 +50,7 @@
         formControlName="customerId"
         class="form-input"
         [class.error]="hasError('customerId', 'required')"
-        placeholder="Müşteri ID"
+        [placeholder]="translations().customerId"
         readonly
       />
       <div class="error-message" *ngIf="hasError('customerId', 'required')">
@@ -62,9 +62,8 @@
       </div>
     </div>
 
-    <!-- Vehicle Selection -->
     <div class="form-group">
-      <label for="vehicleId" class="form-label">Araç <span class="required">*</span></label>
+      <label for="vehicleId" class="form-label">{{ translations().vehicle }} <span class="required">*</span></label>
       <div class="customer-select-wrapper" *ngIf="!isEditMode">
         <button
           type="button"
@@ -73,7 +72,7 @@
           (click)="openVehicleSelectModal()"
         >
           <span *ngIf="selectedVehicle">{{ getSelectedVehicleText() }}</span>
-          <span *ngIf="!selectedVehicle">Araç Seç</span>
+          <span *ngIf="!selectedVehicle">{{ translations().vehicleSelect }}</span>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="select-icon">
             <path
               stroke-linecap="round"
@@ -88,7 +87,7 @@
           type="button"
           class="btn-clear-customer"
           (click)="clearSelectedVehicle()"
-          title="Seçimi Temizle"
+          [title]="translations().clearSelection"
         >
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -112,7 +111,7 @@
         formControlName="vehicleId"
         class="form-input"
         [class.error]="hasError('vehicleId', 'required')"
-        placeholder="Araç ID"
+        [placeholder]="translations().vehicleId"
         readonly
       />
       <div class="error-message" *ngIf="hasError('vehicleId', 'required')">
@@ -125,10 +124,9 @@
       </div>
     </div>
 
-    <!-- Start Date -->
     <div class="form-group">
       <app-datepicker
-        label="Başlangıç Tarihi"
+        [label]="translations().startDate"
         formControlName="startDate"
         [required]="true"
       ></app-datepicker>
@@ -137,10 +135,9 @@
       </div>
     </div>
 
-    <!-- End Date -->
     <div class="form-group">
       <app-datepicker
-        label="Bitiş Tarihi"
+        [label]="translations().endDate"
         formControlName="endDate"
         [required]="true"
       ></app-datepicker>
@@ -149,16 +146,15 @@
       </div>
     </div>
 
-    <!-- Daily Rate -->
     <div class="form-group">
-      <label for="dailyRate" class="form-label">Günlük Fiyat (TL) <span class="required">*</span></label>
+      <label for="dailyRate" class="form-label">{{ translations().dailyRate }} <span class="required">*</span></label>
       <input
         id="dailyRate"
         type="number"
         formControlName="dailyRate"
         class="form-input"
         [class.error]="hasError('dailyRate', 'required') || hasError('dailyRate', 'min')"
-        placeholder="0.00"
+        [placeholder]="translations().dailyRatePlaceholder"
         step="0.01"
         min="0"
         readonly
@@ -167,20 +163,19 @@
         {{ getErrorMessage('dailyRate') }}
       </div>
       <div class="hint-text" *ngIf="selectedVehicle">
-        Araç seçildiğinde otomatik olarak doldurulur
+        {{ translations().dailyRateHint }}
       </div>
     </div>
 
-    <!-- Total Amount -->
     <div class="form-group">
-      <label for="totalAmount" class="form-label">Toplam Tutar (TL) <span class="required">*</span></label>
+      <label for="totalAmount" class="form-label">{{ translations().totalAmount }} <span class="required">*</span></label>
       <input
         id="totalAmount"
         type="number"
         formControlName="totalAmount"
         class="form-input"
         [class.error]="hasError('totalAmount', 'required') || hasError('totalAmount', 'min')"
-        placeholder="0.00"
+        [placeholder]="translations().totalAmountPlaceholder"
         step="0.01"
         min="0"
         readonly
@@ -188,13 +183,11 @@
       <div class="error-message" *ngIf="hasError('totalAmount', 'required') || hasError('totalAmount', 'min')">
         {{ getErrorMessage('totalAmount') }}
       </div>
-      <small class="hint-text">Tarih ve günlük fiyata göre otomatik hesaplanır</small>
+      <small class="hint-text">{{ translations().totalAmountHint }}</small>
     </div>
 
-
-    <!-- Actual Return Date (only for edit) -->
     <div class="form-group" *ngIf="isEditMode">
-      <label for="actualReturnDate" class="form-label">Gerçek İade Tarihi</label>
+      <label for="actualReturnDate" class="form-label">{{ translations().actualReturnDate }}</label>
       <input
         id="actualReturnDate"
         type="datetime-local"
@@ -203,44 +196,41 @@
       />
     </div>
 
-    <!-- Late Fee (only for edit) -->
     <div class="form-group" *ngIf="isEditMode">
-      <label for="lateFee" class="form-label">Gecikme Ücreti (TL)</label>
+      <label for="lateFee" class="form-label">{{ translations().lateFee }}</label>
       <input
         id="lateFee"
         type="number"
         formControlName="lateFee"
         class="form-input"
-        placeholder="0.00"
+        [placeholder]="translations().lateFeePlaceholder"
         step="0.01"
         min="0"
       />
     </div>
 
-    <!-- Damage Fee (only for edit) -->
     <div class="form-group" *ngIf="isEditMode">
-      <label for="damageFee" class="form-label">Hasar Ücreti (TL)</label>
+      <label for="damageFee" class="form-label">{{ translations().damageFee }}</label>
       <input
         id="damageFee"
         type="number"
         formControlName="damageFee"
         class="form-input"
-        placeholder="0.00"
+        [placeholder]="translations().damageFeePlaceholder"
         step="0.01"
         min="0"
       />
     </div>
 
-    <!-- KM At Start -->
     <div class="form-group">
-      <label for="kmAtStart" class="form-label">Başlangıç KM</label>
+      <label for="kmAtStart" class="form-label">{{ translations().kmAtStart }}</label>
       <input
         id="kmAtStart"
         type="number"
         formControlName="kmAtStart"
         class="form-input"
         [class.error]="hasError('kmAtStart', 'min')"
-        placeholder="0"
+        [placeholder]="translations().kmAtStartPlaceholder"
         min="0"
       />
       <div class="error-message" *ngIf="hasError('kmAtStart', 'min')">
@@ -248,62 +238,58 @@
       </div>
     </div>
 
-    <!-- KM At Return (only for edit) -->
     <div class="form-group" *ngIf="isEditMode">
-      <label for="kmAtReturn" class="form-label">İade KM</label>
+      <label for="kmAtReturn" class="form-label">{{ translations().kmAtReturn }}</label>
       <input
         id="kmAtReturn"
         type="number"
         formControlName="kmAtReturn"
         class="form-input"
-        placeholder="0"
+        [placeholder]="translations().kmAtReturnPlaceholder"
         min="0"
         [value]="rental?.kmAtReturn || ''"
       />
     </div>
 
-    <!-- Pickup Location -->
     <div class="form-group">
-      <label for="pickupLocation" class="form-label">Teslim Konumu</label>
+      <label for="pickupLocation" class="form-label">{{ translations().pickupLocation }}</label>
       <input
         id="pickupLocation"
         type="text"
         formControlName="pickupLocation"
         class="form-input"
         [class.error]="hasError('pickupLocation', 'maxlength')"
-        placeholder="Teslim konumu..."
+        [placeholder]="translations().pickupLocationPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('pickupLocation', 'maxlength')">
         {{ getErrorMessage('pickupLocation') }}
       </div>
     </div>
 
-    <!-- Return Location -->
     <div class="form-group">
-      <label for="returnLocation" class="form-label">İade Konumu</label>
+      <label for="returnLocation" class="form-label">{{ translations().returnLocation }}</label>
       <input
         id="returnLocation"
         type="text"
         formControlName="returnLocation"
         class="form-input"
         [class.error]="hasError('returnLocation', 'maxlength')"
-        placeholder="İade konumu..."
+        [placeholder]="translations().returnLocationPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('returnLocation', 'maxlength')">
         {{ getErrorMessage('returnLocation') }}
       </div>
     </div>
 
-    <!-- Notes -->
     <div class="form-group full-width">
-      <label for="notes" class="form-label">Notlar</label>
+      <label for="notes" class="form-label">{{ translations().notes }}</label>
       <textarea
         id="notes"
         formControlName="notes"
         class="form-input"
         [class.error]="hasError('notes', 'maxlength')"
         rows="4"
-        placeholder="Kiralama ile ilgili notlar..."
+        [placeholder]="translations().notesPlaceholder"
       ></textarea>
       <div class="error-message" *ngIf="hasError('notes', 'maxlength')">
         {{ getErrorMessage('notes') }}
@@ -311,15 +297,13 @@
     </div>
   </div>
 
-  <!-- Form Footer -->
   <div modal-footer class="form-footer">
     <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">
-      İptal
+      {{ translations().cancel }}
     </button>
     <button type="submit" class="btn-primary" [disabled]="isLoading">
-      <span *ngIf="isLoading">Kaydediliyor...</span>
-      <span *ngIf="!isLoading">{{ isEditMode ? 'Güncelle' : 'Kaydet' }}</span>
+      <span *ngIf="isLoading">{{ translations().saving }}</span>
+      <span *ngIf="!isLoading">{{ isEditMode ? translations().update : translations().save }}</span>
     </button>
   </div>
 </form>
-

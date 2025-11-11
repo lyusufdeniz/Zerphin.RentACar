@@ -3,13 +3,13 @@
     {{ label }}
     <span *ngIf="required" class="required">*</span>
   </label>
-  
+
   <div class="datepicker-input-wrapper" [class.disabled]="disabled">
     <input
       type="date"
       #dateInput
       [value]="value"
-      [placeholder]="placeholder"
+      [placeholder]="translations().placeholder"
       [disabled]="disabled"
       [min]="min"
       [max]="max"
@@ -17,7 +17,7 @@
       (blur)="onTouched()"
       class="datepicker-hidden-input"
     />
-    
+
     <div
       class="datepicker-display"
       (click)="toggleCalendar()"
@@ -25,7 +25,7 @@
       [class.has-value]="displayValue"
     >
       <span class="datepicker-display-text" *ngIf="displayValue">{{ displayValue }}</span>
-      <span class="datepicker-placeholder" *ngIf="!displayValue">{{ placeholder }}</span>
+      <span class="datepicker-placeholder" *ngIf="!displayValue">{{ translations().placeholder }}</span>
       <svg
         class="datepicker-icon"
         fill="none"
@@ -43,14 +43,14 @@
   </div>
 
   <div class="datepicker-dropdown" #dropdown *ngIf="isOpen && !disabled">
-    <!-- Year Picker View -->
+
     <div *ngIf="showYearPicker" class="datepicker-year-view">
       <div class="datepicker-header">
         <button
           type="button"
           class="datepicker-nav-btn"
           (click)="previousMonth()"
-          aria-label="Önceki yıllar"
+          [attr.aria-label]="translations().previousYears"
         >
           <svg
             fill="none"
@@ -66,16 +66,16 @@
             />
           </svg>
         </button>
-        
+
         <div class="datepicker-year-range">
           {{ yearList[0] }} - {{ yearList[yearList.length - 1] }}
         </div>
-        
+
         <button
           type="button"
           class="datepicker-nav-btn"
           (click)="nextMonth()"
-          aria-label="Sonraki yıllar"
+          [attr.aria-label]="translations().nextYears"
         >
           <svg
             fill="none"
@@ -92,7 +92,7 @@
           </svg>
         </button>
       </div>
-      
+
       <div class="datepicker-years-grid" #yearGrid>
         <button
           *ngFor="let year of yearList"
@@ -107,14 +107,13 @@
       </div>
     </div>
 
-    <!-- Month/Calendar View -->
     <div *ngIf="!showYearPicker">
       <div class="datepicker-header">
         <button
           type="button"
           class="datepicker-nav-btn"
           (click)="previousMonth()"
-          aria-label="Önceki ay"
+          [attr.aria-label]="translations().previousMonth"
         >
           <svg
             fill="none"
@@ -130,17 +129,17 @@
             />
           </svg>
         </button>
-        
+
         <div class="datepicker-month-year">
-          <span class="datepicker-month">{{ months[currentMonth] }}</span>
+          <span class="datepicker-month">{{ translations().months[currentMonth] }}</span>
           <span class="datepicker-year clickable" (click)="toggleYearPicker()">{{ currentYear }}</span>
         </div>
-        
+
         <button
           type="button"
           class="datepicker-nav-btn"
           (click)="nextMonth()"
-          aria-label="Sonraki ay"
+          [attr.aria-label]="translations().nextMonth"
         >
           <svg
             fill="none"
@@ -160,7 +159,7 @@
 
       <div class="datepicker-weekdays">
         <div
-          *ngFor="let day of weekDays"
+          *ngFor="let day of translations().weekDays"
           class="datepicker-weekday"
         >
           {{ day }}
@@ -185,4 +184,3 @@
     </div>
   </div>
 </div>
-

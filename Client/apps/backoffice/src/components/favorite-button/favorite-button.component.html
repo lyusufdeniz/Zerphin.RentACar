@@ -2,7 +2,7 @@
   class="favorite-btn"
   [class.favorited]="isFavorite"
   [class.loading]="isLoading"
-  [title]="isFavorite ? 'Favorilerden Kaldır' : 'Favorilere Ekle'"
+  [title]="isFavorite ? translations().remove : translations().add"
   (click)="toggleFavorite($event)"
   type="button"
 >
@@ -21,9 +21,7 @@
     />
   </svg>
   <span class="favorite-text" *ngIf="!isLoading">
-    {{ isFavorite ? 'Favorilerden Kaldır' : 'Favorilere Ekle' }}
+    {{ isFavorite ? translations().remove : translations().add }}
   </span>
-  <span class="favorite-text loading" *ngIf="isLoading">İşleniyor...</span>
+  <span class="favorite-text loading" *ngIf="isLoading">{{ translations().processing }}</span>
 </button>
-
-

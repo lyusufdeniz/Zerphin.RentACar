@@ -42,10 +42,8 @@ export class ModalComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
 
   ngOnInit() {
-    // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
-    
-    // Focus trap - focus first focusable element
+
     setTimeout(() => {
       const firstFocusable = this.elementRef.nativeElement.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -57,13 +55,9 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Restore body scroll
     document.body.style.overflow = '';
   }
 
-  /**
-   * Handle escape key press
-   */
   @HostListener('document:keydown.escape', ['$event'])
   handleEscape(event: Event) {
     if (this.closeOnEscape && event instanceof KeyboardEvent) {
@@ -71,9 +65,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Handle backdrop click
-   */
   onBackdropClick(event: MouseEvent) {
     if (this.closeOnBackdropClick && event.target === event.currentTarget) {
       this.backdropClick.emit();
@@ -81,18 +72,11 @@ export class ModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Close modal
-   */
   onClose() {
     this.close.emit();
   }
 
-  /**
-   * Get size class
-   */
   getSizeClass(): string {
     return `modal-${this.size}`;
   }
 }
-

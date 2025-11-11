@@ -5,6 +5,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -15,6 +17,7 @@ import {
 } from '../../models/vehicle';
 import { VehicleService } from '../../services/vehicle.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-vehicle-detail',
@@ -28,6 +31,7 @@ export class VehicleDetailComponent implements OnInit {
 
   private vehicleService = inject(VehicleService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   vehicle: Vehicle | null = null;
@@ -36,15 +40,47 @@ export class VehicleDetailComponent implements OnInit {
   categoryNames = VehicleCategoryNames;
   statusNames = VehicleStatusNames;
 
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      loading: this.languageService.translate('messages.details.loading'),
+      generalInfo: this.languageService.translate('messages.details.vehicle.generalInfo'),
+      brand: this.languageService.translate('messages.details.vehicle.brand'),
+      model: this.languageService.translate('messages.details.vehicle.model'),
+      year: this.languageService.translate('messages.details.vehicle.year'),
+      color: this.languageService.translate('messages.details.vehicle.color'),
+      category: this.languageService.translate('messages.details.vehicle.category'),
+      status: this.languageService.translate('messages.details.vehicle.status'),
+      rentalInfo: this.languageService.translate('messages.details.vehicle.rentalInfo'),
+      dailyPrice: this.languageService.translate('messages.details.vehicle.dailyPrice'),
+      seatingCapacity: this.languageService.translate('messages.details.vehicle.seatingCapacity'),
+      person: this.languageService.translate('messages.details.vehicle.person'),
+      technicalInfo: this.languageService.translate('messages.details.vehicle.technicalInfo'),
+      fuelType: this.languageService.translate('messages.details.vehicle.fuelType'),
+      transmission: this.languageService.translate('messages.details.vehicle.transmission'),
+      km: this.languageService.translate('messages.details.vehicle.km'),
+      kmUnit: this.languageService.translate('messages.details.vehicle.kmUnit'),
+      features: this.languageService.translate('messages.details.vehicle.features'),
+      airConditioning: this.languageService.translate('messages.details.vehicle.airConditioning'),
+      gps: this.languageService.translate('messages.details.vehicle.gps'),
+      bluetooth: this.languageService.translate('messages.details.vehicle.bluetooth'),
+      description: this.languageService.translate('messages.details.vehicle.description'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
   ngOnInit() {
     if (this.vehicleId) {
       this.loadVehicle();
     }
   }
 
-  /**
-   * Load vehicle details
-   */
   loadVehicle() {
     this.isLoading = true;
     this.cdr.markForCheck();
@@ -58,37 +94,31 @@ export class VehicleDetailComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        console.error('Araç detayları yüklenirken hata oluştu', error);
+        const errorMsg = this.languageService.translate('messages.details.loadingError.vehicle');
+        console.error(errorMsg, error);
         if (error.errorMessage && Array.isArray(error.errorMessage)) {
           this.toastService.showErrorMessages(error.errorMessage);
         } else {
-          this.toastService.error('Araç detayları yüklenirken hata oluştu');
+          this.toastService.error(errorMsg);
         }
       },
     });
   }
 
-  /**
-   * Get image source
-   */
   getImageSource(): string {
     if (!this.vehicle) return '';
-    
+
     if (this.vehicle.imageUrl) {
       return this.vehicle.imageUrl;
     }
-    
+
     if (this.vehicle.imageBase64) {
       return this.vehicle.imageBase64;
     }
-    
-    // Placeholder image
+
     return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iIzI1MjUyNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NjY2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BcmHDpyBSZXNtaTwvdGV4dD48L3N2Zz4=';
   }
 
-  /**
-   * Get status badge class
-   */
   getStatusClass(status: VehicleStatus): string {
     switch (status) {
       case VehicleStatus.Available:
@@ -100,4 +130,3 @@ export class VehicleDetailComponent implements OnInit {
     }
   }
 }
-

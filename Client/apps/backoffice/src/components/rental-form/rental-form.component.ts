@@ -7,6 +7,8 @@ import {
   EventEmitter,
   inject,
   ChangeDetectorRef,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -27,6 +29,7 @@ import { RentalService } from '../../services/rental.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { ToastService } from '../../services/toast.service';
 import { ModalService } from '../../services/modal.service';
+import { LanguageService } from '../../services/language.service';
 import { CustomerSelectComponent } from '../customer-select/customer-select.component';
 import { VehicleSelectComponent } from '../vehicle-select/vehicle-select.component';
 import { Vehicle } from '../../models/vehicle';
@@ -40,7 +43,7 @@ import { Customer } from '../../models/customer';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RentalFormComponent implements OnInit {
-  @Input() rental?: Rental; // Input for edit mode
+  @Input() rental?: Rental; 
   @Output() saved = new EventEmitter<Rental>();
   @Output() cancelled = new EventEmitter<void>();
 
@@ -58,10 +61,58 @@ export class RentalFormComponent implements OnInit {
   private vehicleService = inject(VehicleService);
   private toastService = inject(ToastService);
   private modalService = inject(ModalService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   selectedCustomer: Customer | null = null;
   selectedVehicle: Vehicle | null = null;
+
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      customer: this.languageService.translate('modals.rental.customer'),
+      customerSelect: this.languageService.translate('modals.rental.customerSelect'),
+      customerId: this.languageService.translate('modals.rental.customerId'),
+      clearSelection: this.languageService.translate('modals.common.clearSelection'),
+      vehicle: this.languageService.translate('modals.rental.vehicle'),
+      vehicleSelect: this.languageService.translate('modals.rental.vehicleSelect'),
+      vehicleId: this.languageService.translate('modals.rental.vehicleId'),
+      startDate: this.languageService.translate('modals.rental.startDate'),
+      endDate: this.languageService.translate('modals.rental.endDate'),
+      dailyRate: this.languageService.translate('modals.rental.dailyRate'),
+      dailyRatePlaceholder: this.languageService.translate('modals.rental.dailyRatePlaceholder'),
+      dailyRateHint: this.languageService.translate('modals.rental.dailyRateHint'),
+      totalAmount: this.languageService.translate('modals.rental.totalAmount'),
+      totalAmountPlaceholder: this.languageService.translate('modals.rental.totalAmountPlaceholder'),
+      totalAmountHint: this.languageService.translate('modals.rental.totalAmountHint'),
+      actualReturnDate: this.languageService.translate('modals.rental.actualReturnDate'),
+      lateFee: this.languageService.translate('modals.rental.lateFee'),
+      lateFeePlaceholder: this.languageService.translate('modals.rental.lateFeePlaceholder'),
+      damageFee: this.languageService.translate('modals.rental.damageFee'),
+      damageFeePlaceholder: this.languageService.translate('modals.rental.damageFeePlaceholder'),
+      kmAtStart: this.languageService.translate('modals.rental.kmAtStart'),
+      kmAtStartPlaceholder: this.languageService.translate('modals.rental.kmAtStartPlaceholder'),
+      kmAtReturn: this.languageService.translate('modals.rental.kmAtReturn'),
+      kmAtReturnPlaceholder: this.languageService.translate('modals.rental.kmAtReturnPlaceholder'),
+      pickupLocation: this.languageService.translate('modals.rental.pickupLocation'),
+      pickupLocationPlaceholder: this.languageService.translate('modals.rental.pickupLocationPlaceholder'),
+      returnLocation: this.languageService.translate('modals.rental.returnLocation'),
+      returnLocationPlaceholder: this.languageService.translate('modals.rental.returnLocationPlaceholder'),
+      notes: this.languageService.translate('modals.rental.notes'),
+      notesPlaceholder: this.languageService.translate('modals.rental.notesPlaceholder'),
+      cancel: this.languageService.translate('modals.common.cancel'),
+      save: this.languageService.translate('modals.common.save'),
+      update: this.languageService.translate('modals.common.update'),
+      saving: this.languageService.translate('modals.common.saving'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
 
   ngOnInit() {
     this.isEditMode = !!this.rental;
@@ -71,30 +122,21 @@ export class RentalFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Load selected vehicle for edit mode
-   */
   loadSelectedVehicle() {
     if (!this.rental?.vehicleId) return;
-    
+
     this.vehicleService.getVehicleById(this.rental.vehicleId).subscribe({
       next: (vehicle) => {
         this.selectedVehicle = vehicle;
         this.cdr.markForCheck();
       },
-      error: () => {
-        // Error is already handled by exception interceptor
-      },
+      error: () => {},
     });
   }
 
-  /**
-   * Initialize form
-   */
   initForm() {
     const rental = this.rental;
 
-    // Default dates
     const today = new Date();
     const nextWeek = new Date();
     nextWeek.setDate(today.getDate() + 7);
@@ -128,7 +170,6 @@ export class RentalFormComponent implements OnInit {
         rental?.totalAmount || 0,
         [Validators.required, Validators.min(0)],
       ],
-      // Status is set automatically to Active when creating, no need for form control
       notes: [
         rental?.notes || '',
         Validators.maxLength(1000),
@@ -164,7 +205,6 @@ export class RentalFormComponent implements OnInit {
       ],
     });
 
-    // Calculate total amount when dates or daily rate change
     this.rentalForm.get('startDate')?.valueChanges.subscribe(() => {
       this.calculateTotalAmount();
       this.validateDateRange();
@@ -180,9 +220,6 @@ export class RentalFormComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  /**
-   * Format date for input (YYYY-MM-DD)
-   */
   formatDateForInput(dateString: string): string {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -192,9 +229,6 @@ export class RentalFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  /**
-   * Format date-time for input (YYYY-MM-DDTHH:mm)
-   */
   formatDateTimeForInput(dateString: string | undefined): string {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -206,9 +240,6 @@ export class RentalFormComponent implements OnInit {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
-  /**
-   * Calculate total amount based on dates and daily rate
-   */
   calculateTotalAmount() {
     const startDate = this.rentalForm.get('startDate')?.value;
     const endDate = this.rentalForm.get('endDate')?.value;
@@ -217,22 +248,17 @@ export class RentalFormComponent implements OnInit {
     if (startDate && endDate && dailyRate && Number(dailyRate) > 0) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-      // Calculate days (end date inclusive, so add 1 day)
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
       const total = diffDays * Number(dailyRate);
       this.rentalForm.patchValue({ totalAmount: total }, { emitEvent: false });
       this.cdr.markForCheck();
     } else {
-      // Reset to 0 if missing required fields
       this.rentalForm.patchValue({ totalAmount: 0 }, { emitEvent: false });
       this.cdr.markForCheck();
     }
   }
 
-  /**
-   * Validate date range
-   */
   validateDateRange() {
     const startDate = this.rentalForm.get('startDate')?.value;
     const endDate = this.rentalForm.get('endDate')?.value;
@@ -246,16 +272,10 @@ export class RentalFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Get form control
-   */
   get f() {
     return this.rentalForm.controls;
   }
 
-  /**
-   * Check if field has error
-   */
   hasError(field: string, errorType: string): boolean {
     const control = this.rentalForm.get(field);
     return !!(
@@ -265,32 +285,26 @@ export class RentalFormComponent implements OnInit {
     );
   }
 
-  /**
-   * Get error message
-   */
   getErrorMessage(field: string): string {
     const control = this.rentalForm.get(field);
     if (!control || !control.errors) return '';
 
-    if (control.hasError('required')) return 'Bu alan zorunludur';
+    if (control.hasError('required')) return this.languageService.translate('messages.errors.validation.required');
     if (control.hasError('min'))
-      return `Minimum değer ${control.errors['min'].min} olmalıdır`;
+      return this.languageService.translateWithParams('messages.errors.validation.min', { min: control.errors['min'].min.toString() });
     if (control.hasError('max'))
-      return `Maksimum değer ${control.errors['max'].max} olmalıdır`;
+      return this.languageService.translateWithParams('messages.errors.validation.max', { max: control.errors['max'].max.toString() });
     if (control.hasError('maxlength'))
-      return `Maksimum ${control.errors['maxlength'].requiredLength} karakter olmalıdır`;
+      return this.languageService.translateWithParams('messages.errors.validation.maxlength', { length: control.errors['maxlength'].requiredLength.toString() });
     if (control.hasError('dateRange'))
-      return 'Bitiş tarihi başlangıç tarihinden önce olamaz';
+      return this.languageService.translate('messages.errors.validation.dateRange');
 
-    return 'Geçersiz değer';
+    return this.languageService.translate('messages.errors.validation.invalid');
   }
 
-  /**
-   * Submit form
-   */
   onSubmit() {
     if (!this.validateDateRange()) {
-      this.toastService.error('Bitiş tarihi başlangıç tarihinden önce olamaz');
+      this.toastService.error(this.languageService.translate('messages.errors.validation.dateRange'));
       return;
     }
 
@@ -298,7 +312,7 @@ export class RentalFormComponent implements OnInit {
       Object.keys(this.rentalForm.controls).forEach((key) => {
         this.rentalForm.get(key)?.markAsTouched();
       });
-      this.toastService.error('Lütfen tüm zorunlu alanları doldurun');
+      this.toastService.error(this.languageService.translate('messages.errors.validation.fillAllRequired'));
       return;
     }
 
@@ -308,7 +322,7 @@ export class RentalFormComponent implements OnInit {
     const formValue = this.rentalForm.value;
 
     if (this.isEditMode && this.rental) {
-      // Update existing rental
+
       const updateCommand: UpdateRentalCommand = {
         id: this.rental.id,
         startDate: new Date(formValue.startDate).toISOString(),
@@ -331,17 +345,16 @@ export class RentalFormComponent implements OnInit {
         next: (rental) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          this.toastService.success('Kiralama başarıyla güncellendi');
+          this.toastService.success(this.languageService.translate('messages.success.rental.updated'));
           this.saved.emit(rental);
         },
         error: () => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
     } else {
-      // Create new rental
+
       const createCommand: CreateRentalCommand = {
         customerId: formValue.customerId,
         vehicleId: formValue.vehicleId,
@@ -349,7 +362,7 @@ export class RentalFormComponent implements OnInit {
         endDate: new Date(formValue.endDate).toISOString(),
         dailyRate: Number(formValue.dailyRate),
         totalAmount: Number(formValue.totalAmount),
-        status: RentalStatus.Active, // Status otomatik olarak Active olarak ayarlanır
+        status: RentalStatus.Active,
         notes: formValue.notes?.trim() || undefined,
         pickupLocation: formValue.pickupLocation?.trim() || undefined,
         returnLocation: formValue.returnLocation?.trim() || undefined,
@@ -360,28 +373,21 @@ export class RentalFormComponent implements OnInit {
         next: (rental) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          this.toastService.success('Kiralama başarıyla oluşturuldu');
+          this.toastService.success(this.languageService.translate('messages.success.rental.created'));
           this.saved.emit(rental);
         },
         error: () => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
     }
   }
 
-  /**
-   * Cancel form
-   */
   onCancel() {
     this.cancelled.emit();
   }
 
-  /**
-   * Get vehicle display text
-   */
   getVehicleDisplayText(vehicle: Vehicle): string {
     if (vehicle.licensePlate) {
       return `${vehicle.licensePlate} - ${vehicle.brand} ${vehicle.model}`;
@@ -389,16 +395,12 @@ export class RentalFormComponent implements OnInit {
     return `${vehicle.brand} ${vehicle.model} (${vehicle.id})`;
   }
 
-  /**
-   * Open customer select modal
-   */
   openCustomerSelectModal() {
     const { close, contentRef } = this.modalService.open(CustomerSelectComponent, {
-      title: 'Müşteri Seç',
+      title: this.languageService.translate('messages.modal.customerSelect'),
       size: 'large',
     });
 
-    // Listen for customer selected event
     if (contentRef && contentRef.instance) {
       const customerSelect = contentRef.instance as CustomerSelectComponent;
 
@@ -414,12 +416,9 @@ export class RentalFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Get selected customer display text
-   */
   getSelectedCustomerText(): string {
     if (!this.selectedCustomer) {
-      return 'Müşteri Seç';
+      return this.languageService.translate('messages.modal.customerSelect');
     }
 
     if (
@@ -437,25 +436,18 @@ export class RentalFormComponent implements OnInit {
     return this.selectedCustomer.id;
   }
 
-  /**
-   * Clear selected customer
-   */
   clearSelectedCustomer() {
     this.selectedCustomer = null;
     this.rentalForm.patchValue({ customerId: '' });
     this.cdr.markForCheck();
   }
 
-  /**
-   * Open vehicle select modal
-   */
   openVehicleSelectModal() {
     const { close, contentRef } = this.modalService.open(VehicleSelectComponent, {
-      title: 'Araç Seç',
+      title: this.languageService.translate('messages.modal.vehicleSelect'),
       size: 'large',
     });
 
-    // Listen for vehicle selected event
     if (contentRef && contentRef.instance) {
       const vehicleSelect = contentRef.instance as VehicleSelectComponent;
 
@@ -463,12 +455,10 @@ export class RentalFormComponent implements OnInit {
         (vehicle: Vehicle) => {
           this.selectedVehicle = vehicle;
           this.rentalForm.patchValue({ vehicleId: vehicle.id });
-          // Auto-fill daily rate if vehicle has one and calculate total
           if (vehicle.dailyRentalPrice) {
             this.rentalForm.patchValue({ 
               dailyRate: vehicle.dailyRentalPrice 
             }, { emitEvent: false });
-            // Force recalculation after patchValue
             setTimeout(() => {
               this.calculateTotalAmount();
             }, 0);
@@ -481,23 +471,16 @@ export class RentalFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Get selected vehicle display text
-   */
   getSelectedVehicleText(): string {
     if (!this.selectedVehicle) {
-      return 'Araç Seç';
+      return this.languageService.translate('messages.modal.vehicleSelect');
     }
     return this.getVehicleDisplayText(this.selectedVehicle);
   }
 
-  /**
-   * Clear selected vehicle
-   */
   clearSelectedVehicle() {
     this.selectedVehicle = null;
     this.rentalForm.patchValue({ vehicleId: '' });
     this.cdr.markForCheck();
   }
 }
-

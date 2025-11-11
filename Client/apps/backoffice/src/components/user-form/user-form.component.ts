@@ -7,6 +7,8 @@ import {
   EventEmitter,
   inject,
   ChangeDetectorRef,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -24,6 +26,7 @@ import {
 import { UserService } from '../../services/user.service';
 import { CustomerService } from '../../services/customer.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 import {
   CreateCustomerCommand,
 } from '../../models/customer';
@@ -55,16 +58,67 @@ export class UserFormComponent implements OnInit {
   private userService = inject(UserService);
   private customerService = inject(CustomerService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
+
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      firstName: this.languageService.translate('modals.user.firstName'),
+      firstNamePlaceholder: this.languageService.translate('modals.user.firstNamePlaceholder'),
+      lastName: this.languageService.translate('modals.user.lastName'),
+      lastNamePlaceholder: this.languageService.translate('modals.user.lastNamePlaceholder'),
+      email: this.languageService.translate('modals.user.email'),
+      emailPlaceholder: this.languageService.translate('modals.user.emailPlaceholder'),
+      phoneNumber: this.languageService.translate('modals.user.phoneNumber'),
+      phoneNumberPlaceholder: this.languageService.translate('modals.user.phoneNumberPlaceholder'),
+      password: this.languageService.translate('modals.user.password'),
+      passwordPlaceholder: this.languageService.translate('modals.user.passwordPlaceholder'),
+      role: this.languageService.translate('modals.user.role'),
+      address: this.languageService.translate('modals.user.address'),
+      addressPlaceholder: this.languageService.translate('modals.user.addressPlaceholder'),
+      identityNumber: this.languageService.translate('modals.user.identityNumber'),
+      identityNumberPlaceholder: this.languageService.translate('modals.user.identityNumberPlaceholder'),
+      birthDate: this.languageService.translate('modals.user.birthDate'),
+      customerInfo: this.languageService.translate('modals.user.customerInfo'),
+      licenseNumber: this.languageService.translate('modals.user.licenseNumber'),
+      licenseNumberPlaceholder: this.languageService.translate('modals.user.licenseNumberPlaceholder'),
+      licenseExpiryDate: this.languageService.translate('modals.user.licenseExpiryDate'),
+      licenseClass: this.languageService.translate('modals.user.licenseClass'),
+      licenseClassPlaceholder: this.languageService.translate('modals.user.licenseClassPlaceholder'),
+      emergencyContactName: this.languageService.translate('modals.user.emergencyContactName'),
+      emergencyContactNamePlaceholder: this.languageService.translate('modals.user.emergencyContactNamePlaceholder'),
+      emergencyContactPhone: this.languageService.translate('modals.user.emergencyContactPhone'),
+      emergencyContactPhonePlaceholder: this.languageService.translate('modals.user.emergencyContactPhonePlaceholder'),
+      creditScore: this.languageService.translate('modals.user.creditScore'),
+      creditScorePlaceholder: this.languageService.translate('modals.user.creditScorePlaceholder'),
+      isVerified: this.languageService.translate('modals.user.isVerified'),
+      hasInsurance: this.languageService.translate('modals.user.hasInsurance'),
+      insuranceCompany: this.languageService.translate('modals.user.insuranceCompany'),
+      insuranceCompanyPlaceholder: this.languageService.translate('modals.user.insuranceCompanyPlaceholder'),
+      insurancePolicyNumber: this.languageService.translate('modals.user.insurancePolicyNumber'),
+      insurancePolicyNumberPlaceholder: this.languageService.translate('modals.user.insurancePolicyNumberPlaceholder'),
+      specialNotes: this.languageService.translate('modals.user.specialNotes'),
+      specialNotesPlaceholder: this.languageService.translate('modals.user.specialNotesPlaceholder'),
+      cancel: this.languageService.translate('modals.common.cancel'),
+      save: this.languageService.translate('modals.common.save'),
+      update: this.languageService.translate('modals.common.update'),
+      saving: this.languageService.translate('modals.common.saving'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
 
   ngOnInit() {
     this.isEditMode = !!this.user;
     this.initForm();
   }
 
-  /**
-   * Initialize form
-   */
   initForm() {
     const user = this.user;
 
@@ -118,7 +172,6 @@ export class UserFormComponent implements OnInit {
           : null,
         [this.validateMinimumAge.bind(this)],
       ],
-      // Customer fields
       licenseNumber: ['', [Validators.maxLength(50)]],
       licenseExpiryDate: [null],
       licenseClass: ['', [Validators.maxLength(20)]],
@@ -134,25 +187,20 @@ export class UserFormComponent implements OnInit {
       insurancePolicyNumber: ['', [Validators.maxLength(100)]],
     });
 
-    // Watch role changes to show/hide customer fields
     this.userForm.get('role')?.valueChanges.subscribe((role) => {
       this.updateCustomerFieldsVisibility(role);
       this.cdr.markForCheck();
     });
 
-    // Initialize customer fields visibility
     const currentRole = this.userForm.get('role')?.value;
     this.updateCustomerFieldsVisibility(currentRole);
 
     this.cdr.markForCheck();
   }
 
-  /**
-   * Update customer fields visibility and validators based on role
-   */
   updateCustomerFieldsVisibility(role: UserRole) {
     const isCustomer = role === UserRole.Customer;
-    
+
     const customerFields = [
       'licenseNumber',
       'licenseExpiryDate',
@@ -184,9 +232,6 @@ export class UserFormComponent implements OnInit {
     });
   }
 
-  /**
-   * Format date for input (YYYY-MM-DD)
-   */
   formatDateForInput(dateString: string): string {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -196,12 +241,9 @@ export class UserFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  /**
-   * Validate minimum age (18 years old)
-   */
   validateMinimumAge(control: any): { [key: string]: any } | null {
     if (!control.value) {
-      return null; // If no value, let required validator handle it
+      return null; 
     }
 
     const selectedDate = new Date(control.value);
@@ -216,16 +258,10 @@ export class UserFormComponent implements OnInit {
     return null;
   }
 
-  /**
-   * Get form control
-   */
   get f() {
     return this.userForm.controls;
   }
 
-  /**
-   * Check if field has error
-   */
   hasError(field: string, errorType: string): boolean {
     const control = this.userForm.get(field);
     return !!(
@@ -235,90 +271,78 @@ export class UserFormComponent implements OnInit {
     );
   }
 
-      /**
-       * Get error message
-       */
       getErrorMessage(field: string): string {
         const control = this.userForm.get(field);
         if (!control || !control.errors) return '';
 
         if (control.hasError('required')) {
-          if (field === 'firstName') return 'First name is required';
-          if (field === 'lastName') return 'Last name is required';
-          if (field === 'email') return 'Email is required';
-          if (field === 'phoneNumber') return 'Phone number is required';
-          if (field === 'password') return 'Password is required';
-          return 'Bu alan zorunludur';
+          if (field === 'firstName') return this.languageService.translate('messages.errors.userForm.firstNameRequired');
+          if (field === 'lastName') return this.languageService.translate('messages.errors.userForm.lastNameRequired');
+          if (field === 'email') return this.languageService.translate('messages.errors.userForm.emailRequired');
+          if (field === 'phoneNumber') return this.languageService.translate('messages.errors.userForm.phoneRequired');
+          if (field === 'password') return this.languageService.translate('messages.errors.userForm.passwordRequired');
+          return this.languageService.translate('messages.errors.validation.required');
         }
-        if (control.hasError('email')) return 'Invalid email format';
+        if (control.hasError('email')) return this.languageService.translate('messages.errors.userForm.emailInvalid');
         if (control.hasError('minlength')) {
           if (field === 'password') {
-            return 'Password must be at least 8 characters';
+            return this.languageService.translate('messages.errors.userForm.passwordMinLength');
           }
-          return `Minimum ${control.errors['minlength'].requiredLength} karakter olmalıdır`;
+          return this.languageService.translateWithParams('messages.errors.validation.maxlength', { length: control.errors['minlength'].requiredLength.toString() });
         }
         if (control.hasError('maxlength')) {
           if (field === 'firstName') {
-            return 'First name cannot exceed 50 characters';
+            return this.languageService.translate('messages.errors.userForm.firstNameMaxLength');
           }
           if (field === 'lastName') {
-            return 'Last name cannot exceed 50 characters';
+            return this.languageService.translate('messages.errors.userForm.lastNameMaxLength');
           }
           if (field === 'email') {
-            return 'Email cannot exceed 100 characters';
+            return this.languageService.translate('messages.errors.userForm.emailMaxLength');
           }
           if (field === 'address') {
-            return 'Address cannot exceed 200 characters';
+            return this.languageService.translate('messages.errors.userForm.addressMaxLength');
           }
           if (field === 'identityNumber') {
-            return 'Identity number cannot exceed 20 characters';
+            return this.languageService.translate('messages.errors.userForm.identityNumberMaxLength');
           }
-          return `Maksimum ${control.errors['maxlength'].requiredLength} karakter olmalıdır`;
+          return this.languageService.translateWithParams('messages.errors.validation.maxlength', { length: control.errors['maxlength'].requiredLength.toString() });
         }
         if (control.hasError('pattern')) {
           if (field === 'phoneNumber') {
-            return 'Invalid phone number format';
+            return this.languageService.translate('messages.errors.userForm.phoneInvalid');
           }
           if (field === 'password') {
-            return 'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character';
+            return this.languageService.translate('messages.errors.userForm.passwordPattern');
           }
-          return 'Geçersiz format';
+          return this.languageService.translate('messages.errors.validation.invalidFormat');
         }
         if (control.hasError('minimumAge')) {
-          return 'User must be at least 18 years old';
+          return this.languageService.translate('messages.errors.userForm.minimumAge');
         }
         if (control.hasError('min'))
-          return `Minimum değer ${control.errors['min'].min} olmalıdır`;
+          return this.languageService.translateWithParams('messages.errors.validation.min', { min: control.errors['min'].min.toString() });
         if (control.hasError('max'))
-          return `Maksimum değer ${control.errors['max'].max} olmalıdır`;
+          return this.languageService.translateWithParams('messages.errors.validation.max', { max: control.errors['max'].max.toString() });
 
-        return 'Geçersiz değer';
+        return this.languageService.translate('messages.errors.validation.invalid');
       }
 
-  /**
-   * Get role name
-   */
   getRoleName(role: number): string {
     return this.roleNames[role as UserRole] || '-';
   }
 
-  /**
-   * Check if customer fields should be shown
-   */
   isCustomerRole(): boolean {
     const role = this.userForm.get('role')?.value;
     return role === UserRole.Customer;
   }
 
-  /**
-   * Submit form
-   */
   onSubmit() {
     if (this.userForm.invalid) {
       Object.keys(this.userForm.controls).forEach((key) => {
         this.userForm.get(key)?.markAsTouched();
       });
-      this.toastService.error('Lütfen tüm zorunlu alanları doldurun');
+      this.toastService.error(this.languageService.translate('messages.errors.validation.fillAllRequired'));
       return;
     }
 
@@ -329,13 +353,11 @@ export class UserFormComponent implements OnInit {
     const isCustomer = formValue.role === UserRole.Customer;
 
     if (this.isEditMode && this.user) {
-      // Update existing user (edit mode - not implemented in API)
-      this.toastService.error('Kullanıcı güncelleme özelliği henüz kullanılamıyor');
+      this.toastService.error(this.languageService.translate('messages.success.user.updateNotAvailable'));
       this.isLoading = false;
       this.cdr.markForCheck();
       return;
     } else {
-      // Create new user
       const createUserCommand: CreateUserCommand = {
         firstName: formValue.firstName?.trim() || undefined,
         lastName: formValue.lastName?.trim() || undefined,
@@ -348,14 +370,12 @@ export class UserFormComponent implements OnInit {
         birthDate: formValue.birthDate
           ? new Date(formValue.birthDate).toISOString()
           : undefined,
-        // Required fields with default values
         isVerified: false,
         creditScore: 0,
         hasInsurance: false,
       };
 
       if (isCustomer) {
-        // Add customer-specific fields to CreateUserCommand
         createUserCommand.licenseNumber = formValue.licenseNumber?.trim() || undefined;
         createUserCommand.licenseExpiryDate = formValue.licenseExpiryDate
           ? new Date(formValue.licenseExpiryDate).toISOString()
@@ -374,10 +394,9 @@ export class UserFormComponent implements OnInit {
         createUserCommand.insuranceCompany = formValue.insuranceCompany?.trim() || undefined;
         createUserCommand.insurancePolicyNumber = formValue.insurancePolicyNumber?.trim() || undefined;
 
-        // Create user with customer data (backend will create customer automatically)
         this.userService.createUser(createUserCommand).subscribe({
           next: (user) => {
-            this.toastService.success('Kullanıcı ve müşteri başarıyla oluşturuldu');
+            this.toastService.success(this.languageService.translate('messages.success.user.createdWithCustomer'));
             this.saved.emit(user);
             this.isLoading = false;
             this.cdr.markForCheck();
@@ -385,14 +404,12 @@ export class UserFormComponent implements OnInit {
           error: () => {
             this.isLoading = false;
             this.cdr.markForCheck();
-            // Error is already handled by exception interceptor
           },
         });
       } else {
-        // Create regular user (non-customer)
         this.userService.createUser(createUserCommand).subscribe({
           next: (user) => {
-            this.toastService.success('Kullanıcı başarıyla oluşturuldu');
+            this.toastService.success(this.languageService.translate('messages.success.user.created'));
             this.saved.emit(user);
             this.isLoading = false;
             this.cdr.markForCheck();
@@ -400,18 +417,13 @@ export class UserFormComponent implements OnInit {
           error: () => {
             this.isLoading = false;
             this.cdr.markForCheck();
-            // Error is already handled by exception interceptor
           },
         });
       }
     }
   }
 
-  /**
-   * Cancel form
-   */
   onCancel() {
     this.cancelled.emit();
   }
 }
-

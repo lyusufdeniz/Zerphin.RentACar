@@ -7,11 +7,14 @@ import {
   Output,
   EventEmitter,
   inject,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { LanguageService } from '../../services/language.service';
 import { UserRoleNames } from '../../models/user/user-role.model';
 
 @Component({
@@ -25,12 +28,34 @@ export class NavbarComponent implements OnInit, OnDestroy {
   @Output() menuToggle = new EventEmitter<void>();
   private authService = inject(AuthService);
   private router = inject(Router);
-  
+  private languageService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
+
   currentTime: string = '';
   currentDate: string = '';
   private intervalSubscription?: Subscription;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  translations = computed(() => {
+
+    const currentLang = this.languageService.currentLanguage();
+    return {
+      dashboard: this.languageService.translate('dashboard.title'),
+      user: this.languageService.translate('common.user'),
+      logout: this.languageService.translate('common.logout'),
+    };
+  });
+
+  constructor() {
+
+    effect(() => {
+
+      const _ = this.languageService.currentLanguage();
+
+      this.updateTime();
+
+      this.cdr.markForCheck();
+    });
+  }
 
   get user() {
     return this.authService.user;
@@ -42,8 +67,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   getRoleDisplayName(): string {
     const user = this.user;
-    if (!user || !user.role) return 'Kullanıcı';
-    return UserRoleNames[user.role as keyof typeof UserRoleNames] || user.roleName || 'Kullanıcı';
+    if (!user || !user.role) return this.translations().user;
+    return UserRoleNames[user.role as keyof typeof UserRoleNames] || user.roleName || this.translations().user;
   }
 
   onMenuToggle() {
@@ -60,6 +85,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.updateTime();
       this.cdr.markForCheck();
     });
+
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {
@@ -70,16 +97,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private updateTime() {
     const now = new Date();
-    this.currentTime = now.toLocaleTimeString('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+
+    this.currentTime = now.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
     });
-    this.currentDate = now.toLocaleDateString('tr-TR', {
+    this.currentDate = now.toLocaleDateString(locale, {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
     });
   }
 }
-

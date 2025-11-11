@@ -7,6 +7,8 @@ import {
   EventEmitter,
   inject,
   ChangeDetectorRef,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -24,6 +26,7 @@ import {
 import { InsuranceService } from '../../services/insurance.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 import { Vehicle } from '../../models/vehicle';
 
 @Component({
@@ -42,6 +45,7 @@ export class InsuranceFormComponent implements OnInit {
   private insuranceService = inject(InsuranceService);
   private vehicleService = inject(VehicleService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   insuranceForm!: FormGroup;
@@ -50,15 +54,51 @@ export class InsuranceFormComponent implements OnInit {
   isLoadingVehicles = false;
   vehicles: Vehicle[] = [];
 
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      vehicle: this.languageService.translate('modals.insurance.vehicle'),
+      vehicleSelect: this.languageService.translate('modals.insurance.vehicleSelect'),
+      loadingVehicles: this.languageService.translate('modals.insurance.loadingVehicles'),
+      policyNumber: this.languageService.translate('modals.insurance.policyNumber'),
+      policyNumberPlaceholder: this.languageService.translate('modals.insurance.policyNumberPlaceholder'),
+      insuranceCompany: this.languageService.translate('modals.insurance.insuranceCompany'),
+      insuranceCompanyPlaceholder: this.languageService.translate('modals.insurance.insuranceCompanyPlaceholder'),
+      startDate: this.languageService.translate('modals.insurance.startDate'),
+      endDate: this.languageService.translate('modals.insurance.endDate'),
+      endDateError: this.languageService.translate('modals.insurance.endDateError'),
+      premiumAmount: this.languageService.translate('modals.insurance.premiumAmount'),
+      premiumAmountPlaceholder: this.languageService.translate('modals.insurance.premiumAmountPlaceholder'),
+      coverageType: this.languageService.translate('modals.insurance.coverageType'),
+      coverageTypePlaceholder: this.languageService.translate('modals.insurance.coverageTypePlaceholder'),
+      coverageLimit: this.languageService.translate('modals.insurance.coverageLimit'),
+      coverageLimitPlaceholder: this.languageService.translate('modals.insurance.coverageLimitPlaceholder'),
+      deductible: this.languageService.translate('modals.insurance.deductible'),
+      deductiblePlaceholder: this.languageService.translate('modals.insurance.deductiblePlaceholder'),
+      coverageDetails: this.languageService.translate('modals.insurance.coverageDetails'),
+      coverageDetailsPlaceholder: this.languageService.translate('modals.insurance.coverageDetailsPlaceholder'),
+      contactInfo: this.languageService.translate('modals.insurance.contactInfo'),
+      contactInfoPlaceholder: this.languageService.translate('modals.insurance.contactInfoPlaceholder'),
+      cancel: this.languageService.translate('modals.common.cancel'),
+      save: this.languageService.translate('modals.common.save'),
+      update: this.languageService.translate('modals.common.update'),
+      saving: this.languageService.translate('modals.common.saving'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
   ngOnInit() {
     this.isEditMode = !!this.insurance;
     this.loadVehicles();
     this.initForm();
   }
 
-  /**
-   * Load vehicles for dropdown
-   */
   loadVehicles() {
     this.isLoadingVehicles = true;
     this.cdr.markForCheck();
@@ -74,18 +114,13 @@ export class InsuranceFormComponent implements OnInit {
         error: (error) => {
           this.isLoadingVehicles = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
   }
 
-  /**
-   * Initialize form
-   */
   initForm() {
     const insurance = this.insurance;
 
-    // Default dates
     const today = new Date();
     const nextYear = new Date();
     nextYear.setFullYear(today.getFullYear() + 1);
@@ -138,9 +173,6 @@ export class InsuranceFormComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  /**
-   * Format date for input (YYYY-MM-DD)
-   */
   formatDateForInput(dateString: string): string {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -150,16 +182,10 @@ export class InsuranceFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  /**
-   * Get form control
-   */
   get f() {
     return this.insuranceForm.controls;
   }
 
-  /**
-   * Check if field has error
-   */
   hasError(field: string, errorType: string): boolean {
     const control = this.insuranceForm.get(field);
     return !!(
@@ -169,24 +195,18 @@ export class InsuranceFormComponent implements OnInit {
     );
   }
 
-  /**
-   * Get error message
-   */
   getErrorMessage(field: string): string {
     const control = this.insuranceForm.get(field);
     if (!control || !control.errors) return '';
 
-    if (control.hasError('required')) return 'Bu alan zorunludur';
-    if (control.hasError('min')) return `Minimum değer ${control.errors['min'].min} olmalıdır`;
+    if (control.hasError('required')) return this.languageService.translate('messages.errors.validation.required');
+    if (control.hasError('min')) return this.languageService.translateWithParams('messages.errors.validation.min', { min: control.errors['min'].min.toString() });
     if (control.hasError('maxlength'))
-      return `Maksimum ${control.errors['maxlength'].requiredLength} karakter olmalıdır`;
+      return this.languageService.translateWithParams('messages.errors.validation.maxlength', { length: control.errors['maxlength'].requiredLength.toString() });
 
-    return 'Geçersiz değer';
+    return this.languageService.translate('messages.errors.validation.invalid');
   }
 
-  /**
-   * Validate date range
-   */
   validateDateRange() {
     const startDate = this.insuranceForm.get('startDate')?.value;
     const endDate = this.insuranceForm.get('endDate')?.value;
@@ -206,20 +226,17 @@ export class InsuranceFormComponent implements OnInit {
     return true;
   }
 
-  /**
-   * Submit form
-   */
   onSubmit() {
     if (this.insuranceForm.invalid) {
       Object.keys(this.insuranceForm.controls).forEach((key) => {
         this.insuranceForm.get(key)?.markAsTouched();
       });
-      this.toastService.error('Lütfen tüm zorunlu alanları doldurun');
+      this.toastService.error(this.languageService.translate('messages.errors.validation.fillAllRequired'));
       return;
     }
 
     if (!this.validateDateRange()) {
-      this.toastService.error('Bitiş tarihi başlangıç tarihinden önce olamaz');
+      this.toastService.error(this.languageService.translate('messages.errors.validation.dateRange'));
       return;
     }
 
@@ -228,7 +245,6 @@ export class InsuranceFormComponent implements OnInit {
 
     const formValue = this.insuranceForm.value;
 
-    // Prepare command data
     const commandData: any = {
       vehicleId: formValue.vehicleId,
       insuranceCompany: formValue.insuranceCompany?.trim() || undefined,
@@ -244,7 +260,6 @@ export class InsuranceFormComponent implements OnInit {
     };
 
     if (this.isEditMode && this.insurance) {
-      // Update existing insurance (vehicleId is not included in UpdateInsuranceCommand)
       const { vehicleId, ...updateData } = commandData;
       const updateCommand: UpdateInsuranceCommand = {
         id: this.insurance.id,
@@ -255,45 +270,36 @@ export class InsuranceFormComponent implements OnInit {
         next: (insurance) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          this.toastService.success('Sigorta başarıyla güncellendi');
+          this.toastService.success(this.languageService.translate('messages.success.insurance.updated'));
           this.saved.emit(insurance);
         },
         error: (error) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
     } else {
-      // Create new insurance
       const createCommand: CreateInsuranceCommand = commandData;
 
       this.insuranceService.createInsurance(createCommand).subscribe({
         next: (insurance) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          this.toastService.success('Sigorta başarıyla oluşturuldu');
+          this.toastService.success(this.languageService.translate('messages.success.insurance.created'));
           this.saved.emit(insurance);
         },
         error: (error) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
     }
   }
 
-  /**
-   * Cancel form
-   */
   onCancel() {
     this.cancelled.emit();
   }
 
-  /**
-   * Get vehicle display text
-   */
   getVehicleDisplayText(vehicle: Vehicle): string {
     if (vehicle.licensePlate) {
       return `${vehicle.licensePlate} - ${vehicle.brand} ${vehicle.model}`;
@@ -301,4 +307,3 @@ export class InsuranceFormComponent implements OnInit {
     return `${vehicle.brand} ${vehicle.model} (${vehicle.id})`;
   }
 }
-

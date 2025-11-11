@@ -5,6 +5,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -16,6 +18,7 @@ import { RentalService } from '../../services/rental.service';
 import { ToastService } from '../../services/toast.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { Vehicle, VehicleCategoryNames, VehicleCategory } from '../../models/vehicle';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-rental-detail',
@@ -30,6 +33,7 @@ export class RentalDetailComponent implements OnInit {
   private rentalService = inject(RentalService);
   private vehicleService = inject(VehicleService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   rental: Rental | null = null;
@@ -38,15 +42,64 @@ export class RentalDetailComponent implements OnInit {
 
   statusNames = RentalStatusNames;
 
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      loading: this.languageService.translate('messages.details.rental.loading'),
+      notFound: this.languageService.translate('messages.details.notFound.rental'),
+      rentalInfo: this.languageService.translate('messages.details.rental.rentalInfo'),
+      status: this.languageService.translate('messages.details.rental.status'),
+      customerName: this.languageService.translate('messages.details.rental.customerName'),
+      customerEmail: this.languageService.translate('messages.details.rental.customerEmail'),
+      customerPhone: this.languageService.translate('messages.details.rental.customerPhone'),
+      vehicleInfo: this.languageService.translate('messages.details.rental.vehicleInfo'),
+      licensePlate: this.languageService.translate('messages.details.rental.licensePlate'),
+      brandModel: this.languageService.translate('messages.details.rental.brandModel'),
+      year: this.languageService.translate('messages.details.rental.year'),
+      color: this.languageService.translate('messages.details.rental.color'),
+      category: this.languageService.translate('messages.details.rental.category'),
+      fuelType: this.languageService.translate('messages.details.rental.fuelType'),
+      transmission: this.languageService.translate('messages.details.rental.transmission'),
+      seatingCapacity: this.languageService.translate('messages.details.rental.seatingCapacity'),
+      person: this.languageService.translate('messages.details.rental.person'),
+      km: this.languageService.translate('messages.details.rental.km'),
+      kmUnit: this.languageService.translate('messages.details.rental.kmUnit'),
+      dateInfo: this.languageService.translate('messages.details.rental.dateInfo'),
+      startDate: this.languageService.translate('messages.details.rental.startDate'),
+      endDate: this.languageService.translate('messages.details.rental.endDate'),
+      actualReturnDate: this.languageService.translate('messages.details.rental.actualReturnDate'),
+      createdAt: this.languageService.translate('messages.details.rental.createdAt'),
+      updatedAt: this.languageService.translate('messages.details.rental.updatedAt'),
+      financialInfo: this.languageService.translate('messages.details.rental.financialInfo'),
+      dailyPrice: this.languageService.translate('messages.details.rental.dailyPrice'),
+      totalAmount: this.languageService.translate('messages.details.rental.totalAmount'),
+      lateFee: this.languageService.translate('messages.details.rental.lateFee'),
+      damageFee: this.languageService.translate('messages.details.rental.damageFee'),
+      vatIncluded: this.languageService.translate('messages.details.rental.vatIncluded'),
+      locationInfo: this.languageService.translate('messages.details.rental.locationInfo'),
+      pickupLocation: this.languageService.translate('messages.details.rental.pickupLocation'),
+      returnLocation: this.languageService.translate('messages.details.rental.returnLocation'),
+      kmInfo: this.languageService.translate('messages.details.rental.kmInfo'),
+      kmAtStart: this.languageService.translate('messages.details.rental.kmAtStart'),
+      kmAtReturn: this.languageService.translate('messages.details.rental.kmAtReturn'),
+      kmUsed: this.languageService.translate('messages.details.rental.kmUsed'),
+      notes: this.languageService.translate('messages.details.rental.notes'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
   ngOnInit() {
     if (this.rentalId) {
       this.loadRental();
     }
   }
 
-  /**
-   * Load rental details
-   */
   loadRental() {
     this.isLoading = true;
     this.cdr.markForCheck();
@@ -54,7 +107,6 @@ export class RentalDetailComponent implements OnInit {
     this.rentalService.getRentalById(this.rentalId).subscribe({
       next: (rental) => {
         this.rental = rental;
-        // Load vehicle details if vehicleId exists
         if (rental.vehicleId) {
           this.loadVehicle(rental.vehicleId);
         } else {
@@ -65,31 +117,26 @@ export class RentalDetailComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
       },
     });
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+    return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
   }
 
-  /**
-   * Format date-time for display
-   */
   formatDateTime(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleString('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+    return date.toLocaleString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -98,20 +145,15 @@ export class RentalDetailComponent implements OnInit {
     });
   }
 
-  /**
-   * Format currency
-   */
   formatCurrency(amount: number | undefined): string {
     if (amount === undefined || amount === null) return '-';
-    return new Intl.NumberFormat('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'TRY',
     }).format(amount);
   }
 
-  /**
-   * Load vehicle details
-   */
   loadVehicle(vehicleId: string) {
     this.vehicleService.getVehicleById(vehicleId).subscribe({
       next: (vehicle) => {
@@ -122,14 +164,10 @@ export class RentalDetailComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
       },
     });
   }
 
-  /**
-   * Get vehicle image
-   */
   getVehicleImage(): string | null {
     if (!this.vehicle) return null;
     if (this.vehicle.imageUrl) {
@@ -141,35 +179,25 @@ export class RentalDetailComponent implements OnInit {
     return null;
   }
 
-  /**
-   * Get vehicle display name
-   */
   getVehicleDisplayName(): string {
     if (!this.vehicle) return '';
     return `${this.vehicle.brand} ${this.vehicle.model}`;
   }
 
-  /**
-   * Get category name
-   */
   getCategoryName(category: number): string {
     return VehicleCategoryNames[category as VehicleCategory] || '';
   }
 
-  /**
-   * Get status badge class
-   */
   getStatusClass(status: RentalStatus): string {
     switch (status) {
       case RentalStatus.Active:
-        return 'status-active'; // Yeşil
+        return 'status-active';
       case RentalStatus.Completed:
-        return 'status-info'; // Mavi
+        return 'status-info';
       case RentalStatus.Cancelled:
-        return 'status-expired'; // Kırmızı
+        return 'status-expired';
       default:
         return '';
     }
   }
 }
-

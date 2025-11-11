@@ -7,6 +7,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -26,6 +28,7 @@ import {
 } from '../../models/vehicle';
 import { VehicleService } from '../../services/vehicle.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -42,14 +45,14 @@ export class VehicleFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private vehicleService = inject(VehicleService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   vehicleForm!: FormGroup;
   isEditMode = false;
   isLoading = false;
-  imagePreviewUrl: string | null = null; // For preview purposes
+  imagePreviewUrl: string | null = null;
 
-  // Enums
   categories = Object.values(VehicleCategory).filter(
     (v) => typeof v === 'number'
   ) as VehicleCategory[];
@@ -59,23 +62,64 @@ export class VehicleFormComponent implements OnInit {
   categoryNames = VehicleCategoryNames;
   statusNames = VehicleStatusNames;
 
-  // Fuel types
-  fuelTypes = ['Benzin', 'Dizel', 'Elektrik', 'Hibrit', 'LPG'];
-  
-  // Transmission types
-  transmissionTypes = ['Manuel', 'Otomatik', 'Yarı Otomatik'];
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      brand: this.languageService.translate('modals.vehicle.brand'),
+      brandPlaceholder: this.languageService.translate('modals.vehicle.brandPlaceholder'),
+      model: this.languageService.translate('modals.vehicle.model'),
+      modelPlaceholder: this.languageService.translate('modals.vehicle.modelPlaceholder'),
+      licensePlate: this.languageService.translate('modals.vehicle.licensePlate'),
+      licensePlatePlaceholder: this.languageService.translate('modals.vehicle.licensePlatePlaceholder'),
+      year: this.languageService.translate('modals.vehicle.year'),
+      yearPlaceholder: this.languageService.translate('modals.vehicle.yearPlaceholder'),
+      color: this.languageService.translate('modals.vehicle.color'),
+      colorPlaceholder: this.languageService.translate('modals.vehicle.colorPlaceholder'),
+      category: this.languageService.translate('modals.vehicle.category'),
+      dailyRentalPrice: this.languageService.translate('modals.vehicle.dailyRentalPrice'),
+      dailyRentalPricePlaceholder: this.languageService.translate('modals.vehicle.dailyRentalPricePlaceholder'),
+      seatingCapacity: this.languageService.translate('modals.vehicle.seatingCapacity'),
+      seatingCapacityPlaceholder: this.languageService.translate('modals.vehicle.seatingCapacityPlaceholder'),
+      fuelType: this.languageService.translate('modals.vehicle.fuelType'),
+      fuelTypePlaceholder: this.languageService.translate('modals.vehicle.fuelTypePlaceholder'),
+      transmission: this.languageService.translate('modals.vehicle.transmission'),
+      transmissionPlaceholder: this.languageService.translate('modals.vehicle.transmissionPlaceholder'),
+      km: this.languageService.translate('modals.vehicle.km'),
+      kmPlaceholder: this.languageService.translate('modals.vehicle.kmPlaceholder'),
+      description: this.languageService.translate('modals.vehicle.description'),
+      descriptionPlaceholder: this.languageService.translate('modals.vehicle.descriptionPlaceholder'),
+      image: this.languageService.translate('modals.vehicle.image'),
+      imageHint: this.languageService.translate('modals.vehicle.imageHint'),
+      hasAirConditioning: this.languageService.translate('modals.vehicle.hasAirConditioning'),
+      hasGPS: this.languageService.translate('modals.vehicle.hasGPS'),
+      select: this.languageService.translate('modals.vehicle.select'),
+      features: this.languageService.translate('modals.vehicle.features'),
+      bluetooth: this.languageService.translate('modals.vehicle.bluetooth'),
+      cancel: this.languageService.translate('modals.common.cancel'),
+      save: this.languageService.translate('modals.common.save'),
+      update: this.languageService.translate('modals.common.update'),
+      saving: this.languageService.translate('modals.common.saving'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
+  fuelTypes = ['gasoline', 'diesel', 'electric', 'hybrid', 'lpg'];
+  transmissionTypes = ['manual', 'automatic', 'semiAutomatic'];
 
   ngOnInit() {
     this.isEditMode = !!this.vehicle;
     this.initForm();
   }
 
-  /**
-   * Initialize form
-   */
   initForm() {
     const vehicle = this.vehicle;
-    
+
     this.vehicleForm = this.fb.group({
       brand: [vehicle?.brand || '', [Validators.required, Validators.maxLength(50)]],
       model: [vehicle?.model || '', [Validators.required, Validators.maxLength(50)]],
@@ -113,16 +157,10 @@ export class VehicleFormComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  /**
-   * Get form control
-   */
   get f() {
     return this.vehicleForm.controls;
   }
 
-  /**
-   * Check if field has error
-   */
   hasError(field: string, errorType: string): boolean {
     const control = this.vehicleForm.get(field);
     return !!(
@@ -132,86 +170,67 @@ export class VehicleFormComponent implements OnInit {
     );
   }
 
-  /**
-   * Get error message
-   */
   getErrorMessage(field: string): string {
     const control = this.vehicleForm.get(field);
     if (!control || !control.errors) return '';
 
-    if (control.hasError('required')) return 'Bu alan zorunludur';
-    if (control.hasError('min')) return `Minimum değer ${control.errors['min'].min} olmalıdır`;
-    if (control.hasError('max')) return `Maksimum değer ${control.errors['max'].max} olmalıdır`;
+    if (control.hasError('required')) return this.languageService.translate('messages.errors.validation.required');
+    if (control.hasError('min')) return this.languageService.translateWithParams('messages.errors.validation.min', { min: control.errors['min'].min.toString() });
+    if (control.hasError('max')) return this.languageService.translateWithParams('messages.errors.validation.max', { max: control.errors['max'].max.toString() });
     if (control.hasError('maxlength'))
-      return `Maksimum ${control.errors['maxlength'].requiredLength} karakter olmalıdır`;
+      return this.languageService.translateWithParams('messages.errors.validation.maxlength', { length: control.errors['maxlength'].requiredLength.toString() });
 
-    return 'Geçersiz değer';
+    return this.languageService.translate('messages.errors.validation.invalid');
   }
 
-  /**
-   * Get image preview URL
-   */
   getImagePreview(): string | null {
-    // If we have a preview URL from newly selected image, use it
     if (this.imagePreviewUrl) {
       return this.imagePreviewUrl;
     }
-    
-    // If editing and vehicle has imageUrl, use it
+
     if (this.vehicle?.imageUrl) {
       return this.vehicle.imageUrl;
     }
-    
-    // If we have base64, construct data URL
+
     const imageBase64 = this.vehicleForm.get('imageBase64')?.value;
     if (imageBase64 && imageBase64.trim()) {
-      // If it's already a data URL, return as is
       if (imageBase64.startsWith('data:')) {
         return imageBase64;
       }
-      // Otherwise, construct data URL (assume JPEG format)
       return `data:image/jpeg;base64,${imageBase64}`;
     }
-    
+
     return null;
   }
 
-  /**
-   * Handle file input change
-   */
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      
-      // Validate file type
+
       if (!file.type.startsWith('image/')) {
-        this.toastService.error('Lütfen bir resim dosyası seçin');
+        this.toastService.error(this.languageService.translate('messages.errors.validation.imageRequired'));
         input.value = '';
         return;
       }
-      
-      // Validate file size (max 5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB
+
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        this.toastService.error('Resim boyutu 5MB\'dan büyük olamaz');
+        this.toastService.error(this.languageService.translate('messages.errors.validation.imageSize'));
         input.value = '';
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const dataUrl = e.target.result as string;
-        // Store data URL for preview
         this.imagePreviewUrl = dataUrl;
-        // Extract only base64 part (remove data:image/xxx;base64, prefix)
         const base64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
-        // Store only base64 string in form (without data URL prefix)
         this.vehicleForm.patchValue({ imageBase64: base64 });
         this.cdr.markForCheck();
       };
       reader.onerror = () => {
-        this.toastService.error('Resim yüklenirken hata oluştu');
+        this.toastService.error(this.languageService.translate('messages.errors.validation.imageUpload'));
         input.value = '';
         this.imagePreviewUrl = null;
       };
@@ -219,15 +238,12 @@ export class VehicleFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Submit form
-   */
   onSubmit() {
     if (this.vehicleForm.invalid) {
       Object.keys(this.vehicleForm.controls).forEach((key) => {
         this.vehicleForm.get(key)?.markAsTouched();
       });
-      this.toastService.error('Lütfen tüm zorunlu alanları doldurun');
+      this.toastService.error(this.languageService.translate('messages.errors.validation.fillAllRequired'));
       return;
     }
 
@@ -236,14 +252,13 @@ export class VehicleFormComponent implements OnInit {
 
     const formValue = this.vehicleForm.value;
 
-    // Prepare command data - only include imageBase64 if it has a value
     const commandData: any = {
       brand: formValue.brand,
       model: formValue.model,
       licensePlate: formValue.licensePlate,
       year: Number(formValue.year),
       color: formValue.color || undefined,
-      category: Number(formValue.category), // Ensure category is sent as int
+      category: Number(formValue.category),
       dailyRentalPrice: Number(formValue.dailyRentalPrice),
       seatingCapacity: Number(formValue.seatingCapacity),
       fuelType: formValue.fuelType || undefined,
@@ -255,13 +270,11 @@ export class VehicleFormComponent implements OnInit {
       hasBluetooth: Boolean(formValue.hasBluetooth),
     };
 
-    // Only include imageBase64 if it has a value
     if (formValue.imageBase64 && formValue.imageBase64.trim()) {
       commandData.imageBase64 = formValue.imageBase64;
     }
 
     if (this.isEditMode && this.vehicle) {
-      // Update existing vehicle
       const updateCommand: UpdateVehicleCommand = {
         id: this.vehicle.id,
         ...commandData,
@@ -271,41 +284,42 @@ export class VehicleFormComponent implements OnInit {
         next: (vehicle) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          this.toastService.success('Araç başarıyla güncellendi');
+          this.toastService.success(this.languageService.translate('messages.success.vehicle.updated'));
           this.saved.emit(vehicle);
         },
         error: (error) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
     } else {
-      // Create new vehicle
       const createCommand: CreateVehicleCommand = commandData;
 
       this.vehicleService.createVehicle(createCommand).subscribe({
         next: (vehicle) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          this.toastService.success('Araç başarıyla oluşturuldu');
+          this.toastService.success(this.languageService.translate('messages.success.vehicle.created'));
           this.saved.emit(vehicle);
         },
         error: (error) => {
           this.isLoading = false;
           this.cdr.markForCheck();
-          // Error is already handled by exception interceptor
         },
       });
     }
   }
 
-  /**
-   * Cancel form
-   */
   onCancel() {
     this.cancelled.emit();
   }
 
-}
+  getFuelTypeLabel(fuelType: string): string {
+    return this.languageService.translate(`messages.fuelTypes.${fuelType}`);
+  }
 
+  getTransmissionTypeLabel(transmissionType: string): string {
+    return this.languageService.translate(`messages.transmissionTypes.${transmissionType}`);
+  }
+
+}

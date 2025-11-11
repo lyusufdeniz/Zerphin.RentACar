@@ -10,6 +10,8 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -18,6 +20,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { DatepickerService } from '../../services/datepicker.service';
+import { LanguageService } from '../../services/language.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -36,7 +39,7 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
-  @Input() placeholder = 'Tarih seçin';
+  @Input() placeholder = '';
   @Input() label = '';
   @Input() required = false;
   @Input() disabled = false;
@@ -61,10 +64,58 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
 
   private cdr = inject(ChangeDetectorRef);
   private datepickerService = inject(DatepickerService);
+  private languageService = inject(LanguageService);
   private onChange = (value: string) => {};
-  
-  // Public method for template access
   onTouched = () => {};
+
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      placeholder: this.placeholder || this.languageService.translate('messages.datepicker.placeholder'),
+      previousYears: this.languageService.translate('messages.datepicker.previousYears'),
+      nextYears: this.languageService.translate('messages.datepicker.nextYears'),
+      previousMonth: this.languageService.translate('messages.datepicker.previousMonth'),
+      nextMonth: this.languageService.translate('messages.datepicker.nextMonth'),
+      months: this.getMonths(),
+      weekDays: this.getWeekDays(),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
+  getMonths(): string[] {
+    return [
+      this.languageService.translate('messages.datepicker.months.january'),
+      this.languageService.translate('messages.datepicker.months.february'),
+      this.languageService.translate('messages.datepicker.months.march'),
+      this.languageService.translate('messages.datepicker.months.april'),
+      this.languageService.translate('messages.datepicker.months.may'),
+      this.languageService.translate('messages.datepicker.months.june'),
+      this.languageService.translate('messages.datepicker.months.july'),
+      this.languageService.translate('messages.datepicker.months.august'),
+      this.languageService.translate('messages.datepicker.months.september'),
+      this.languageService.translate('messages.datepicker.months.october'),
+      this.languageService.translate('messages.datepicker.months.november'),
+      this.languageService.translate('messages.datepicker.months.december'),
+    ];
+  }
+
+  getWeekDays(): string[] {
+    return [
+      this.languageService.translate('messages.datepicker.weekDays.monday'),
+      this.languageService.translate('messages.datepicker.weekDays.tuesday'),
+      this.languageService.translate('messages.datepicker.weekDays.wednesday'),
+      this.languageService.translate('messages.datepicker.weekDays.thursday'),
+      this.languageService.translate('messages.datepicker.weekDays.friday'),
+      this.languageService.translate('messages.datepicker.weekDays.saturday'),
+      this.languageService.translate('messages.datepicker.weekDays.sunday'),
+    ];
+  }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
@@ -76,46 +127,22 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
     }
   }
 
-  months = [
-    'Ocak',
-    'Şubat',
-    'Mart',
-    'Nisan',
-    'Mayıs',
-    'Haziran',
-    'Temmuz',
-    'Ağustos',
-    'Eylül',
-    'Ekim',
-    'Kasım',
-    'Aralık',
-  ];
-
-  weekDays = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
-
   ngOnInit() {
     const today = new Date();
     this.currentMonth = today.getMonth();
     this.currentYear = today.getFullYear();
-    
-    // Generate year list (current year ± 50 years)
+
     this.generateYearList(this.currentYear);
-    
-    // Generate unique ID for this datepicker instance
+
     this.datepickerId = `datepicker-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Subscribe to datepicker open events
+
     this.datepickerSubscription = this.datepickerService.onDatepickerOpen().subscribe((openedId) => {
       if (openedId !== null && openedId !== this.datepickerId && this.isOpen) {
-        // Another datepicker was opened, close this one
         this.closeCalendar();
       }
     });
   }
 
-  /**
-   * Generate year list for year picker
-   */
   generateYearList(centerYear: number) {
     this.yearList = [];
     for (let year = centerYear - 50; year <= centerYear + 50; year++) {
@@ -170,9 +197,8 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
 
   toggleCalendar() {
     if (this.disabled) return;
-    
+
     if (!this.isOpen) {
-      // Opening calendar - notify service to close other datepickers
       this.datepickerService.notifyDatepickerOpened(this.datepickerId);
       this.isOpen = true;
       if (!this.currentYear) {
@@ -182,7 +208,6 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
         this.generateCalendar();
       }
     } else {
-      // Closing calendar
       this.isOpen = false;
       this.datepickerService.notifyDatepickerClosed();
     }
@@ -202,8 +227,7 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
     if (day === null) return;
 
     const date = new Date(this.currentYear, this.currentMonth, day);
-    
-    // Check min/max constraints
+
     if (this.min) {
       const minDate = new Date(this.min);
       if (date < minDate) return;
@@ -224,7 +248,6 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
 
   previousMonth() {
     if (this.showYearPicker) {
-      // Scroll years if in year picker mode
       const firstYear = this.yearList[0];
       this.generateYearList(firstYear - 20);
       this.cdr.markForCheck();
@@ -242,7 +265,6 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
 
   nextMonth() {
     if (this.showYearPicker) {
-      // Scroll years if in year picker mode
       const lastYear = this.yearList[this.yearList.length - 1];
       this.generateYearList(lastYear + 20);
       this.cdr.markForCheck();
@@ -258,16 +280,11 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
     }
   }
 
-  /**
-   * Toggle year picker view
-   */
   toggleYearPicker() {
     this.showYearPicker = !this.showYearPicker;
     if (this.showYearPicker) {
-      // Regenerate year list centered on current year
       this.generateYearList(this.currentYear);
-      
-      // Scroll to current year after view updates
+
       setTimeout(() => {
         this.scrollToCurrentYear();
       }, 0);
@@ -275,26 +292,19 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
     this.cdr.markForCheck();
   }
 
-  /**
-   * Scroll to current year in year picker
-   */
   scrollToCurrentYear() {
     if (this.yearGrid && this.yearGrid.nativeElement) {
       const yearIndex = this.yearList.indexOf(this.currentYear);
       if (yearIndex !== -1) {
-        // Calculate which row the current year is in (4 columns)
         const rowIndex = Math.floor(yearIndex / 4);
-        const yearItemHeight = 48; // Approximate height including gap
+        const yearItemHeight = 48;
         const scrollPosition = rowIndex * yearItemHeight;
-        
-        this.yearGrid.nativeElement.scrollTop = Math.max(0, scrollPosition - 60); // Offset for better visibility
+
+        this.yearGrid.nativeElement.scrollTop = Math.max(0, scrollPosition - 60);
       }
     }
   }
 
-  /**
-   * Select year from year picker
-   */
   selectYear(year: number) {
     this.currentYear = year;
     this.showYearPicker = false;
@@ -302,17 +312,11 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
     this.cdr.markForCheck();
   }
 
-  /**
-   * Check if year is current year
-   */
   isCurrentYear(year: number): boolean {
     const today = new Date();
     return year === today.getFullYear();
   }
 
-  /**
-   * Check if year is selected
-   */
   isSelectedYear(year: number): boolean {
     return year === this.currentYear;
   }
@@ -321,16 +325,14 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
     const firstDay = new Date(this.currentYear, this.currentMonth, 1);
     const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Monday = 0
+    const startingDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
 
     this.calendarDays = [];
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       this.calendarDays.push(null);
     }
 
-    // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       this.calendarDays.push(day);
     }
@@ -376,7 +378,7 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
   onInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    
+
     if (value) {
       const date = new Date(value);
       if (!isNaN(date.getTime())) {
@@ -400,10 +402,8 @@ export class DatepickerComponent implements OnInit, OnDestroy, ControlValueAcces
   }
 
   ngOnDestroy() {
-    // Unsubscribe from datepicker service
     if (this.datepickerSubscription) {
       this.datepickerSubscription.unsubscribe();
     }
   }
 }
-

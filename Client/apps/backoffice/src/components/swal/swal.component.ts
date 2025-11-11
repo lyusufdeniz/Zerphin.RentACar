@@ -43,7 +43,7 @@ export class SwalComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    // Add escape key listener
+
     document.addEventListener('keydown', this.handleEscape);
   }
 
@@ -57,9 +57,6 @@ export class SwalComponent implements OnInit, OnDestroy {
     }
   };
 
-  /**
-   * Get icon SVG path based on type
-   */
   getIconPath(): string {
     switch (this.type) {
       case 'success':
@@ -77,9 +74,6 @@ export class SwalComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Get icon color based on type
-   */
   getIconColor(): string {
     switch (this.type) {
       case 'success':
@@ -115,4 +109,3 @@ export class SwalComponent implements OnInit, OnDestroy {
     }
   }
 }
-

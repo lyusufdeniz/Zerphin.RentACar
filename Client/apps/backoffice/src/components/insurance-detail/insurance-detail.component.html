@@ -1,26 +1,25 @@
 <div class="insurance-detail">
-  <!-- Loading State -->
+
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Sigorta detayları yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
-  <!-- Insurance Details -->
   <div *ngIf="!isLoading && insurance" class="detail-content">
     <div class="detail-grid">
-      <!-- Policy Information -->
+
       <div class="detail-section">
-        <h3>Poliçe Bilgileri</h3>
+        <h3>{{ translations().policyInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Poliçe Numarası:</span>
+          <span class="detail-label">{{ translations().policyNumber }}</span>
           <span class="detail-value policy-number">{{ insurance.policyNumber }}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Sigorta Şirketi:</span>
+          <span class="detail-label">{{ translations().insuranceCompany }}</span>
           <span class="detail-value">{{ insurance.insuranceCompany }}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Durum:</span>
+          <span class="detail-label">{{ translations().status }}</span>
           <span class="detail-value">
             <span class="badge status" [class]="getStatusClass(insurance)">
               {{ getStatusName(insurance) }}
@@ -29,86 +28,80 @@
         </div>
       </div>
 
-      <!-- Dates -->
       <div class="detail-section">
-        <h3>Tarih Bilgileri</h3>
+        <h3>{{ translations().dateInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Başlangıç Tarihi:</span>
+          <span class="detail-label">{{ translations().startDate }}</span>
           <span class="detail-value">{{ formatDate(insurance.startDate) }}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Bitiş Tarihi:</span>
+          <span class="detail-label">{{ translations().endDate }}</span>
           <span class="detail-value">{{ formatDate(insurance.endDate) }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.createdAt">
-          <span class="detail-label">Oluşturma Tarihi:</span>
+          <span class="detail-label">{{ translations().createdAt }}</span>
           <span class="detail-value">{{ formatDateTime(insurance.createdAt) }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.updatedAt">
-          <span class="detail-label">Güncelleme Tarihi:</span>
+          <span class="detail-label">{{ translations().updatedAt }}</span>
           <span class="detail-value">{{ formatDateTime(insurance.updatedAt) }}</span>
         </div>
       </div>
 
-      <!-- Financial Information -->
       <div class="detail-section">
-        <h3>Finansal Bilgiler</h3>
+        <h3>{{ translations().financialInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Prim Tutarı:</span>
+          <span class="detail-label">{{ translations().premiumAmount }}</span>
           <span class="detail-value price">{{ formatCurrency(insurance.premiumAmount) }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.coverageLimit">
-          <span class="detail-label">Kapsam Limiti:</span>
+          <span class="detail-label">{{ translations().coverageLimit }}</span>
           <span class="detail-value price">{{ formatCurrency(insurance.coverageLimit) }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.deductible">
-          <span class="detail-label">Muafiyet:</span>
+          <span class="detail-label">{{ translations().deductible }}</span>
           <span class="detail-value price">{{ formatCurrency(insurance.deductible) }}</span>
         </div>
       </div>
 
-      <!-- Coverage Information -->
       <div class="detail-section">
-        <h3>Kapsam Bilgileri</h3>
+        <h3>{{ translations().coverageInfo }}</h3>
         <div class="detail-item" *ngIf="insurance.coverageType">
-          <span class="detail-label">Kapsam Türü:</span>
+          <span class="detail-label">{{ translations().coverageType }}</span>
           <span class="detail-value">{{ insurance.coverageType }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.coverageDetails">
-          <span class="detail-label">Kapsam Detayları:</span>
+          <span class="detail-label">{{ translations().coverageDetails }}</span>
           <span class="detail-value">{{ insurance.coverageDetails }}</span>
         </div>
       </div>
 
-      <!-- Vehicle Information -->
       <div class="detail-section">
-        <h3>Araç Bilgileri</h3>
+        <h3>{{ translations().vehicleInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Araç ID:</span>
+          <span class="detail-label">{{ translations().vehicleId }}</span>
           <span class="detail-value vehicle-info">{{ insurance.vehicleId }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.vehicleLicensePlate">
-          <span class="detail-label">Plaka:</span>
+          <span class="detail-label">{{ translations().licensePlate }}</span>
           <span class="detail-value vehicle-info">{{ insurance.vehicleLicensePlate }}</span>
         </div>
         <div class="detail-item" *ngIf="insurance.vehicleBrand && insurance.vehicleModel">
-          <span class="detail-label">Marka/Model:</span>
+          <span class="detail-label">{{ translations().brandModel }}</span>
           <span class="detail-value">{{ insurance.vehicleBrand }} {{ insurance.vehicleModel }}</span>
         </div>
       </div>
 
-      <!-- Contact Information -->
       <div class="detail-section" *ngIf="insurance.contactInfo">
-        <h3>İletişim Bilgileri</h3>
+        <h3>{{ translations().contactInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">İletişim:</span>
+          <span class="detail-label">{{ translations().contact }}</span>
           <span class="detail-value">{{ insurance.contactInfo }}</span>
         </div>
       </div>
 
-      <!-- Notes -->
       <div class="detail-section full-width" *ngIf="insurance.notes">
-        <h3>Notlar</h3>
+        <h3>{{ translations().notes }}</h3>
         <div class="detail-item">
           <p class="detail-notes">{{ insurance.notes }}</p>
         </div>
@@ -116,9 +109,7 @@
     </div>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="!isLoading && !insurance" class="empty-state">
-    <p>Sigorta detayları bulunamadı</p>
+    <p>{{ translations().notFound }}</p>
   </div>
 </div>
-

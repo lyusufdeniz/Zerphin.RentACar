@@ -3,10 +3,12 @@ import {
   Input,
   OnChanges,
   OnInit,
+  OnDestroy,
   SimpleChanges,
   ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
@@ -17,6 +19,9 @@ import {
   ChartOptions,
 } from 'chart.js';
 import { ChartService } from '../../services/chart.service';
+import { ThemeService } from '../../services/theme.service';
+import { Subscription } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-chart',
@@ -25,7 +30,7 @@ import { ChartService } from '../../services/chart.service';
   templateUrl: './chart.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartComponent implements OnInit, OnChanges {
+export class ChartComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() type: ChartType = 'line';
@@ -38,13 +43,23 @@ export class ChartComponent implements OnInit, OnChanges {
   public chartData: ChartData = { labels: [], datasets: [] };
   public chartType: ChartType = 'line';
 
-  constructor(
-    private chartService: ChartService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  private chartService = inject(ChartService);
+  private themeService = inject(ThemeService);
+  private cdr = inject(ChangeDetectorRef);
+  private themeSubscription?: Subscription;
 
   ngOnInit() {
     this.initializeChart();
+
+    this.themeSubscription = toObservable(this.themeService.currentTheme).subscribe(() => {
+      this.initializeChart();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -57,7 +72,6 @@ export class ChartComponent implements OnInit, OnChanges {
     this.chartType = this.type;
     this.chartData = this.data || { labels: [], datasets: [] };
 
-    // Merge default options with custom options
     this.chartOptions = this.chartService.mergeOptions(
       this.options || {},
       this.type
@@ -65,7 +79,6 @@ export class ChartComponent implements OnInit, OnChanges {
 
     this.cdr.markForCheck();
 
-    // Update chart if it exists
     setTimeout(() => {
       if (this.chart) {
         this.chart.update();
@@ -73,9 +86,6 @@ export class ChartComponent implements OnInit, OnChanges {
     }, 0);
   }
 
-  /**
-   * Update chart data
-   */
   updateChart(data: ChartData) {
     this.chartData = data;
     if (this.chart) {
@@ -83,9 +93,6 @@ export class ChartComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-   * Update chart options
-   */
   updateOptions(options: ChartOptions) {
     this.chartOptions = this.chartService.mergeOptions(
       options,
@@ -96,9 +103,6 @@ export class ChartComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-   * Get chart configuration
-   */
   getChartConfiguration(): any {
     switch (this.type) {
       case 'bar':
@@ -134,4 +138,3 @@ export class ChartComponent implements OnInit, OnChanges {
     }
   }
 }
-

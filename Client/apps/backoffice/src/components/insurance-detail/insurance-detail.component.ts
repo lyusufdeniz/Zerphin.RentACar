@@ -5,6 +5,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -14,6 +16,7 @@ import {
 } from '../../models/insurance';
 import { InsuranceService } from '../../services/insurance.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-insurance-detail',
@@ -27,6 +30,7 @@ export class InsuranceDetailComponent implements OnInit {
 
   private insuranceService = inject(InsuranceService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   insurance: Insurance | null = null;
@@ -34,15 +38,50 @@ export class InsuranceDetailComponent implements OnInit {
 
   statusNames = InsuranceStatusNames;
 
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      loading: this.languageService.translate('messages.details.insurance.loading'),
+      notFound: this.languageService.translate('messages.details.notFound.insurance'),
+      policyInfo: this.languageService.translate('messages.details.insurance.policyInfo'),
+      policyNumber: this.languageService.translate('messages.details.insurance.policyNumber'),
+      insuranceCompany: this.languageService.translate('messages.details.insurance.insuranceCompany'),
+      status: this.languageService.translate('messages.details.insurance.status'),
+      dateInfo: this.languageService.translate('messages.details.insurance.dateInfo'),
+      startDate: this.languageService.translate('messages.details.insurance.startDate'),
+      endDate: this.languageService.translate('messages.details.insurance.endDate'),
+      createdAt: this.languageService.translate('messages.details.insurance.createdAt'),
+      updatedAt: this.languageService.translate('messages.details.insurance.updatedAt'),
+      financialInfo: this.languageService.translate('messages.details.insurance.financialInfo'),
+      premiumAmount: this.languageService.translate('messages.details.insurance.premiumAmount'),
+      coverageLimit: this.languageService.translate('messages.details.insurance.coverageLimit'),
+      deductible: this.languageService.translate('messages.details.insurance.deductible'),
+      coverageInfo: this.languageService.translate('messages.details.insurance.coverageInfo'),
+      coverageType: this.languageService.translate('messages.details.insurance.coverageType'),
+      coverageDetails: this.languageService.translate('messages.details.insurance.coverageDetails'),
+      vehicleInfo: this.languageService.translate('messages.details.insurance.vehicleInfo'),
+      vehicleId: this.languageService.translate('messages.details.insurance.vehicleId'),
+      licensePlate: this.languageService.translate('messages.details.insurance.licensePlate'),
+      brandModel: this.languageService.translate('messages.details.insurance.brandModel'),
+      contactInfo: this.languageService.translate('messages.details.insurance.contactInfo'),
+      contact: this.languageService.translate('messages.details.insurance.contact'),
+      notes: this.languageService.translate('messages.details.insurance.notes'),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
   ngOnInit() {
     if (this.insuranceId) {
       this.loadInsurance();
     }
   }
 
-  /**
-   * Load insurance details
-   */
   loadInsurance() {
     this.isLoading = true;
     this.cdr.markForCheck();
@@ -56,31 +95,26 @@ export class InsuranceDetailComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
       },
     });
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+    return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
   }
 
-  /**
-   * Format date-time for display
-   */
   formatDateTime(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleString('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+    return date.toLocaleString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -89,20 +123,15 @@ export class InsuranceDetailComponent implements OnInit {
     });
   }
 
-  /**
-   * Format currency
-   */
   formatCurrency(amount: number | undefined): string {
     if (amount === undefined || amount === null) return '-';
-    return new Intl.NumberFormat('tr-TR', {
+    const locale = this.languageService.isTurkish() ? 'tr-TR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'TRY',
     }).format(amount);
   }
 
-  /**
-   * Calculate status based on dates
-   */
   calculateStatus(insurance: Insurance): InsuranceStatus {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -113,34 +142,26 @@ export class InsuranceDetailComponent implements OnInit {
     const endDate = new Date(insurance.endDate);
     endDate.setHours(0, 0, 0, 0);
 
-    // Calculate days until expiration
     const daysUntilExpiration = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    // If end date has passed
     if (today > endDate) {
       return InsuranceStatus.Expired;
     }
 
-    // If start date hasn't arrived yet
     if (today < startDate) {
-      return InsuranceStatus.Active; // Will be active when start date arrives
+      return InsuranceStatus.Active;
     }
 
-    // If expiring within 30 days
     if (daysUntilExpiration <= 30 && daysUntilExpiration > 0) {
       return InsuranceStatus.ExpiringSoon;
     }
 
-    // Otherwise active
     return InsuranceStatus.Active;
   }
 
-  /**
-   * Get status badge class
-   */
   getStatusClass(insurance: Insurance): string {
     const status = insurance.status ?? this.calculateStatus(insurance);
-    
+
     switch (status) {
       case InsuranceStatus.Active:
         return 'status-active';
@@ -155,12 +176,8 @@ export class InsuranceDetailComponent implements OnInit {
     }
   }
 
-  /**
-   * Get status name
-   */
   getStatusName(insurance: Insurance): string {
     const status = insurance.status ?? this.calculateStatus(insurance);
     return this.statusNames[status] || '-';
   }
 }
-

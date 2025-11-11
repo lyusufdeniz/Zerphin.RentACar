@@ -5,11 +5,11 @@
         type="text"
         [(ngModel)]="searchQuery"
         (keyup.enter)="search()"
-        placeholder="Marka, model veya plaka ile ara..."
+        [placeholder]="translations().searchPlaceholder"
         class="search-input"
       />
       <button class="btn-primary search-btn" (click)="search()" type="button" [disabled]="isLoading">
-        Ara
+        {{ translations().searchButton }}
       </button>
       <button
         *ngIf="searchQuery"
@@ -17,14 +17,14 @@
         (click)="clearSearch()"
         type="button"
       >
-        Temizle
+        {{ translations().clearButton }}
       </button>
     </div>
   </div>
 
   <div class="loading-container" *ngIf="isLoading">
     <div class="loading-spinner"></div>
-    <p>Araçlar yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
   <div class="customers-list" *ngIf="!isLoading">
@@ -56,7 +56,7 @@
     </div>
 
     <div *ngIf="vehicles.length === 0" class="empty-state">
-      <p>Araç bulunamadı</p>
+      <p>{{ translations().notFound }}</p>
     </div>
   </div>
 
@@ -66,18 +66,17 @@
       (click)="changePage(currentPage - 1)"
       [disabled]="currentPage === 1"
     >
-      Önceki
+      {{ translations().previous }}
     </button>
     <span class="pagination-info">
-      Sayfa {{ currentPage }} / {{ totalPages }} (Toplam: {{ totalCount }})
+      {{ translations().pageInfo }}
     </span>
     <button
       class="btn-pagination"
       (click)="changePage(currentPage + 1)"
       [disabled]="currentPage === totalPages"
     >
-      Sonraki
+      {{ translations().next }}
     </button>
   </div>
 </div>
-

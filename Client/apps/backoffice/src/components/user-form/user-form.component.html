@@ -1,88 +1,83 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
   <div class="form-grid">
-    <!-- First Name -->
+
     <div class="form-group">
-      <label for="firstName" class="form-label">Ad <span class="required">*</span></label>
+      <label for="firstName" class="form-label">{{ translations().firstName }} <span class="required">*</span></label>
       <input
         id="firstName"
         type="text"
         formControlName="firstName"
         class="form-input"
         [class.error]="hasError('firstName', 'required') || hasError('firstName', 'maxlength')"
-        placeholder="Ad"
+        [placeholder]="translations().firstNamePlaceholder"
       />
       <div class="error-message" *ngIf="hasError('firstName', 'required') || hasError('firstName', 'maxlength')">
         {{ getErrorMessage('firstName') }}
       </div>
     </div>
 
-    <!-- Last Name -->
     <div class="form-group">
-      <label for="lastName" class="form-label">Soyad <span class="required">*</span></label>
+      <label for="lastName" class="form-label">{{ translations().lastName }} <span class="required">*</span></label>
       <input
         id="lastName"
         type="text"
         formControlName="lastName"
         class="form-input"
         [class.error]="hasError('lastName', 'required') || hasError('lastName', 'maxlength')"
-        placeholder="Soyad"
+        [placeholder]="translations().lastNamePlaceholder"
       />
       <div class="error-message" *ngIf="hasError('lastName', 'required') || hasError('lastName', 'maxlength')">
         {{ getErrorMessage('lastName') }}
       </div>
     </div>
 
-    <!-- Email -->
     <div class="form-group">
-      <label for="email" class="form-label">Email <span class="required">*</span></label>
+      <label for="email" class="form-label">{{ translations().email }} <span class="required">*</span></label>
       <input
         id="email"
         type="email"
         formControlName="email"
         class="form-input"
         [class.error]="hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'maxlength')"
-        placeholder="email@example.com"
+        [placeholder]="translations().emailPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'maxlength')">
         {{ getErrorMessage('email') }}
       </div>
     </div>
 
-    <!-- Phone Number -->
     <div class="form-group">
-      <label for="phoneNumber" class="form-label">Telefon <span class="required">*</span></label>
+      <label for="phoneNumber" class="form-label">{{ translations().phoneNumber }} <span class="required">*</span></label>
       <input
         id="phoneNumber"
         type="text"
         formControlName="phoneNumber"
         class="form-input"
         [class.error]="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')"
-        placeholder="+905551234567"
+        [placeholder]="translations().phoneNumberPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')">
         {{ getErrorMessage('phoneNumber') }}
       </div>
     </div>
 
-    <!-- Password -->
     <div class="form-group" *ngIf="!isEditMode">
-      <label for="password" class="form-label">Şifre <span class="required">*</span></label>
+      <label for="password" class="form-label">{{ translations().password }} <span class="required">*</span></label>
       <input
         id="password"
         type="password"
         formControlName="password"
         class="form-input"
         [class.error]="hasError('password', 'required') || hasError('password', 'minlength') || hasError('password', 'pattern')"
-        placeholder="Minimum 8 karakter (büyük/küçük harf, rakam, özel karakter)"
+        [placeholder]="translations().passwordPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('password', 'required') || hasError('password', 'minlength') || hasError('password', 'pattern')">
         {{ getErrorMessage('password') }}
       </div>
     </div>
 
-    <!-- Role -->
     <div class="form-group">
-      <label for="role" class="form-label">Rol <span class="required">*</span></label>
+      <label for="role" class="form-label">{{ translations().role }} <span class="required">*</span></label>
       <select id="role" formControlName="role" class="form-input">
         <option *ngFor="let role of roles" [ngValue]="role">
           {{ getRoleName(role) }}
@@ -90,32 +85,30 @@
       </select>
     </div>
 
-    <!-- Address -->
     <div class="form-group full-width">
-      <label for="address" class="form-label">Adres</label>
+      <label for="address" class="form-label">{{ translations().address }}</label>
       <textarea
         id="address"
         formControlName="address"
         class="form-input"
         [class.error]="hasError('address', 'maxlength')"
         rows="3"
-        placeholder="Adres"
+        [placeholder]="translations().addressPlaceholder"
       ></textarea>
       <div class="error-message" *ngIf="hasError('address', 'maxlength')">
         {{ getErrorMessage('address') }}
       </div>
     </div>
 
-    <!-- Identity Number -->
     <div class="form-group">
-      <label for="identityNumber" class="form-label">TC Kimlik No</label>
+      <label for="identityNumber" class="form-label">{{ translations().identityNumber }}</label>
       <input
         id="identityNumber"
         type="text"
         formControlName="identityNumber"
         class="form-input"
         [class.error]="hasError('identityNumber', 'maxlength')"
-        placeholder="TC Kimlik No"
+        [placeholder]="translations().identityNumberPlaceholder"
         maxlength="11"
       />
       <div class="error-message" *ngIf="hasError('identityNumber', 'maxlength')">
@@ -123,10 +116,9 @@
       </div>
     </div>
 
-    <!-- Birth Date -->
     <div class="form-group">
       <app-datepicker
-        label="Doğum Tarihi"
+        [label]="translations().birthDate"
         formControlName="birthDate"
       ></app-datepicker>
       <div class="error-message" *ngIf="hasError('birthDate', 'minimumAge')">
@@ -134,32 +126,29 @@
       </div>
     </div>
 
-    <!-- Customer Fields Section -->
     <ng-container *ngIf="isCustomerRole() && !isEditMode">
       <div class="form-group full-width">
-        <h3 class="section-title">Müşteri Bilgileri</h3>
+        <h3 class="section-title">{{ translations().customerInfo }}</h3>
       </div>
 
-      <!-- License Number -->
       <div class="form-group">
-        <label for="licenseNumber" class="form-label">Ehliyet Numarası</label>
+        <label for="licenseNumber" class="form-label">{{ translations().licenseNumber }}</label>
         <input
           id="licenseNumber"
           type="text"
           formControlName="licenseNumber"
           class="form-input"
           [class.error]="hasError('licenseNumber', 'maxlength')"
-          placeholder="Ehliyet numarası"
+          [placeholder]="translations().licenseNumberPlaceholder"
         />
         <div class="error-message" *ngIf="hasError('licenseNumber', 'maxlength')">
           {{ getErrorMessage('licenseNumber') }}
         </div>
       </div>
 
-      <!-- License Expiry Date -->
       <div class="form-group">
         <app-datepicker
-          label="Ehliyet Geçerlilik Tarihi"
+          [label]="translations().licenseExpiryDate"
           formControlName="licenseExpiryDate"
           [required]="true"
         ></app-datepicker>
@@ -168,64 +157,60 @@
         </div>
       </div>
 
-      <!-- License Class -->
       <div class="form-group">
-        <label for="licenseClass" class="form-label">Ehliyet Sınıfı</label>
+        <label for="licenseClass" class="form-label">{{ translations().licenseClass }}</label>
         <input
           id="licenseClass"
           type="text"
           formControlName="licenseClass"
           class="form-input"
           [class.error]="hasError('licenseClass', 'maxlength')"
-          placeholder="B, B1, vb."
+          [placeholder]="translations().licenseClassPlaceholder"
         />
         <div class="error-message" *ngIf="hasError('licenseClass', 'maxlength')">
           {{ getErrorMessage('licenseClass') }}
         </div>
       </div>
 
-      <!-- Emergency Contact Name -->
       <div class="form-group">
-        <label for="emergencyContactName" class="form-label">Acil Durum İletişim Adı</label>
+        <label for="emergencyContactName" class="form-label">{{ translations().emergencyContactName }}</label>
         <input
           id="emergencyContactName"
           type="text"
           formControlName="emergencyContactName"
           class="form-input"
           [class.error]="hasError('emergencyContactName', 'maxlength')"
-          placeholder="Acil durum kişi adı"
+          [placeholder]="translations().emergencyContactNamePlaceholder"
         />
         <div class="error-message" *ngIf="hasError('emergencyContactName', 'maxlength')">
           {{ getErrorMessage('emergencyContactName') }}
         </div>
       </div>
 
-      <!-- Emergency Contact Phone -->
       <div class="form-group">
-        <label for="emergencyContactPhone" class="form-label">Acil Durum İletişim Telefonu</label>
+        <label for="emergencyContactPhone" class="form-label">{{ translations().emergencyContactPhone }}</label>
         <input
           id="emergencyContactPhone"
           type="text"
           formControlName="emergencyContactPhone"
           class="form-input"
           [class.error]="hasError('emergencyContactPhone', 'maxlength')"
-          placeholder="0555 123 45 67"
+          [placeholder]="translations().emergencyContactPhonePlaceholder"
         />
         <div class="error-message" *ngIf="hasError('emergencyContactPhone', 'maxlength')">
           {{ getErrorMessage('emergencyContactPhone') }}
         </div>
       </div>
 
-      <!-- Credit Score -->
       <div class="form-group">
-        <label for="creditScore" class="form-label">Kredi Skoru <span class="required">*</span></label>
+        <label for="creditScore" class="form-label">{{ translations().creditScore }} <span class="required">*</span></label>
         <input
           id="creditScore"
           type="number"
           formControlName="creditScore"
           class="form-input"
           [class.error]="hasError('creditScore', 'required') || hasError('creditScore', 'min') || hasError('creditScore', 'max')"
-          placeholder="0"
+          [placeholder]="translations().creditScorePlaceholder"
           min="0"
           max="1000"
         />
@@ -234,70 +219,65 @@
         </div>
       </div>
 
-      <!-- Is Verified -->
       <div class="form-group">
         <label class="checkbox-label">
           <input
             type="checkbox"
             formControlName="isVerified"
           />
-          <span>Doğrulandı</span>
+          <span>{{ translations().isVerified }}</span>
         </label>
       </div>
 
-      <!-- Has Insurance -->
       <div class="form-group">
         <label class="checkbox-label">
           <input
             type="checkbox"
             formControlName="hasInsurance"
           />
-          <span>Sigortası Var</span>
+          <span>{{ translations().hasInsurance }}</span>
         </label>
       </div>
 
-      <!-- Insurance Company -->
       <div class="form-group" *ngIf="userForm.get('hasInsurance')?.value">
-        <label for="insuranceCompany" class="form-label">Sigorta Şirketi</label>
+        <label for="insuranceCompany" class="form-label">{{ translations().insuranceCompany }}</label>
         <input
           id="insuranceCompany"
           type="text"
           formControlName="insuranceCompany"
           class="form-input"
           [class.error]="hasError('insuranceCompany', 'maxlength')"
-          placeholder="Sigorta şirketi adı"
+          [placeholder]="translations().insuranceCompanyPlaceholder"
         />
         <div class="error-message" *ngIf="hasError('insuranceCompany', 'maxlength')">
           {{ getErrorMessage('insuranceCompany') }}
         </div>
       </div>
 
-      <!-- Insurance Policy Number -->
       <div class="form-group" *ngIf="userForm.get('hasInsurance')?.value">
-        <label for="insurancePolicyNumber" class="form-label">Sigorta Poliçe Numarası</label>
+        <label for="insurancePolicyNumber" class="form-label">{{ translations().insurancePolicyNumber }}</label>
         <input
           id="insurancePolicyNumber"
           type="text"
           formControlName="insurancePolicyNumber"
           class="form-input"
           [class.error]="hasError('insurancePolicyNumber', 'maxlength')"
-          placeholder="Poliçe numarası"
+          [placeholder]="translations().insurancePolicyNumberPlaceholder"
         />
         <div class="error-message" *ngIf="hasError('insurancePolicyNumber', 'maxlength')">
           {{ getErrorMessage('insurancePolicyNumber') }}
         </div>
       </div>
 
-      <!-- Special Notes -->
       <div class="form-group full-width">
-        <label for="specialNotes" class="form-label">Özel Notlar</label>
+        <label for="specialNotes" class="form-label">{{ translations().specialNotes }}</label>
         <textarea
           id="specialNotes"
           formControlName="specialNotes"
           class="form-input"
           [class.error]="hasError('specialNotes', 'maxlength')"
           rows="4"
-          placeholder="Özel notlar..."
+          [placeholder]="translations().specialNotesPlaceholder"
         ></textarea>
         <div class="error-message" *ngIf="hasError('specialNotes', 'maxlength')">
           {{ getErrorMessage('specialNotes') }}
@@ -306,15 +286,13 @@
     </ng-container>
   </div>
 
-  <!-- Form Footer -->
   <div modal-footer class="form-footer">
     <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">
-      İptal
+      {{ translations().cancel }}
     </button>
     <button type="submit" class="btn-primary" [disabled]="isLoading">
-      <span *ngIf="isLoading">Kaydediliyor...</span>
-      <span *ngIf="!isLoading">{{ isEditMode ? 'Güncelle' : 'Kaydet' }}</span>
+      <span *ngIf="isLoading">{{ translations().saving }}</span>
+      <span *ngIf="!isLoading">{{ isEditMode ? translations().update : translations().save }}</span>
     </button>
   </div>
 </form>
-

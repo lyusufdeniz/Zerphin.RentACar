@@ -6,11 +6,14 @@ import {
   inject,
   Output,
   EventEmitter,
+  computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService } from '../../services/vehicle.service';
 import { Vehicle, VehicleSearchParams } from '../../models/vehicle';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-vehicle-select',
@@ -23,6 +26,7 @@ export class VehicleSelectComponent implements OnInit {
   @Output() vehicleSelected = new EventEmitter<Vehicle>();
 
   private vehicleService = inject(VehicleService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
 
   vehicles: Vehicle[] = [];
@@ -33,13 +37,35 @@ export class VehicleSelectComponent implements OnInit {
   totalPages = 0;
   totalCount = 0;
 
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      searchPlaceholder: this.languageService.translate('messages.select.vehicle.searchPlaceholder'),
+      searchButton: this.languageService.translate('messages.select.vehicle.searchButton'),
+      clearButton: this.languageService.translate('messages.select.vehicle.clearButton'),
+      loading: this.languageService.translate('messages.select.vehicle.loading'),
+      notFound: this.languageService.translate('messages.select.vehicle.notFound'),
+      previous: this.languageService.translate('messages.select.vehicle.previous'),
+      next: this.languageService.translate('messages.select.vehicle.next'),
+      pageInfo: this.languageService.translateWithParams('messages.select.vehicle.pageInfo', {
+        currentPage: this.currentPage,
+        totalPages: this.totalPages,
+        totalCount: this.totalCount,
+      }),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const _ = this.languageService.currentLanguage();
+      this.cdr.markForCheck();
+    });
+  }
+
   ngOnInit() {
     this.loadVehicles();
   }
 
-  /**
-   * Load vehicles with search
-   */
   loadVehicles() {
     this.isLoading = true;
     this.cdr.markForCheck();
@@ -53,8 +79,7 @@ export class VehicleSelectComponent implements OnInit {
 
     if (this.searchQuery.trim()) {
       const query = this.searchQuery.trim();
-      // Try to detect if it's a license plate (contains numbers and letters)
-      // Otherwise search by brand/model
+
       if (/^[0-9]{2}[A-Z]{1,3}[0-9]{2,4}$/.test(query.toUpperCase().replace(/\s/g, ''))) {
         params.LicensePlate = query;
       } else {
@@ -75,31 +100,22 @@ export class VehicleSelectComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
+
       },
     });
   }
 
-  /**
-   * Search vehicles
-   */
   search() {
     this.currentPage = 1;
     this.loadVehicles();
   }
 
-  /**
-   * Clear search
-   */
   clearSearch() {
     this.searchQuery = '';
     this.currentPage = 1;
     this.loadVehicles();
   }
 
-  /**
-   * Change page
-   */
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -107,53 +123,44 @@ export class VehicleSelectComponent implements OnInit {
     }
   }
 
-  /**
-   * Select vehicle
-   */
   selectVehicle(vehicle: Vehicle) {
     this.vehicleSelected.emit(vehicle);
   }
 
-  /**
-   * Get vehicle display name
-   */
   getVehicleDisplayName(vehicle: Vehicle): string {
     return `${vehicle.licensePlate} - ${vehicle.brand} ${vehicle.model}`;
   }
 
-  /**
-   * Get vehicle details text
-   */
   getVehicleDetailsText(vehicle: Vehicle): string {
     const details: string[] = [];
     if (vehicle.year) {
       details.push(`${vehicle.year}`);
     }
     if (vehicle.category) {
-      const categoryNames: Record<number, string> = {
-        1: 'Hatchback',
-        2: 'Sedan',
-        3: 'SUV',
-        4: 'Pickup',
+      const categoryMap: Record<number, string> = {
+        1: this.languageService.translate('messages.select.vehicle.categories.hatchback'),
+        2: this.languageService.translate('messages.select.vehicle.categories.sedan'),
+        3: this.languageService.translate('messages.select.vehicle.categories.suv'),
+        4: this.languageService.translate('messages.select.vehicle.categories.pickup'),
       };
-      details.push(categoryNames[vehicle.category] || '');
+      details.push(categoryMap[vehicle.category] || '');
     }
     if (vehicle.dailyRentalPrice) {
-      details.push(`${vehicle.dailyRentalPrice} TL/gün`);
+      const priceText = this.languageService.translateWithParams('messages.select.vehicle.pricePerDay', {
+        price: vehicle.dailyRentalPrice,
+      });
+      details.push(priceText);
     }
     if (vehicle.status) {
-      const statusNames: Record<number, string> = {
-        1: 'Müsait',
-        2: 'Kiralanmış',
+      const statusMap: Record<number, string> = {
+        1: this.languageService.translate('messages.select.vehicle.status.available'),
+        2: this.languageService.translate('messages.select.vehicle.status.rented'),
       };
-      details.push(statusNames[vehicle.status] || '');
+      details.push(statusMap[vehicle.status] || '');
     }
     return details.filter(d => d).join(' • ');
   }
 
-  /**
-   * Get vehicle image URL
-   */
   getVehicleImage(vehicle: Vehicle): string | null {
     if (vehicle.imageUrl) {
       return vehicle.imageUrl;
@@ -164,4 +171,3 @@ export class VehicleSelectComponent implements OnInit {
     return null;
   }
 }
-

@@ -1,84 +1,79 @@
 <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="vehicle-form">
   <div class="form-grid">
-    <!-- Brand -->
+
     <div class="form-group">
-      <label for="brand" class="form-label">Marka <span class="required">*</span></label>
+      <label for="brand" class="form-label">{{ translations().brand }} <span class="required">*</span></label>
       <input
         id="brand"
         type="text"
         formControlName="brand"
         class="form-input"
         [class.error]="hasError('brand', 'required')"
-        placeholder="Marka girin"
+        [placeholder]="translations().brandPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('brand', 'required')">
         {{ getErrorMessage('brand') }}
       </div>
     </div>
 
-    <!-- Model -->
     <div class="form-group">
-      <label for="model" class="form-label">Model <span class="required">*</span></label>
+      <label for="model" class="form-label">{{ translations().model }} <span class="required">*</span></label>
       <input
         id="model"
         type="text"
         formControlName="model"
         class="form-input"
         [class.error]="hasError('model', 'required')"
-        placeholder="Model girin"
+        [placeholder]="translations().modelPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('model', 'required')">
         {{ getErrorMessage('model') }}
       </div>
     </div>
 
-    <!-- License Plate -->
     <div class="form-group">
-      <label for="licensePlate" class="form-label">Plaka <span class="required">*</span></label>
+      <label for="licensePlate" class="form-label">{{ translations().licensePlate }} <span class="required">*</span></label>
       <input
         id="licensePlate"
         type="text"
         formControlName="licensePlate"
         class="form-input"
         [class.error]="hasError('licensePlate', 'required')"
-        placeholder="34ABC123"
+        [placeholder]="translations().licensePlatePlaceholder"
       />
       <div class="error-message" *ngIf="hasError('licensePlate', 'required')">
         {{ getErrorMessage('licensePlate') }}
       </div>
     </div>
 
-    <!-- Year -->
     <div class="form-group">
-      <label for="year" class="form-label">Yıl <span class="required">*</span></label>
+      <label for="year" class="form-label">{{ translations().year }} <span class="required">*</span></label>
       <input
         id="year"
         type="number"
         formControlName="year"
         class="form-input"
         [class.error]="hasError('year', 'required') || hasError('year', 'min') || hasError('year', 'max')"
-        placeholder="2024"
+        [placeholder]="translations().yearPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('year', 'required') || hasError('year', 'min') || hasError('year', 'max')">
         {{ getErrorMessage('year') }}
       </div>
     </div>
 
-    <!-- Color -->
     <div class="form-group">
-      <label for="color" class="form-label">Renk</label>
+      <label for="color" class="form-label">{{ translations().color }}</label>
       <input
         id="color"
         type="text"
         formControlName="color"
         class="form-input"
-        placeholder="Beyaz"
+        [placeholder]="translations().colorPlaceholder"
       />
     </div>
 
-    <!-- Category -->
     <div class="form-group">
-      <label for="category" class="form-label">Kategori <span class="required">*</span></label>
+      <label for="category" class="form-label">{{ translations().category }} <span class="required">*</span></label>
       <select id="category" formControlName="category" class="form-input">
         <option *ngFor="let cat of categories" [ngValue]="cat">
           {{ categoryNames[cat] }}
@@ -86,17 +81,15 @@
       </select>
     </div>
 
-
-    <!-- Daily Rental Price -->
     <div class="form-group">
-      <label for="dailyRentalPrice" class="form-label">Günlük Kira Fiyatı (TL) <span class="required">*</span></label>
+      <label for="dailyRentalPrice" class="form-label">{{ translations().dailyRentalPrice }} <span class="required">*</span></label>
       <input
         id="dailyRentalPrice"
         type="number"
         formControlName="dailyRentalPrice"
         class="form-input"
         [class.error]="hasError('dailyRentalPrice', 'required') || hasError('dailyRentalPrice', 'min')"
-        placeholder="0.00"
+        [placeholder]="translations().dailyRentalPricePlaceholder"
         step="0.01"
         min="0"
       />
@@ -105,16 +98,15 @@
       </div>
     </div>
 
-    <!-- Seating Capacity -->
     <div class="form-group">
-      <label for="seatingCapacity" class="form-label">Koltuk Sayısı <span class="required">*</span></label>
+      <label for="seatingCapacity" class="form-label">{{ translations().seatingCapacity }} <span class="required">*</span></label>
       <input
         id="seatingCapacity"
         type="number"
         formControlName="seatingCapacity"
         class="form-input"
         [class.error]="hasError('seatingCapacity', 'required') || hasError('seatingCapacity', 'min')"
-        placeholder="5"
+        [placeholder]="translations().seatingCapacityPlaceholder"
         min="1"
         max="50"
       />
@@ -123,38 +115,35 @@
       </div>
     </div>
 
-    <!-- Fuel Type -->
     <div class="form-group">
-      <label for="fuelType" class="form-label">Yakıt Türü</label>
+      <label for="fuelType" class="form-label">{{ translations().fuelType }}</label>
       <select id="fuelType" formControlName="fuelType" class="form-input">
-        <option value="">Seçiniz</option>
+        <option value="">{{ translations().select }}</option>
         <option *ngFor="let fuel of fuelTypes" [value]="fuel">
-          {{ fuel }}
+          {{ getFuelTypeLabel(fuel) }}
         </option>
       </select>
     </div>
 
-    <!-- Transmission -->
     <div class="form-group">
-      <label for="transmission" class="form-label">Vites Türü</label>
+      <label for="transmission" class="form-label">{{ translations().transmission }}</label>
       <select id="transmission" formControlName="transmission" class="form-input">
-        <option value="">Seçiniz</option>
+        <option value="">{{ translations().select }}</option>
         <option *ngFor="let trans of transmissionTypes" [value]="trans">
-          {{ trans }}
+          {{ getTransmissionTypeLabel(trans) }}
         </option>
       </select>
     </div>
 
-    <!-- KM -->
     <div class="form-group">
-      <label for="km" class="form-label">Kilometre</label>
+      <label for="km" class="form-label">{{ translations().km }}</label>
       <input
         id="km"
         type="number"
         formControlName="km"
         class="form-input"
         [class.error]="hasError('km', 'min')"
-        placeholder="0"
+        [placeholder]="translations().kmPlaceholder"
         min="0"
       />
       <div class="error-message" *ngIf="hasError('km', 'min')">
@@ -162,9 +151,8 @@
       </div>
     </div>
 
-    <!-- Image -->
     <div class="form-group full-width">
-      <label for="image" class="form-label">Araç Görseli</label>
+      <label for="image" class="form-label">{{ translations().image }}</label>
       <input
         id="image"
         type="file"
@@ -175,49 +163,46 @@
       <div *ngIf="getImagePreview()" class="image-preview">
         <img [src]="getImagePreview()" alt="Preview" />
       </div>
+      <small class="hint-text">{{ translations().imageHint }}</small>
     </div>
 
-    <!-- Description -->
     <div class="form-group full-width">
-      <label for="description" class="form-label">Açıklama</label>
+      <label for="description" class="form-label">{{ translations().description }}</label>
       <textarea
         id="description"
         formControlName="description"
         class="form-input"
         rows="4"
-        placeholder="Araç açıklaması..."
+        [placeholder]="translations().descriptionPlaceholder"
       ></textarea>
     </div>
 
-    <!-- Features -->
     <div class="form-group full-width">
-      <label class="form-label">Özellikler</label>
+      <label class="form-label">{{ translations().features }}</label>
       <div class="checkbox-group">
         <label class="checkbox-label">
           <input type="checkbox" formControlName="hasAirConditioning" />
-          <span>Klima</span>
+          <span>{{ translations().hasAirConditioning }}</span>
         </label>
         <label class="checkbox-label">
           <input type="checkbox" formControlName="hasGPS" />
-          <span>GPS</span>
+          <span>{{ translations().hasGPS }}</span>
         </label>
         <label class="checkbox-label">
           <input type="checkbox" formControlName="hasBluetooth" />
-          <span>Bluetooth</span>
+          <span>{{ translations().bluetooth }}</span>
         </label>
       </div>
     </div>
   </div>
 
-  <!-- Form Footer -->
   <div modal-footer class="form-footer">
     <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">
-      İptal
+      {{ translations().cancel }}
     </button>
     <button type="submit" class="btn-primary" [disabled]="isLoading">
-      <span *ngIf="isLoading">Kaydediliyor...</span>
-      <span *ngIf="!isLoading">{{ isEditMode ? 'Güncelle' : 'Kaydet' }}</span>
+      <span *ngIf="isLoading">{{ translations().saving }}</span>
+      <span *ngIf="!isLoading">{{ isEditMode ? translations().update : translations().save }}</span>
     </button>
   </div>
 </form>
-

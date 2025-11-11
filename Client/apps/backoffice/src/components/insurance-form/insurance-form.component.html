@@ -1,8 +1,8 @@
 <form [formGroup]="insuranceForm" (ngSubmit)="onSubmit()" class="insurance-form">
   <div class="form-grid">
-    <!-- Vehicle -->
+
     <div class="form-group">
-      <label for="vehicleId" class="form-label">Araç <span class="required">*</span></label>
+      <label for="vehicleId" class="form-label">{{ translations().vehicle }} <span class="required">*</span></label>
       <select
         id="vehicleId"
         formControlName="vehicleId"
@@ -10,7 +10,7 @@
         [class.error]="hasError('vehicleId', 'required')"
         [disabled]="isLoadingVehicles || isEditMode"
       >
-        <option value="">Araç seçin</option>
+        <option value="">{{ translations().vehicleSelect }}</option>
         <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">
           {{ getVehicleDisplayText(vehicle) }}
         </option>
@@ -18,44 +18,41 @@
       <div class="error-message" *ngIf="hasError('vehicleId', 'required')">
         {{ getErrorMessage('vehicleId') }}
       </div>
-      <div *ngIf="isLoadingVehicles" class="loading-text">Araçlar yükleniyor...</div>
+      <div *ngIf="isLoadingVehicles" class="loading-text">{{ translations().loadingVehicles }}</div>
     </div>
 
-    <!-- Policy Number -->
     <div class="form-group">
-      <label for="policyNumber" class="form-label">Poliçe Numarası <span class="required">*</span></label>
+      <label for="policyNumber" class="form-label">{{ translations().policyNumber }} <span class="required">*</span></label>
       <input
         id="policyNumber"
         type="text"
         formControlName="policyNumber"
         class="form-input"
         [class.error]="hasError('policyNumber', 'required') || hasError('policyNumber', 'maxlength')"
-        placeholder="Poliçe numarası girin"
+        [placeholder]="translations().policyNumberPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('policyNumber', 'required') || hasError('policyNumber', 'maxlength')">
         {{ getErrorMessage('policyNumber') }}
       </div>
     </div>
 
-    <!-- Insurance Company -->
     <div class="form-group">
-      <label for="insuranceCompany" class="form-label">Sigorta Şirketi <span class="required">*</span></label>
+      <label for="insuranceCompany" class="form-label">{{ translations().insuranceCompany }} <span class="required">*</span></label>
       <input
         id="insuranceCompany"
         type="text"
         formControlName="insuranceCompany"
         class="form-input"
         [class.error]="hasError('insuranceCompany', 'required') || hasError('insuranceCompany', 'maxlength')"
-        placeholder="Sigorta şirketi adı girin"
+        [placeholder]="translations().insuranceCompanyPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('insuranceCompany', 'required') || hasError('insuranceCompany', 'maxlength')">
         {{ getErrorMessage('insuranceCompany') }}
       </div>
     </div>
 
-    <!-- Start Date -->
     <div class="form-group">
-      <label for="startDate" class="form-label">Başlangıç Tarihi <span class="required">*</span></label>
+      <label for="startDate" class="form-label">{{ translations().startDate }} <span class="required">*</span></label>
       <input
         id="startDate"
         type="date"
@@ -69,9 +66,8 @@
       </div>
     </div>
 
-    <!-- End Date -->
     <div class="form-group">
-      <label for="endDate" class="form-label">Bitiş Tarihi <span class="required">*</span></label>
+      <label for="endDate" class="form-label">{{ translations().endDate }} <span class="required">*</span></label>
       <input
         id="endDate"
         type="date"
@@ -84,20 +80,19 @@
         {{ getErrorMessage('endDate') }}
       </div>
       <div class="error-message" *ngIf="hasError('endDate', 'dateRange')">
-        Bitiş tarihi başlangıç tarihinden önce olamaz
+        {{ translations().endDateError }}
       </div>
     </div>
 
-    <!-- Premium Amount -->
     <div class="form-group">
-      <label for="premiumAmount" class="form-label">Prim Tutarı (TL) <span class="required">*</span></label>
+      <label for="premiumAmount" class="form-label">{{ translations().premiumAmount }} <span class="required">*</span></label>
       <input
         id="premiumAmount"
         type="number"
         formControlName="premiumAmount"
         class="form-input"
         [class.error]="hasError('premiumAmount', 'required') || hasError('premiumAmount', 'min')"
-        placeholder="0.00"
+        [placeholder]="translations().premiumAmountPlaceholder"
         step="0.01"
         min="0"
       />
@@ -106,32 +101,30 @@
       </div>
     </div>
 
-    <!-- Coverage Type -->
     <div class="form-group">
-      <label for="coverageType" class="form-label">Kapsam Türü</label>
+      <label for="coverageType" class="form-label">{{ translations().coverageType }}</label>
       <input
         id="coverageType"
         type="text"
         formControlName="coverageType"
         class="form-input"
         [class.error]="hasError('coverageType', 'maxlength')"
-        placeholder="Örn: Kasko, Trafik, vs."
+        [placeholder]="translations().coverageTypePlaceholder"
       />
       <div class="error-message" *ngIf="hasError('coverageType', 'maxlength')">
         {{ getErrorMessage('coverageType') }}
       </div>
     </div>
 
-    <!-- Coverage Limit -->
     <div class="form-group">
-      <label for="coverageLimit" class="form-label">Kapsam Limiti (TL)</label>
+      <label for="coverageLimit" class="form-label">{{ translations().coverageLimit }}</label>
       <input
         id="coverageLimit"
         type="number"
         formControlName="coverageLimit"
         class="form-input"
         [class.error]="hasError('coverageLimit', 'min')"
-        placeholder="0.00"
+        [placeholder]="translations().coverageLimitPlaceholder"
         step="0.01"
         min="0"
       />
@@ -140,16 +133,15 @@
       </div>
     </div>
 
-    <!-- Deductible -->
     <div class="form-group">
-      <label for="deductible" class="form-label">Muafiyet (TL)</label>
+      <label for="deductible" class="form-label">{{ translations().deductible }}</label>
       <input
         id="deductible"
         type="number"
         formControlName="deductible"
         class="form-input"
         [class.error]="hasError('deductible', 'min')"
-        placeholder="0.00"
+        [placeholder]="translations().deductiblePlaceholder"
         step="0.01"
         min="0"
       />
@@ -158,32 +150,30 @@
       </div>
     </div>
 
-    <!-- Coverage Details -->
     <div class="form-group full-width">
-      <label for="coverageDetails" class="form-label">Kapsam Detayları</label>
+      <label for="coverageDetails" class="form-label">{{ translations().coverageDetails }}</label>
       <textarea
         id="coverageDetails"
         formControlName="coverageDetails"
         class="form-input"
         [class.error]="hasError('coverageDetails', 'maxlength')"
         rows="4"
-        placeholder="Kapsam detayları..."
+        [placeholder]="translations().coverageDetailsPlaceholder"
       ></textarea>
       <div class="error-message" *ngIf="hasError('coverageDetails', 'maxlength')">
         {{ getErrorMessage('coverageDetails') }}
       </div>
     </div>
 
-    <!-- Contact Info -->
     <div class="form-group">
-      <label for="contactInfo" class="form-label">İletişim Bilgileri</label>
+      <label for="contactInfo" class="form-label">{{ translations().contactInfo }}</label>
       <input
         id="contactInfo"
         type="text"
         formControlName="contactInfo"
         class="form-input"
         [class.error]="hasError('contactInfo', 'maxlength')"
-        placeholder="İletişim bilgileri..."
+        [placeholder]="translations().contactInfoPlaceholder"
       />
       <div class="error-message" *ngIf="hasError('contactInfo', 'maxlength')">
         {{ getErrorMessage('contactInfo') }}
@@ -191,15 +181,13 @@
     </div>
   </div>
 
-  <!-- Form Footer -->
   <div modal-footer class="form-footer">
     <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="isLoading">
-      İptal
+      {{ translations().cancel }}
     </button>
     <button type="submit" class="btn-primary" [disabled]="isLoading || isLoadingVehicles">
-      <span *ngIf="isLoading">Kaydediliyor...</span>
-      <span *ngIf="!isLoading">{{ isEditMode ? 'Güncelle' : 'Kaydet' }}</span>
+      <span *ngIf="isLoading">{{ translations().saving }}</span>
+      <span *ngIf="!isLoading">{{ isEditMode ? translations().update : translations().save }}</span>
     </button>
   </div>
 </form>
-

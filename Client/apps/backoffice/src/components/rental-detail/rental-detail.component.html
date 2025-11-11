@@ -1,18 +1,17 @@
 <div class="rental-detail">
-  <!-- Loading State -->
+
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Kiralama detayları yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
-  <!-- Rental Details -->
   <div *ngIf="!isLoading && rental" class="detail-content">
     <div class="detail-grid">
-      <!-- Rental Information -->
+
       <div class="detail-section">
-        <h3>Kiralama Bilgileri</h3>
+        <h3>{{ translations().rentalInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Durum:</span>
+          <span class="detail-label">{{ translations().status }}</span>
           <span class="detail-value">
             <span class="badge status" [class]="getStatusClass(rental.status)">
               {{ statusNames[rental.status] }}
@@ -20,147 +19,141 @@
           </span>
         </div>
         <div class="detail-item" *ngIf="rental.customerName">
-          <span class="detail-label">Müşteri Adı:</span>
+          <span class="detail-label">{{ translations().customerName }}</span>
           <span class="detail-value">{{ rental.customerName }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.customerEmail">
-          <span class="detail-label">Müşteri Email:</span>
+          <span class="detail-label">{{ translations().customerEmail }}</span>
           <span class="detail-value">{{ rental.customerEmail }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.customerPhone">
-          <span class="detail-label">Müşteri Telefon:</span>
+          <span class="detail-label">{{ translations().customerPhone }}</span>
           <span class="detail-value">{{ rental.customerPhone }}</span>
         </div>
       </div>
 
-      <!-- Vehicle Information -->
       <div class="detail-section">
-        <h3>Araç Bilgileri</h3>
+        <h3>{{ translations().vehicleInfo }}</h3>
         <div class="detail-item full-width" *ngIf="getVehicleImage()">
           <div class="vehicle-image-wrapper">
             <img [src]="getVehicleImage()" [alt]="getVehicleDisplayName()" class="vehicle-image" />
           </div>
         </div>
         <div class="detail-item" *ngIf="rental.vehicleLicensePlate">
-          <span class="detail-label">Plaka:</span>
+          <span class="detail-label">{{ translations().licensePlate }}</span>
           <span class="detail-value vehicle-info">{{ rental.vehicleLicensePlate }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.vehicleBrand && rental.vehicleModel">
-          <span class="detail-label">Marka/Model:</span>
+          <span class="detail-label">{{ translations().brandModel }}</span>
           <span class="detail-value">{{ rental.vehicleBrand }} {{ rental.vehicleModel }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.year">
-          <span class="detail-label">Yıl:</span>
+          <span class="detail-label">{{ translations().year }}</span>
           <span class="detail-value">{{ vehicle.year }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.color">
-          <span class="detail-label">Renk:</span>
+          <span class="detail-label">{{ translations().color }}</span>
           <span class="detail-value">{{ vehicle.color }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.category">
-          <span class="detail-label">Kategori:</span>
+          <span class="detail-label">{{ translations().category }}</span>
           <span class="detail-value">{{ getCategoryName(vehicle.category) }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.fuelType">
-          <span class="detail-label">Yakıt Tipi:</span>
+          <span class="detail-label">{{ translations().fuelType }}</span>
           <span class="detail-value">{{ vehicle.fuelType }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.transmission">
-          <span class="detail-label">Şanzıman:</span>
+          <span class="detail-label">{{ translations().transmission }}</span>
           <span class="detail-value">{{ vehicle.transmission }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.seatingCapacity">
-          <span class="detail-label">Koltuk Sayısı:</span>
-          <span class="detail-value">{{ vehicle.seatingCapacity }} kişi</span>
+          <span class="detail-label">{{ translations().seatingCapacity }}</span>
+          <span class="detail-value">{{ vehicle.seatingCapacity }} {{ translations().person }}</span>
         </div>
         <div class="detail-item" *ngIf="vehicle && vehicle.km !== undefined">
-          <span class="detail-label">Kilometre:</span>
-          <span class="detail-value">{{ vehicle.km | number }} km</span>
+          <span class="detail-label">{{ translations().km }}</span>
+          <span class="detail-value">{{ vehicle.km | number }} {{ translations().kmUnit }}</span>
         </div>
       </div>
 
-      <!-- Dates -->
       <div class="detail-section">
-        <h3>Tarih Bilgileri</h3>
+        <h3>{{ translations().dateInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Başlangıç Tarihi:</span>
+          <span class="detail-label">{{ translations().startDate }}</span>
           <span class="detail-value">{{ formatDate(rental.startDate) }}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Bitiş Tarihi:</span>
+          <span class="detail-label">{{ translations().endDate }}</span>
           <span class="detail-value">{{ formatDate(rental.endDate) }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.actualReturnDate">
-          <span class="detail-label">Gerçek İade Tarihi:</span>
+          <span class="detail-label">{{ translations().actualReturnDate }}</span>
           <span class="detail-value">{{ formatDateTime(rental.actualReturnDate) }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.createdAt">
-          <span class="detail-label">Oluşturma Tarihi:</span>
+          <span class="detail-label">{{ translations().createdAt }}</span>
           <span class="detail-value">{{ formatDateTime(rental.createdAt) }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.updatedAt">
-          <span class="detail-label">Güncelleme Tarihi:</span>
+          <span class="detail-label">{{ translations().updatedAt }}</span>
           <span class="detail-value">{{ formatDateTime(rental.updatedAt) }}</span>
         </div>
       </div>
 
-      <!-- Financial Information -->
       <div class="detail-section">
-        <h3>Finansal Bilgiler</h3>
+        <h3>{{ translations().financialInfo }}</h3>
         <div class="detail-item">
-          <span class="detail-label">Günlük Fiyat:</span>
+          <span class="detail-label">{{ translations().dailyPrice }}</span>
           <span class="detail-value price">{{ formatCurrency(rental.dailyRate) }}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">Toplam Tutar:</span>
+          <span class="detail-label">{{ translations().totalAmount }}</span>
           <span class="detail-value price">{{ formatCurrency(rental.totalAmount) }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.lateFee">
-          <span class="detail-label">Gecikme Ücreti:</span>
+          <span class="detail-label">{{ translations().lateFee }}</span>
           <span class="detail-value price">{{ formatCurrency(rental.lateFee) }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.damageFee">
-          <span class="detail-label">Hasar Ücreti:</span>
+          <span class="detail-label">{{ translations().damageFee }}</span>
           <span class="detail-value price">{{ formatCurrency(rental.damageFee) }}</span>
         </div>
         <div class="detail-item full-width">
-          <small class="hint-text">* Tüm tutarlar KDV dahildir</small>
+          <small class="hint-text">{{ translations().vatIncluded }}</small>
         </div>
       </div>
 
-      <!-- Location Information -->
       <div class="detail-section" *ngIf="rental.pickupLocation || rental.returnLocation">
-        <h3>Konum Bilgileri</h3>
+        <h3>{{ translations().locationInfo }}</h3>
         <div class="detail-item" *ngIf="rental.pickupLocation">
-          <span class="detail-label">Teslim Konumu:</span>
+          <span class="detail-label">{{ translations().pickupLocation }}</span>
           <span class="detail-value">{{ rental.pickupLocation }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.returnLocation">
-          <span class="detail-label">İade Konumu:</span>
+          <span class="detail-label">{{ translations().returnLocation }}</span>
           <span class="detail-value">{{ rental.returnLocation }}</span>
         </div>
       </div>
 
-      <!-- KM Information -->
       <div class="detail-section" *ngIf="rental.kmAtStart !== undefined || rental.kmAtReturn !== undefined">
-        <h3>Kilometre Bilgileri</h3>
+        <h3>{{ translations().kmInfo }}</h3>
         <div class="detail-item" *ngIf="rental.kmAtStart !== undefined">
-          <span class="detail-label">Başlangıç KM:</span>
-          <span class="detail-value">{{ rental.kmAtStart | number }} km</span>
+          <span class="detail-label">{{ translations().kmAtStart }}</span>
+          <span class="detail-value">{{ rental.kmAtStart | number }} {{ translations().kmUnit }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.kmAtReturn !== undefined">
-          <span class="detail-label">İade KM:</span>
-          <span class="detail-value">{{ rental.kmAtReturn | number }} km</span>
+          <span class="detail-label">{{ translations().kmAtReturn }}</span>
+          <span class="detail-value">{{ rental.kmAtReturn | number }} {{ translations().kmUnit }}</span>
         </div>
         <div class="detail-item" *ngIf="rental.kmAtStart !== undefined && rental.kmAtReturn !== undefined">
-          <span class="detail-label">Kullanılan KM:</span>
-          <span class="detail-value">{{ (rental.kmAtReturn - rental.kmAtStart) | number }} km</span>
+          <span class="detail-label">{{ translations().kmUsed }}</span>
+          <span class="detail-value">{{ (rental.kmAtReturn - rental.kmAtStart) | number }} {{ translations().kmUnit }}</span>
         </div>
       </div>
 
-      <!-- Notes -->
       <div class="detail-section full-width" *ngIf="rental.notes">
-        <h3>Notlar</h3>
+        <h3>{{ translations().notes }}</h3>
         <div class="detail-item">
           <p class="detail-notes">{{ rental.notes }}</p>
         </div>
@@ -168,9 +161,7 @@
     </div>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="!isLoading && !rental" class="empty-state">
-    <p>Kiralama detayları bulunamadı</p>
+    <p>{{ translations().notFound }}</p>
   </div>
 </div>
-

@@ -1,13 +1,12 @@
 <div class="vehicle-detail" *ngIf="vehicle">
-  <!-- Loading State -->
+
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
-  <!-- Vehicle Details -->
   <div *ngIf="!isLoading && vehicle" class="detail-content">
-    <!-- Image Section -->
+
     <div class="detail-image-section">
       <img
         [src]="getImageSource()"
@@ -16,7 +15,6 @@
       />
     </div>
 
-    <!-- Info Section -->
     <div class="detail-info-section">
       <div class="detail-header">
         <h2>{{ vehicle.brand }} {{ vehicle.model }}</h2>
@@ -24,34 +22,34 @@
       </div>
 
       <div class="detail-grid">
-        <!-- Basic Info -->
+
         <div class="detail-group">
-          <h3 class="detail-group-title">Genel Bilgiler</h3>
+          <h3 class="detail-group-title">{{ translations().generalInfo }}</h3>
           <div class="detail-items">
             <div class="detail-item">
-              <span class="detail-label">Marka:</span>
+              <span class="detail-label">{{ translations().brand }}</span>
               <span class="detail-value">{{ vehicle.brand }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Model:</span>
+              <span class="detail-label">{{ translations().model }}</span>
               <span class="detail-value">{{ vehicle.model }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Yıl:</span>
+              <span class="detail-label">{{ translations().year }}</span>
               <span class="detail-value">{{ vehicle.year }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Renk:</span>
+              <span class="detail-label">{{ translations().color }}</span>
               <span class="detail-value">{{ vehicle.color || '-' }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Kategori:</span>
+              <span class="detail-label">{{ translations().category }}</span>
               <span class="detail-value badge category">{{
                 categoryNames[vehicle.category]
               }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Durum:</span>
+              <span class="detail-label">{{ translations().status }}</span>
               <span class="detail-value badge status" [class]="getStatusClass(vehicle.status)">{{
                 statusNames[vehicle.status]
               }}</span>
@@ -59,46 +57,43 @@
           </div>
         </div>
 
-        <!-- Rental Info -->
         <div class="detail-group">
-          <h3 class="detail-group-title">Kiralama Bilgileri</h3>
+          <h3 class="detail-group-title">{{ translations().rentalInfo }}</h3>
           <div class="detail-items">
             <div class="detail-item">
-              <span class="detail-label">Günlük Fiyat:</span>
+              <span class="detail-label">{{ translations().dailyPrice }}</span>
               <span class="detail-value price">{{
                 vehicle.dailyRentalPrice | number: '1.2-2'
               }}
                 TL</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Koltuk Sayısı:</span>
-              <span class="detail-value">{{ vehicle.seatingCapacity }} kişi</span>
+              <span class="detail-label">{{ translations().seatingCapacity }}</span>
+              <span class="detail-value">{{ vehicle.seatingCapacity }} {{ translations().person }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Technical Info -->
         <div class="detail-group">
-          <h3 class="detail-group-title">Teknik Bilgiler</h3>
+          <h3 class="detail-group-title">{{ translations().technicalInfo }}</h3>
           <div class="detail-items">
             <div class="detail-item">
-              <span class="detail-label">Yakıt Türü:</span>
+              <span class="detail-label">{{ translations().fuelType }}</span>
               <span class="detail-value">{{ vehicle.fuelType || '-' }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Vites:</span>
+              <span class="detail-label">{{ translations().transmission }}</span>
               <span class="detail-value">{{ vehicle.transmission || '-' }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Kilometre:</span>
-              <span class="detail-value">{{ vehicle.km || 0 | number }} km</span>
+              <span class="detail-label">{{ translations().km }}</span>
+              <span class="detail-value">{{ vehicle.km || 0 | number }} {{ translations().kmUnit }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Features -->
         <div class="detail-group full-width">
-          <h3 class="detail-group-title">Özellikler</h3>
+          <h3 class="detail-group-title">{{ translations().features }}</h3>
           <div class="features-list">
             <div
               class="feature-item"
@@ -112,7 +107,7 @@
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span>Klima</span>
+              <span>{{ translations().airConditioning }}</span>
             </div>
             <div class="feature-item" *ngIf="vehicle.hasGPS">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="feature-icon">
@@ -123,7 +118,7 @@
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span>GPS</span>
+              <span>{{ translations().gps }}</span>
             </div>
             <div class="feature-item" *ngIf="vehicle.hasBluetooth">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="feature-icon">
@@ -134,18 +129,16 @@
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span>Bluetooth</span>
+              <span>{{ translations().bluetooth }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Description -->
         <div class="detail-group full-width" *ngIf="vehicle.description">
-          <h3 class="detail-group-title">Açıklama</h3>
+          <h3 class="detail-group-title">{{ translations().description }}</h3>
           <p class="detail-description">{{ vehicle.description }}</p>
         </div>
       </div>
     </div>
   </div>
 </div>
-
