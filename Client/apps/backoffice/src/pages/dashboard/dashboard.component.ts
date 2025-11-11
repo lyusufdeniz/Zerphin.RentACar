@@ -4,6 +4,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartComponent } from '../../components/chart/chart.component';
@@ -11,6 +13,9 @@ import { FavoritePagesComponent } from '../../components/favorite-pages/favorite
 import { FavoriteButtonComponent } from '../../components/favorite-button/favorite-button.component';
 import { StatisticsService } from '../../services/statistics.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { ChartData, ChartOptions } from 'chart.js';
 import {
   VehicleStatisticsResponse,
@@ -31,27 +36,69 @@ import {
   templateUrl: './dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   private statisticsService = inject(StatisticsService);
   private toastService = inject(ToastService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
+  private languageSubscription?: Subscription;
 
   isLoading = true;
 
-  // Statistics data
+  translations = computed(() => {
+    const _ = this.languageService.currentLanguage();
+    return {
+      title: this.languageService.translate('dashboard.title'),
+      refresh: this.languageService.translate('dashboard.refresh'),
+      loading: this.languageService.translate('dashboard.loading'),
+      loadingStats: this.languageService.translate('dashboard.loadingStats'),
+      vehicles: {
+        title: this.languageService.translate('dashboard.vehicles.title'),
+        total: this.languageService.translate('dashboard.vehicles.total'),
+        available: this.languageService.translate('dashboard.vehicles.available'),
+        rented: this.languageService.translate('dashboard.vehicles.rented'),
+        maintenance: this.languageService.translate('dashboard.vehicles.maintenance'),
+      },
+      rentals: {
+        title: this.languageService.translate('dashboard.rentals.title'),
+        total: this.languageService.translate('dashboard.rentals.total'),
+        totalRevenue: this.languageService.translate('dashboard.rentals.totalRevenue'),
+        averageAmount: this.languageService.translate('dashboard.rentals.averageAmount'),
+        active: this.languageService.translate('dashboard.rentals.active'),
+      },
+      insurances: {
+        title: this.languageService.translate('dashboard.insurances.title'),
+        total: this.languageService.translate('dashboard.insurances.total'),
+        active: this.languageService.translate('dashboard.insurances.active'),
+        expired: this.languageService.translate('dashboard.insurances.expired'),
+        expiringSoon: this.languageService.translate('dashboard.insurances.expiringSoon'),
+      },
+      users: {
+        title: this.languageService.translate('dashboard.users.title'),
+        total: this.languageService.translate('dashboard.users.total'),
+        active: this.languageService.translate('dashboard.users.active'),
+        inactive: this.languageService.translate('dashboard.users.inactive'),
+        newLast30Days: this.languageService.translate('dashboard.users.newLast30Days'),
+      },
+      charts: {
+        vehicleStatus: this.languageService.translate('dashboard.charts.vehicleStatus'),
+        vehicleCategory: this.languageService.translate('dashboard.charts.vehicleCategory'),
+        rentalStatus: this.languageService.translate('dashboard.charts.rentalStatus'),
+        userRole: this.languageService.translate('dashboard.charts.userRole'),
+      },
+    };
+  });
+
   vehicleStats: VehicleStatisticsResponse | null = null;
   rentalStats: RentalStatisticsResponse | null = null;
   insuranceStats: InsuranceStatisticsResponse | null = null;
   userStats: UserStatisticsResponse | null = null;
 
-  // Chart data
   vehicleStatusChartData: ChartData<'pie'> = { labels: [], datasets: [] };
   vehicleCategoryChartData: ChartData<'doughnut'> = { labels: [], datasets: [] };
   rentalStatusChartData: ChartData<'bar'> = { labels: [], datasets: [] };
-  rentalMonthlyChartData: ChartData<'line'> = { labels: [], datasets: [] };
   userRoleChartData: ChartData<'pie'> = { labels: [], datasets: [] };
 
-  // Chart options
   pieChartOptions: ChartOptions<'pie'> = {
     plugins: {
       legend: {
@@ -74,6 +121,13 @@ export class DashboardComponent implements OnInit {
     },
     scales: {
       x: {
+        ticks: {
+          display: true, 
+          color: '#999999',
+          font: {
+            size: 12,
+          },
+        },
         grid: {
           display: false,
         },
@@ -82,6 +136,30 @@ export class DashboardComponent implements OnInit {
         },
       },
       y: {
+        type: 'linear',
+        position: 'left',
+        title: {
+          display: false, 
+        },
+        ticks: {
+          display: false, 
+        },
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+      },
+      y1: {
+        type: 'linear',
+        position: 'right',
+        title: {
+          display: false, 
+        },
+        ticks: {
+          display: false, 
+        },
         grid: {
           display: false,
         },
@@ -91,26 +169,25 @@ export class DashboardComponent implements OnInit {
       },
     },
   };
-  lineChartOptions: ChartOptions<'line'> = {
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-    },
-  };
 
   ngOnInit() {
     this.loadAllStatistics();
+
+    this.languageSubscription = toObservable(this.languageService.currentLanguage).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
-  /**
-   * Load all statistics
-   */
+  ngOnDestroy() {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
   loadAllStatistics() {
     this.isLoading = true;
     this.cdr.markForCheck();
 
-    // Load all statistics in parallel
     Promise.all([
       this.loadVehicleStatistics(),
       this.loadRentalStatistics(),
@@ -128,9 +205,6 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  /**
-   * Load vehicle statistics
-   */
   private async loadVehicleStatistics() {
     try {
       const result = await this.statisticsService
@@ -141,13 +215,10 @@ export class DashboardComponent implements OnInit {
         this.prepareVehicleCharts();
       }
     } catch (error: any) {
-      this.handleError('Araç istatistikleri yüklenirken hata oluştu', error);
+      this.handleError(this.languageService.translate('messages.errors.statistics.vehicle'), error);
     }
   }
 
-  /**
-   * Load rental statistics
-   */
   private async loadRentalStatistics() {
     try {
       const result = await this.statisticsService
@@ -158,13 +229,10 @@ export class DashboardComponent implements OnInit {
         this.prepareRentalCharts();
       }
     } catch (error: any) {
-      this.handleError('Kiralama istatistikleri yüklenirken hata oluştu', error);
+      this.handleError(this.languageService.translate('messages.errors.statistics.rental'), error);
     }
   }
 
-  /**
-   * Load insurance statistics
-   */
   private async loadInsuranceStatistics() {
     try {
       const result = await this.statisticsService
@@ -172,13 +240,10 @@ export class DashboardComponent implements OnInit {
         .toPromise();
       this.insuranceStats = result || null;
     } catch (error: any) {
-      this.handleError('Sigorta istatistikleri yüklenirken hata oluştu', error);
+      this.handleError(this.languageService.translate('messages.errors.statistics.insurance'), error);
     }
   }
 
-  /**
-   * Load user statistics
-   */
   private async loadUserStatistics() {
     try {
       const result = await this.statisticsService
@@ -189,196 +254,105 @@ export class DashboardComponent implements OnInit {
         this.prepareUserCharts();
       }
     } catch (error: any) {
-      this.handleError('Kullanıcı istatistikleri yüklenirken hata oluştu', error);
+      this.handleError(this.languageService.translate('messages.errors.statistics.user'), error);
     }
   }
 
-  /**
-   * Prepare vehicle charts
-   */
   private prepareVehicleCharts() {
     if (!this.vehicleStats) return;
 
-    // Vehicle Status Chart (Pie)
+    const statusColors = [
+      '#2196f3', 
+      '#4caf50', 
+      '#ff9800', 
+      '#9c27b0', 
+      '#f44336', 
+      '#00bcd4', 
+    ];
     this.vehicleStatusChartData = {
       labels: this.vehicleStats.statusStatistics.map((s) => s.statusName),
       datasets: [
         {
           data: this.vehicleStats.statusStatistics.map((s) => s.count),
-          backgroundColor: [
-            '#00d084', // Green - Available
-            '#6366f1', // Indigo - Rented
-          ],
+          backgroundColor: statusColors.slice(0, this.vehicleStats.statusStatistics.length),
           borderWidth: 0,
         },
       ],
     };
 
-    // Vehicle Category Chart (Doughnut)
+    const categoryColors = [
+      '#e91e63', 
+      '#3f51b5', 
+      '#009688', 
+      '#ff5722', 
+      '#673ab7', 
+      '#8bc34a', 
+      '#ffc107', 
+      '#607d8b', 
+    ];
     this.vehicleCategoryChartData = {
       labels: this.vehicleStats.categoryStatistics.map((c) => c.categoryName),
       datasets: [
         {
           data: this.vehicleStats.categoryStatistics.map((c) => c.count),
-          backgroundColor: [
-            '#00d084', // Green
-            '#6366f1', // Indigo
-            '#8b5cf6', // Purple
-            '#ec4899', // Pink
-            '#f59e0b', // Amber
-            '#10b981', // Emerald
-            '#3b82f6', // Blue
-            '#f97316', // Orange
-          ],
+          backgroundColor: categoryColors.slice(0, this.vehicleStats.categoryStatistics.length),
           borderWidth: 0,
         },
       ],
     };
   }
 
-  /**
-   * Prepare rental charts
-   */
   private prepareRentalCharts() {
     if (!this.rentalStats) return;
 
-    // Rental Status Chart (Bar)
     this.rentalStatusChartData = {
       labels: this.rentalStats.statusStatistics.map((s) => s.statusName),
       datasets: [
         {
-          label: 'Kiralama Sayısı',
+          label: this.languageService.translate('messages.dashboard.chartLabels.rentalCount'),
           data: this.rentalStats.statusStatistics.map((s) => s.count),
-          backgroundColor: '#00d084',
+          backgroundColor: '#9c27b0', 
           borderRadius: 8,
           borderSkipped: false,
+          yAxisID: 'y',
         },
         {
-          label: 'Toplam Tutar (TL)',
+          label: this.languageService.translate('messages.dashboard.chartLabels.totalAmount'),
           data: this.rentalStats.statusStatistics.map((s) => s.totalAmount),
-          backgroundColor: '#6366f1',
+          backgroundColor: '#e91e63', 
           borderRadius: 8,
           borderSkipped: false,
-        },
-      ],
-    };
-
-    // Rental Monthly Chart (Line)
-    this.rentalMonthlyChartData = {
-      labels: this.rentalStats.monthlyStatistics.map((m) => m.monthName),
-      datasets: [
-        {
-          label: 'Kiralama Sayısı',
-          data: this.rentalStats.monthlyStatistics.map((m) => m.count),
-          borderColor: '#00d084',
-          backgroundColor: 'rgba(0, 208, 132, 0.15)',
-          tension: 0.4,
-          fill: true,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          pointBackgroundColor: '#00d084',
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
-        },
-        {
-          label: 'Toplam Gelir (TL)',
-          data: this.rentalStats.monthlyStatistics.map((m) => m.totalRevenue),
-          borderColor: '#6366f1',
-          backgroundColor: 'rgba(99, 102, 241, 0.15)',
-          tension: 0.4,
-          fill: true,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          pointBackgroundColor: '#6366f1',
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
           yAxisID: 'y1',
         },
       ],
     };
-
-    // Configure line chart with dual y-axis
-    this.lineChartOptions = {
-      ...this.lineChartOptions,
-      scales: {
-        x: {
-          grid: {
-            display: false,
-          },
-          border: {
-            display: false,
-          },
-        },
-        y: {
-          type: 'linear',
-          display: true,
-          position: 'left',
-          title: {
-            display: true,
-            text: 'Kiralama Sayısı',
-            color: '#cccccc',
-          },
-          ticks: {
-            color: '#999999',
-          },
-          grid: {
-            display: false,
-          },
-          border: {
-            display: false,
-          },
-        },
-        y1: {
-          type: 'linear',
-          display: true,
-          position: 'right',
-          title: {
-            display: true,
-            text: 'Gelir (TL)',
-            color: '#cccccc',
-          },
-          ticks: {
-            color: '#999999',
-          },
-          grid: {
-            display: false,
-          },
-          border: {
-            display: false,
-          },
-        },
-      },
-    };
   }
 
-  /**
-   * Prepare user charts
-   */
   private prepareUserCharts() {
     if (!this.userStats) return;
 
-    // User Role Chart (Pie)
+    const roleColors = [
+      '#4caf50', 
+      '#e91e63', 
+      '#2196f3', 
+      '#ff9800', 
+      '#9c27b0', 
+      '#00bcd4', 
+      '#f44336', 
+      '#ffc107', 
+    ];
     this.userRoleChartData = {
       labels: this.userStats.roleStatistics.map((r) => r.roleName),
       datasets: [
         {
           data: this.userStats.roleStatistics.map((r) => r.count),
-          backgroundColor: [
-            '#00d084', // Green
-            '#6366f1', // Indigo
-            '#8b5cf6', // Purple
-          ],
+          backgroundColor: roleColors.slice(0, this.userStats.roleStatistics.length),
           borderWidth: 0,
         },
       ],
     };
   }
 
-  /**
-   * Handle errors
-   */
   private handleError(message: string, error: any) {
     console.error(message, error);
     if (error.errorMessage && Array.isArray(error.errorMessage)) {

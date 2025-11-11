@@ -4,6 +4,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +15,9 @@ import { InsuranceService } from '../../services/insurance.service';
 import { ToastService } from '../../services/toast.service';
 import { ModalService } from '../../services/modal.service';
 import { SwalService } from '../../services/swal.service';
+import { LanguageService } from '../../services/language.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { InsuranceFormComponent } from '../../components/insurance-form/insurance-form.component';
 import { InsuranceDetailComponent } from '../../components/insurance-detail/insurance-detail.component';
 import {
@@ -30,30 +35,67 @@ import {
   templateUrl: './insurances.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InsurancesComponent implements OnInit {
+export class InsurancesComponent implements OnInit, OnDestroy {
   private insuranceService = inject(InsuranceService);
   private toastService = inject(ToastService);
   private modalService = inject(ModalService);
   private swalService = inject(SwalService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
+  private languageSubscription?: Subscription;
 
-  // Data
+  translations = computed(() => {
+    const currentLang = this.languageService.currentLanguage();
+    return {
+      title: this.languageService.translate('pages.insurances.title'),
+      policyNumber: this.languageService.translate('pages.insurances.policyNumber'),
+      policyNumberPlaceholder: this.languageService.translate('pages.insurances.policyNumberPlaceholder'),
+      licensePlate: this.languageService.translate('pages.insurances.licensePlate'),
+      licensePlatePlaceholder: this.languageService.translate('pages.insurances.licensePlatePlaceholder'),
+      startDateFrom: this.languageService.translate('pages.insurances.startDateFrom'),
+      startDateTo: this.languageService.translate('pages.insurances.startDateTo'),
+      endDateFrom: this.languageService.translate('pages.insurances.endDateFrom'),
+      endDateTo: this.languageService.translate('pages.insurances.endDateTo'),
+      loading: this.languageService.translate('pages.insurances.loading'),
+      noData: this.languageService.translate('pages.insurances.noData'),
+      add: this.languageService.translate('pages.insurances.add'),
+      edit: this.languageService.translate('pages.insurances.edit'),
+      delete: this.languageService.translate('pages.insurances.delete'),
+      view: this.languageService.translate('pages.insurances.view'),
+      search: this.languageService.translate('common.search'),
+      clear: this.languageService.translate('common.clear'),
+      table: {
+        policyNumber: this.languageService.translate('pages.insurances.table.policyNumber'),
+        insuranceCompany: this.languageService.translate('pages.insurances.table.insuranceCompany'),
+        vehicle: this.languageService.translate('pages.insurances.table.vehicle'),
+        startDate: this.languageService.translate('pages.insurances.table.startDate'),
+        endDate: this.languageService.translate('pages.insurances.table.endDate'),
+        premiumAmount: this.languageService.translate('pages.insurances.table.premiumAmount'),
+        status: this.languageService.translate('pages.insurances.table.status'),
+        actions: this.languageService.translate('pages.insurances.table.actions'),
+      },
+      pagination: {
+        previous: this.languageService.translate('pages.insurances.pagination.previous'),
+        next: this.languageService.translate('pages.insurances.pagination.next'),
+      },
+    };
+  });
+
+  public languageServicePublic = this.languageService; 
+
   insurances: Insurance[] = [];
   totalCount = 0;
   isLoading = false;
 
-  // Pagination
   currentPage = 1;
   pageSize = 100;
   totalPages = 0;
 
-  // Filters
   searchParams: InsuranceSearchParams = {
     PageNumber: 1,
     PageSize: 100,
   };
 
-  // Filter values
   searchPolicyNumber = '';
   searchLicensePlate = '';
   startDateFrom?: string;
@@ -61,28 +103,32 @@ export class InsurancesComponent implements OnInit {
   endDateFrom?: string;
   endDateTo?: string;
 
-  // Enums for template
   statuses = Object.values(InsuranceStatus).filter(
     (v) => typeof v === 'number'
   ) as InsuranceStatus[];
   statusNames = InsuranceStatusNames;
 
-  // Order
   orderBy = 'Id';
   isDescending = false;
 
   ngOnInit() {
     this.loadInsurances();
+
+    this.languageSubscription = toObservable(this.languageService.currentLanguage).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
-  /**
-   * Load insurances with current search params
-   */
+  ngOnDestroy() {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
   loadInsurances() {
     this.isLoading = true;
     this.cdr.markForCheck();
 
-    // Build search params
     const params: InsuranceSearchParams = {
       PageNumber: this.currentPage,
       PageSize: this.pageSize,
@@ -109,22 +155,15 @@ export class InsurancesComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
       },
     });
   }
 
-  /**
-   * Search with filters
-   */
   search() {
     this.currentPage = 1;
     this.loadInsurances();
   }
 
-  /**
-   * Clear all filters
-   */
   clearFilters() {
     this.searchPolicyNumber = '';
     this.searchLicensePlate = '';
@@ -137,9 +176,6 @@ export class InsurancesComponent implements OnInit {
     this.search();
   }
 
-  /**
-   * Change page
-   */
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -147,18 +183,12 @@ export class InsurancesComponent implements OnInit {
     }
   }
 
-  /**
-   * Change page size
-   */
   changePageSize(size: number) {
     this.pageSize = size;
     this.currentPage = 1;
     this.loadInsurances();
   }
 
-  /**
-   * Sort by column
-   */
   sortBy(column: string) {
     if (this.orderBy === column) {
       this.isDescending = !this.isDescending;
@@ -169,64 +199,53 @@ export class InsurancesComponent implements OnInit {
     this.loadInsurances();
   }
 
-  /**
-   * Delete insurance
-   */
   deleteInsurance(insurance: Insurance) {
     this.swalService
       .confirm(
-        'Sigorta Sil',
-        `${insurance.policyNumber} poliçe numaralı sigortayı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`,
-        'Sil',
-        'İptal'
+        this.languageService.translate('messages.deleteConfirm.insurance.title'),
+        this.languageService.translateWithParams('messages.deleteConfirm.insurance.message', {
+          policyNumber: insurance.policyNumber,
+        }),
+        this.languageService.translate('messages.deleteConfirm.insurance.confirm'),
+        this.languageService.translate('messages.deleteConfirm.insurance.cancel')
       )
       .subscribe((result) => {
         if (result.isConfirmed) {
           this.insuranceService.deleteInsurance(insurance.id).subscribe({
             next: () => {
-              this.toastService.success('Sigorta başarıyla silindi');
+              this.toastService.success(this.languageService.translate('messages.success.insurance.deleted'));
               this.loadInsurances();
             },
             error: (error) => {
-              // Error is already handled by exception interceptor
             },
           });
         }
       });
   }
 
-  /**
-   * Get page numbers for pagination
-   */
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxPages = 5;
     let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
     let endPage = Math.min(this.totalPages, startPage + maxPages - 1);
-    
+
     if (endPage - startPage < maxPages - 1) {
       startPage = Math.max(1, endPage - maxPages + 1);
     }
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(dateString: string): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');
   }
 
-  /**
-   * Calculate status based on dates
-   */
   calculateStatus(insurance: Insurance): InsuranceStatus {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -237,42 +256,31 @@ export class InsurancesComponent implements OnInit {
     const endDate = new Date(insurance.endDate);
     endDate.setHours(0, 0, 0, 0);
 
-    // Calculate days until expiration
     const daysUntilExpiration = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    // If end date has passed
     if (today > endDate) {
       return InsuranceStatus.Expired;
     }
 
-    // If start date hasn't arrived yet
     if (today < startDate) {
-      return InsuranceStatus.Active; // Will be active when start date arrives
+      return InsuranceStatus.Active; 
     }
 
-    // If expiring within 30 days
     if (daysUntilExpiration <= 30 && daysUntilExpiration > 0) {
       return InsuranceStatus.ExpiringSoon;
     }
 
-    // Otherwise active
     return InsuranceStatus.Active;
   }
 
-  /**
-   * Get status name
-   */
   getStatusName(insurance: Insurance): string {
     const status = insurance.status ?? this.calculateStatus(insurance);
     return this.statusNames[status] || '-';
   }
 
-  /**
-   * Get status badge class
-   */
   getStatusClass(insurance: Insurance): string {
     const status = insurance.status ?? this.calculateStatus(insurance);
-    
+
     switch (status) {
       case InsuranceStatus.Active:
         return 'status-active';
@@ -287,19 +295,15 @@ export class InsurancesComponent implements OnInit {
     }
   }
 
-  /**
-   * Open add insurance modal
-   */
   openAddInsuranceModal() {
     const { close, contentRef } = this.modalService.open(InsuranceFormComponent, {
-      title: 'Yeni Sigorta Ekle',
+      title: this.languageService.translate('messages.modal.insurance.add'),
       size: 'large',
     });
 
-    // Listen for saved event
     if (contentRef && contentRef.instance) {
       const formComponent = contentRef.instance as InsuranceFormComponent;
-      
+
       const savedSub = formComponent.saved.subscribe((insurance: Insurance) => {
         savedSub.unsubscribe();
         cancelledSub.unsubscribe();
@@ -315,20 +319,16 @@ export class InsurancesComponent implements OnInit {
     }
   }
 
-  /**
-   * Edit insurance
-   */
   editInsurance(insurance: Insurance) {
     const { close, contentRef } = this.modalService.open(InsuranceFormComponent, {
-      title: 'Sigorta Düzenle',
+      title: this.languageService.translate('messages.modal.insurance.edit'),
       size: 'large',
       inputs: { insurance },
     });
 
-    // Listen for saved event
     if (contentRef && contentRef.instance) {
       const formComponent = contentRef.instance as InsuranceFormComponent;
-      
+
       const savedSub = formComponent.saved.subscribe((updatedInsurance: Insurance) => {
         savedSub.unsubscribe();
         cancelledSub.unsubscribe();
@@ -344,12 +344,9 @@ export class InsurancesComponent implements OnInit {
     }
   }
 
-  /**
-   * View insurance details
-   */
   viewInsuranceDetails(insurance: Insurance) {
     this.modalService.open(InsuranceDetailComponent, {
-      title: 'Sigorta Detayları',
+      title: this.languageService.translate('messages.modal.insurance.details'),
       size: 'large',
       inputs: { insuranceId: insurance.id },
     });

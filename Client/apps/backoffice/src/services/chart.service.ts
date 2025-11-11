@@ -1,46 +1,61 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   ChartConfiguration,
   ChartData,
   ChartType,
   ChartOptions,
 } from 'chart.js';
+import { ThemeService } from './theme.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChartService {
-  /**
-   * Get default chart options with dark theme
-   */
+  private themeService = inject(ThemeService);
+
+  private getCSSVariable(variable: string): string {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(variable)
+      .trim();
+  }
+
   getDefaultOptions(): ChartOptions {
+    const isDark = this.themeService.isDarkTheme();
+
+    const textPrimary = this.getCSSVariable('--text-primary') || (isDark ? '#ffffff' : '#1a1a1a');
+    const textSecondary = this.getCSSVariable('--text-secondary') || (isDark ? '#cccccc' : '#666666');
+    const textTertiary = this.getCSSVariable('--text-tertiary') || (isDark ? '#999999' : '#999999');
+    const bgSecondary = this.getCSSVariable('--bg-secondary') || (isDark ? '#1a1a1a' : '#f5f5f5');
+    const bgTertiary = this.getCSSVariable('--bg-tertiary') || (isDark ? '#141414' : '#ffffff');
+    const borderColor = this.getCSSVariable('--border-color') || (isDark ? '#252525' : '#e0e0e0');
+
     return {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
           labels: {
-            color: '#cccccc',
+            color: textSecondary,
             font: {
               size: 12,
             },
           },
         },
         tooltip: {
-          backgroundColor: '#1a1a1a',
-          titleColor: '#ffffff',
-          bodyColor: '#cccccc',
-          borderColor: '#252525',
+          backgroundColor: bgSecondary,
+          titleColor: textPrimary,
+          bodyColor: textSecondary,
+          borderColor: borderColor,
           borderWidth: 1,
         },
       },
       scales: {
         x: {
           ticks: {
-            color: '#999999',
+            display: false, 
           },
           grid: {
-            display: false, // Remove grid lines
+            display: false, 
             drawOnChartArea: false,
           },
           border: {
@@ -49,10 +64,24 @@ export class ChartService {
         },
         y: {
           ticks: {
-            color: '#999999',
+            display: false, 
           },
           grid: {
-            display: false, // Remove grid lines
+            display: false, 
+            drawOnChartArea: false,
+          },
+          border: {
+            display: false,
+          },
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          ticks: {
+            display: false, 
+          },
+          grid: {
+            display: false, 
             drawOnChartArea: false,
           },
           border: {
@@ -63,25 +92,19 @@ export class ChartService {
     };
   }
 
-  /**
-   * Get dark theme colors - Modern and vibrant palette
-   */
   getDarkThemeColors(): string[] {
     return [
-      '#00d084', // Primary green
-      '#6366f1', // Indigo
-      '#8b5cf6', // Purple
-      '#ec4899', // Pink
-      '#f59e0b', // Amber
-      '#10b981', // Emerald
-      '#3b82f6', // Blue
-      '#f97316', // Orange
+      '#00d084', 
+      '#6366f1', 
+      '#8b5cf6', 
+      '#ec4899', 
+      '#f59e0b', 
+      '#10b981', 
+      '#3b82f6', 
+      '#f97316', 
     ];
   }
 
-  /**
-   * Create line chart configuration
-   */
   createLineChartConfig(
     data: ChartData<'line'>,
     options?: Partial<ChartOptions<'line'>>
@@ -101,9 +124,6 @@ export class ChartService {
     };
   }
 
-  /**
-   * Create bar chart configuration
-   */
   createBarChartConfig(
     data: ChartData<'bar'>,
     options?: Partial<ChartOptions<'bar'>>
@@ -118,9 +138,6 @@ export class ChartService {
     };
   }
 
-  /**
-   * Create pie chart configuration
-   */
   createPieChartConfig(
     data: ChartData<'pie'>,
     options?: Partial<ChartOptions<'pie'>>
@@ -135,9 +152,6 @@ export class ChartService {
     };
   }
 
-  /**
-   * Create doughnut chart configuration
-   */
   createDoughnutChartConfig(
     data: ChartData<'doughnut'>,
     options?: Partial<ChartOptions<'doughnut'>>
@@ -152,9 +166,6 @@ export class ChartService {
     };
   }
 
-  /**
-   * Create radar chart configuration
-   */
   createRadarChartConfig(
     data: ChartData<'radar'>,
     options?: Partial<ChartOptions<'radar'>>
@@ -169,9 +180,6 @@ export class ChartService {
     };
   }
 
-  /**
-   * Create polar area chart configuration
-   */
   createPolarAreaChartConfig(
     data: ChartData<'polarArea'>,
     options?: Partial<ChartOptions<'polarArea'>>
@@ -186,9 +194,6 @@ export class ChartService {
     };
   }
 
-  /**
-   * Merge custom options with default options
-   */
   mergeOptions<T extends ChartType = ChartType>(
     customOptions: Partial<ChartOptions<T>>,
     chartType?: T
@@ -199,4 +204,3 @@ export class ChartService {
     } as ChartOptions<T>;
   }
 }
-

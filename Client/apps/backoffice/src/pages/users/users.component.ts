@@ -4,6 +4,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +14,9 @@ import { UserService } from '../../services/user.service';
 import { ToastService } from '../../services/toast.service';
 import { ModalService } from '../../services/modal.service';
 import { SwalService } from '../../services/swal.service';
+import { LanguageService } from '../../services/language.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { UserFormComponent } from '../../components/user-form/user-form.component';
 import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
 import {
@@ -22,7 +27,6 @@ import {
   PaginatedUserResponse,
 } from '../../models/user';
 
-// For template usage
 export const UserRoleEnum = UserRole;
 
 @Component({
@@ -32,57 +36,99 @@ export const UserRoleEnum = UserRole;
   templateUrl: './users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private toastService = inject(ToastService);
   private modalService = inject(ModalService);
   private swalService = inject(SwalService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
+  private languageSubscription?: Subscription;
 
-  // Data
+  translations = computed(() => {
+    const currentLang = this.languageService.currentLanguage();
+    return {
+      title: this.languageService.translate('pages.users.title'),
+      name: this.languageService.translate('pages.users.name'),
+      role: this.languageService.translate('pages.users.role'),
+      isActive: this.languageService.translate('pages.users.isActive'),
+      isVerified: this.languageService.translate('pages.users.isVerified'),
+      searchName: this.languageService.translate('pages.users.searchName'),
+      all: this.languageService.translate('pages.users.all'),
+      loading: this.languageService.translate('pages.users.loading'),
+      noData: this.languageService.translate('pages.users.noData'),
+      add: this.languageService.translate('pages.users.add'),
+      edit: this.languageService.translate('pages.users.edit'),
+      delete: this.languageService.translate('pages.users.delete'),
+      view: this.languageService.translate('pages.users.view'),
+      search: this.languageService.translate('common.search'),
+      clear: this.languageService.translate('common.clear'),
+      active: this.languageService.translate('common.active'),
+      inactive: this.languageService.translate('common.inactive'),
+      yes: this.languageService.translate('common.yes'),
+      no: this.languageService.translate('common.no'),
+      table: {
+        firstName: this.languageService.translate('pages.users.table.firstName'),
+        lastName: this.languageService.translate('pages.users.table.lastName'),
+        email: this.languageService.translate('pages.users.table.email'),
+        phone: this.languageService.translate('pages.users.table.phone'),
+        role: this.languageService.translate('pages.users.table.role'),
+        status: this.languageService.translate('pages.users.table.status'),
+        actions: this.languageService.translate('pages.users.table.actions'),
+      },
+      status: {
+        active: this.languageService.translate('pages.users.status.active'),
+        inactive: this.languageService.translate('pages.users.status.inactive'),
+      },
+      pagination: {
+        previous: this.languageService.translate('pages.users.pagination.previous'),
+        next: this.languageService.translate('pages.users.pagination.next'),
+      },
+    };
+  });
+
+  public languageServicePublic = this.languageService; 
+
   users: User[] = [];
   totalCount = 0;
   isLoading = false;
 
-  // Pagination
   currentPage = 1;
   pageSize = 100;
   totalPages = 0;
 
-  // Filters
-  searchEmail = '';
-  searchFirstName = '';
-  searchLastName = '';
-  searchPhoneNumber = '';
-  searchIdentityNumber = '';
-  searchLicenseNumber = '';
-  selectedRole?: UserRole;
-  selectedIsActive?: boolean;
-  selectedIsVerified?: boolean;
+  searchCustomerQuery = ''; 
+  selectedRole: UserRole | null = null;
+  selectedIsActive: boolean | null = null;
+  selectedIsVerified: boolean | null = null;
 
-  // Enums for template
   roles = Object.values(UserRole).filter(
     (v) => typeof v === 'number'
   ) as UserRole[];
   roleNames = UserRoleNames;
-  UserRole = UserRole; // Export to template
+  UserRole = UserRole; 
 
-  // Order
   orderBy = 'Id';
   isDescending = false;
 
   ngOnInit() {
     this.loadUsers();
+
+    this.languageSubscription = toObservable(this.languageService.currentLanguage).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
-  /**
-   * Load users with current search params
-   */
+  ngOnDestroy() {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
   loadUsers() {
     this.isLoading = true;
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
 
-    // Build search params
     const params: UserSearchParams = {
       PageNumber: this.currentPage,
       PageSize: this.pageSize,
@@ -90,15 +136,28 @@ export class UsersComponent implements OnInit {
       IsDescending: this.isDescending,
     };
 
-    if (this.searchEmail) params.Email = this.searchEmail;
-    if (this.searchFirstName) params.FirstName = this.searchFirstName;
-    if (this.searchLastName) params.LastName = this.searchLastName;
-    if (this.searchPhoneNumber) params.PhoneNumber = this.searchPhoneNumber;
-    if (this.searchIdentityNumber) params.IdentityNumber = this.searchIdentityNumber;
-    if (this.searchLicenseNumber) params.LicenseNumber = this.searchLicenseNumber;
-    if (this.selectedRole !== undefined) params.Role = this.selectedRole;
-    if (this.selectedIsActive !== undefined) params.IsActive = this.selectedIsActive;
-    if (this.selectedIsVerified !== undefined) params.IsVerified = this.selectedIsVerified;
+    if (this.searchCustomerQuery.trim()) {
+      const query = this.searchCustomerQuery.trim();
+
+      const parts = query.split(/\s+/);
+      if (parts.length >= 2) {
+        params.FirstName = parts[0];
+        params.LastName = parts.slice(1).join(' ');
+      } else {
+
+        params.FirstName = query;
+      }
+    }
+
+    if (this.selectedRole !== null) {
+      params.Role = this.selectedRole;
+    }
+    if (this.selectedIsActive !== null) {
+      params.IsActive = this.selectedIsActive;
+    }
+    if (this.selectedIsVerified !== null) {
+      params.IsVerified = this.selectedIsVerified;
+    }
 
     this.userService.searchUsers(params).subscribe({
       next: (response) => {
@@ -107,39 +166,30 @@ export class UsersComponent implements OnInit {
         this.totalPages = response.totalPages || 0;
         this.currentPage = response.pageNumber || 1;
         this.isLoading = false;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.isLoading = false;
-        this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
+        this.cdr.detectChanges();
       },
     });
   }
 
-  /**
-   * Search with filters
-   */
   search() {
     this.currentPage = 1;
     this.loadUsers();
   }
 
-  /**
-   * Clear all filters
-   */
   clearFilters() {
-    this.searchEmail = '';
-    this.selectedRole = undefined;
-    this.selectedIsActive = undefined;
+    this.searchCustomerQuery = '';
+    this.selectedRole = null;
+    this.selectedIsActive = null;
+    this.selectedIsVerified = null;
     this.orderBy = 'Id';
     this.isDescending = false;
     this.search();
   }
 
-  /**
-   * Change page
-   */
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -147,18 +197,12 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  /**
-   * Change page size
-   */
   changePageSize(size: number) {
     this.pageSize = size;
     this.currentPage = 1;
     this.loadUsers();
   }
 
-  /**
-   * Sort by column
-   */
   sortBy(column: string) {
     if (this.orderBy === column) {
       this.isDescending = !this.isDescending;
@@ -169,9 +213,6 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  /**
-   * Get page numbers for pagination
-   */
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxPages = 5;
@@ -189,32 +230,22 @@ export class UsersComponent implements OnInit {
     return pages;
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');
   }
 
-  /**
-   * Get role name
-   */
   getRoleName(role: number): string {
     return this.roleNames[role as UserRole] || '-';
   }
 
-  /**
-   * Open add user modal
-   */
   openAddUserModal() {
     const { close, contentRef } = this.modalService.open(UserFormComponent, {
-      title: 'Yeni Kullanıcı Ekle',
+      title: this.languageService.translate('messages.modal.user.add'),
       size: 'large',
     });
 
-    // Listen for saved event
     if (contentRef && contentRef.instance) {
       const formComponent = contentRef.instance as UserFormComponent;
 
@@ -233,17 +264,13 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  /**
-   * Edit user
-   */
   editUser(user: User) {
     const { close, contentRef } = this.modalService.open(UserFormComponent, {
-      title: 'Kullanıcı Düzenle',
+      title: this.languageService.translate('messages.modal.user.edit'),
       size: 'large',
       inputs: { user },
     });
 
-    // Listen for saved event
     if (contentRef && contentRef.instance) {
       const formComponent = contentRef.instance as UserFormComponent;
 
@@ -262,34 +289,36 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  /**
-   * View user detail
-   */
   viewUserDetail(user: User) {
     this.modalService.open(UserDetailComponent, {
-      title: `${user.firstName} ${user.lastName} - Detaylar`,
+      title: this.languageService.translateWithParams('messages.modal.user.details', {
+        firstName: user.firstName,
+        lastName: user.lastName,
+      }),
       size: 'large',
       inputs: { userId: user.id },
     });
   }
 
-  /**
-   * Delete user
-   */
   deleteUser(user: User) {
-    this.swalService.confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?').subscribe((result) => {
-      if (result.isConfirmed) {
-        this.userService.deleteUser(user.id).subscribe({
-          next: () => {
-            this.toastService.success('Kullanıcı başarıyla silindi');
-            this.loadUsers();
-          },
-          error: () => {
-            // Error is already handled by exception interceptor
-          },
-        });
-      }
-    });
+    this.swalService
+      .confirm(
+        this.languageService.translate('messages.deleteConfirm.user.title'),
+        this.languageService.translate('messages.deleteConfirm.user.message'),
+        this.languageService.translate('messages.deleteConfirm.user.confirm'),
+        this.languageService.translate('messages.deleteConfirm.user.cancel')
+      )
+      .subscribe((result) => {
+        if (result.isConfirmed) {
+          this.userService.deleteUser(user.id).subscribe({
+            next: () => {
+              this.toastService.success(this.languageService.translate('messages.success.user.deleted'));
+              this.loadUsers();
+            },
+            error: () => {
+            },
+          });
+        }
+      });
   }
 }
-

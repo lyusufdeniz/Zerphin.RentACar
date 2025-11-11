@@ -6,32 +6,23 @@ import {
   FormGroup,
   FormControl,
 } from '@angular/forms';
-
 export interface ValidationError {
   field: string;
   message: string;
 }
-
 @Injectable({
   providedIn: 'root',
 })
 export class ValidationService {
-  /**
-   * Email validator
-   */
   emailValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
-        return null; // Don't validate empty values (use required for that)
+        return null; 
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(control.value) ? null : { email: true };
     };
   }
-
-  /**
-   * Phone number validator (Turkish format)
-   */
   phoneValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -43,10 +34,6 @@ export class ValidationService {
         : { phone: true };
     };
   }
-
-  /**
-   * Turkish identity number validator
-   */
   identityNumberValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -56,7 +43,6 @@ export class ValidationService {
       if (!identityRegex.test(control.value)) {
         return { identityNumber: true };
       }
-      // TC Kimlik algoritması kontrolü
       const digits = control.value.split('').map(Number);
       const sum1 = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
       const sum2 = digits[1] + digits[3] + digits[5] + digits[7];
@@ -66,10 +52,6 @@ export class ValidationService {
       return null;
     };
   }
-
-  /**
-   * Password strength validator
-   */
   passwordStrengthValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -77,7 +59,6 @@ export class ValidationService {
       }
       const value = control.value;
       const errors: ValidationErrors = {};
-
       if (value.length < 8) {
         errors['minlength'] = { requiredLength: 8, actualLength: value.length };
       }
@@ -93,14 +74,9 @@ export class ValidationService {
       if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
         errors['noSpecialChar'] = true;
       }
-
       return Object.keys(errors).length > 0 ? errors : null;
     };
   }
-
-  /**
-   * Password match validator (for confirm password fields)
-   */
   passwordMatchValidator(passwordControlName: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.parent) {
@@ -115,10 +91,6 @@ export class ValidationService {
         : { passwordMismatch: true };
     };
   }
-
-  /**
-   * Date validator (not in future)
-   */
   dateNotFutureValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -130,10 +102,6 @@ export class ValidationService {
       return date <= today ? null : { dateFuture: true };
     };
   }
-
-  /**
-   * Date range validator
-   */
   dateRangeValidator(minDate?: Date, maxDate?: Date): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -141,21 +109,15 @@ export class ValidationService {
       }
       const date = new Date(control.value);
       const errors: ValidationErrors = {};
-
       if (minDate && date < minDate) {
         errors['dateBeforeMin'] = { minDate };
       }
       if (maxDate && date > maxDate) {
         errors['dateAfterMax'] = { maxDate };
       }
-
       return Object.keys(errors).length > 0 ? errors : null;
     };
   }
-
-  /**
-   * Credit card number validator (Luhn algorithm)
-   */
   creditCardValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -165,8 +127,6 @@ export class ValidationService {
       if (!/^\d{13,19}$/.test(value)) {
         return { creditCard: true };
       }
-
-      // Luhn algorithm
       let sum = 0;
       let isEven = false;
       for (let i = value.length - 1; i >= 0; i--) {
@@ -183,10 +143,6 @@ export class ValidationService {
       return sum % 10 === 0 ? null : { creditCard: true };
     };
   }
-
-  /**
-   * URL validator
-   */
   urlValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -200,10 +156,6 @@ export class ValidationService {
       }
     };
   }
-
-  /**
-   * Number range validator
-   */
   numberRangeValidator(min: number, max: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value === null || control.value === undefined) {
@@ -219,10 +171,6 @@ export class ValidationService {
       return null;
     };
   }
-
-  /**
-   * License plate validator (Turkish format)
-   */
   licensePlateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -234,10 +182,6 @@ export class ValidationService {
         : { licensePlate: true };
     };
   }
-
-  /**
-   * Get error message for a control
-   */
   getErrorMessage(
     control: AbstractControl | null,
     fieldName: string = ''
@@ -245,10 +189,8 @@ export class ValidationService {
     if (!control || !control.errors || !control.touched) {
       return '';
     }
-
     const errors = control.errors;
     const fieldLabel = fieldName || 'Bu alan';
-
     if (errors['required']) {
       return `${fieldLabel} gereklidir`;
     }
@@ -312,13 +254,8 @@ export class ValidationService {
     if (errors['notANumber']) {
       return 'Geçerli bir sayı giriniz';
     }
-
     return `${fieldLabel} geçersiz`;
   }
-
-  /**
-   * Get all validation errors from a form
-   */
   getFormErrors(form: FormGroup): ValidationError[] {
     const errors: ValidationError[] = [];
     Object.keys(form.controls).forEach((key) => {
@@ -332,39 +269,22 @@ export class ValidationService {
     });
     return errors;
   }
-
-  /**
-   * Mark all form fields as touched
-   */
   markFormGroupTouched(form: FormGroup): void {
     Object.keys(form.controls).forEach((key) => {
       const control = form.get(key);
       control?.markAsTouched();
-
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
       }
     });
   }
-
-  /**
-   * Check if form has any errors
-   */
   hasFormErrors(form: FormGroup): boolean {
     return this.getFormErrors(form).length > 0;
   }
-
-  /**
-   * Get first error message from form
-   */
   getFirstFormError(form: FormGroup): string | null {
     const errors = this.getFormErrors(form);
     return errors.length > 0 ? errors[0].message : null;
   }
-
-  /**
-   * Check if control has specific error
-   */
   hasError(
     control: AbstractControl | null,
     errorType: string
@@ -375,10 +295,6 @@ export class ValidationService {
       (control.dirty || control.touched)
     );
   }
-
-  /**
-   * Common field labels
-   */
   getFieldLabel(fieldName: string): string {
     const labels: Record<string, string> = {
       email: 'Email',
@@ -395,6 +311,4 @@ export class ValidationService {
     };
     return labels[fieldName] || fieldName;
   }
-}
-
-
+}

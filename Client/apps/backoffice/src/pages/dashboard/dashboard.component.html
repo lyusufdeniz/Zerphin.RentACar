@@ -1,9 +1,9 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
     <div class="header-left">
-      <h1>Dashboard</h1>
+      <h1>{{ translations().title }}</h1>
       <app-favorite-button
-        title="Dashboard"
+        [title]="translations().title"
         icon="📊"
         path="/dashboard"
       ></app-favorite-button>
@@ -13,97 +13,92 @@
       (click)="loadAllStatistics()"
       [disabled]="isLoading"
     >
-      {{ isLoading ? 'Yükleniyor...' : 'Yenile' }}
+      {{ isLoading ? translations().loading : translations().refresh }}
     </button>
   </div>
 
-  <!-- Favorite Pages -->
   <div class="favorite-pages-section">
     <app-favorite-pages></app-favorite-pages>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>İstatistikler yükleniyor...</p>
+    <p>{{ translations().loadingStats }}</p>
   </div>
 
-  <!-- Statistics Cards -->
   <div *ngIf="!isLoading" class="stats-grid">
-    <!-- Vehicles Stats -->
+
     <div class="stat-card" *ngIf="vehicleStats">
       <div class="stat-card-header">
-        <h3>Araçlar</h3>
+        <h3>{{ translations().vehicles.title }}</h3>
       </div>
       <div class="stat-card-content">
         <div class="stat-item">
-          <span class="stat-label">Toplam Araç</span>
+          <span class="stat-label">{{ translations().vehicles.total }}</span>
           <span class="stat-value">{{ vehicleStats.totalVehicles }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Müsait</span>
+          <span class="stat-label">{{ translations().vehicles.available }}</span>
           <span class="stat-value success">{{ vehicleStats.availableVehicles }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Kiralanmış</span>
+          <span class="stat-label">{{ translations().vehicles.rented }}</span>
           <span class="stat-value warning">{{ vehicleStats.rentedVehicles }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Bakımda</span>
+          <span class="stat-label">{{ translations().vehicles.maintenance }}</span>
           <span class="stat-value">{{ vehicleStats.maintenanceVehicles }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Rentals Stats -->
     <div class="stat-card" *ngIf="rentalStats">
       <div class="stat-card-header">
-        <h3>Kiralamalar</h3>
+        <h3>{{ translations().rentals.title }}</h3>
       </div>
       <div class="stat-card-content">
         <div class="stat-item">
-          <span class="stat-label">Toplam Kiralama</span>
+          <span class="stat-label">{{ translations().rentals.total }}</span>
           <span class="stat-value">{{ rentalStats.totalRentals }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Toplam Gelir</span>
+          <span class="stat-label">{{ translations().rentals.totalRevenue }}</span>
           <span class="stat-value success">
             {{ rentalStats.totalRevenue | number: '1.2-2' }} TL
           </span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Ortalama Tutar</span>
+          <span class="stat-label">{{ translations().rentals.averageAmount }}</span>
           <span class="stat-value">
             {{ rentalStats.averageRentalAmount | number: '1.2-2' }} TL
           </span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Aktif</span>
+          <span class="stat-label">{{ translations().rentals.active }}</span>
           <span class="stat-value warning">{{ rentalStats.activeRentals }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Insurances Stats -->
     <div class="stat-card" *ngIf="insuranceStats">
       <div class="stat-card-header">
-        <h3>Sigortalar</h3>
+        <h3>{{ translations().insurances.title }}</h3>
       </div>
       <div class="stat-card-content">
         <div class="stat-item">
-          <span class="stat-label">Toplam Sigorta</span>
+          <span class="stat-label">{{ translations().insurances.total }}</span>
           <span class="stat-value">{{ insuranceStats.totalInsurances }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Aktif</span>
+          <span class="stat-label">{{ translations().insurances.active }}</span>
           <span class="stat-value success">{{ insuranceStats.activeInsurances }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Süresi Dolmuş</span>
+          <span class="stat-label">{{ translations().insurances.expired }}</span>
           <span class="stat-value">{{ insuranceStats.expiredInsurances }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Yakında Dolacak</span>
+          <span class="stat-label">{{ translations().insurances.expiringSoon }}</span>
           <span class="stat-value warning">
             {{ insuranceStats.expiringSoonInsurances }}
           </span>
@@ -111,37 +106,35 @@
       </div>
     </div>
 
-    <!-- Users Stats -->
     <div class="stat-card" *ngIf="userStats">
       <div class="stat-card-header">
-        <h3>Kullanıcılar</h3>
+        <h3>{{ translations().users.title }}</h3>
       </div>
       <div class="stat-card-content">
         <div class="stat-item">
-          <span class="stat-label">Toplam Kullanıcı</span>
+          <span class="stat-label">{{ translations().users.total }}</span>
           <span class="stat-value">{{ userStats.totalUsers }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Aktif</span>
+          <span class="stat-label">{{ translations().users.active }}</span>
           <span class="stat-value success">{{ userStats.activeUsers }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Pasif</span>
+          <span class="stat-label">{{ translations().users.inactive }}</span>
           <span class="stat-value">{{ userStats.inactiveUsers }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Yeni (30 gün)</span>
+          <span class="stat-label">{{ translations().users.newLast30Days }}</span>
           <span class="stat-value">{{ userStats.newUsersLast30Days }}</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Charts Grid -->
   <div *ngIf="!isLoading" class="charts-grid">
-    <!-- Vehicle Status Chart -->
+
     <div class="chart-card" *ngIf="vehicleStats">
-      <h3>Araç Durum Dağılımı</h3>
+      <h3>{{ translations().charts.vehicleStatus }}</h3>
       <app-chart
         type="pie"
         [data]="vehicleStatusChartData"
@@ -150,9 +143,8 @@
       ></app-chart>
     </div>
 
-    <!-- Vehicle Category Chart -->
     <div class="chart-card" *ngIf="vehicleStats">
-      <h3>Araç Kategori Dağılımı</h3>
+      <h3>{{ translations().charts.vehicleCategory }}</h3>
       <app-chart
         type="doughnut"
         [data]="vehicleCategoryChartData"
@@ -161,9 +153,8 @@
       ></app-chart>
     </div>
 
-    <!-- Rental Status Chart -->
     <div class="chart-card" *ngIf="rentalStats">
-      <h3>Kiralama Durum Dağılımı</h3>
+      <h3>{{ translations().charts.rentalStatus }}</h3>
       <app-chart
         type="bar"
         [data]="rentalStatusChartData"
@@ -172,20 +163,8 @@
       ></app-chart>
     </div>
 
-    <!-- Rental Monthly Chart -->
-    <div class="chart-card full-width" *ngIf="rentalStats">
-      <h3>Aylık Kiralama Trendi</h3>
-      <app-chart
-        type="line"
-        [data]="rentalMonthlyChartData"
-        [options]="lineChartOptions"
-        height="300px"
-      ></app-chart>
-    </div>
-
-    <!-- User Role Chart -->
     <div class="chart-card" *ngIf="userStats">
-      <h3>Kullanıcı Rol Dağılımı</h3>
+      <h3>{{ translations().charts.userRole }}</h3>
       <app-chart
         type="pie"
         [data]="userRoleChartData"
@@ -195,4 +174,3 @@
     </div>
   </div>
 </div>
-

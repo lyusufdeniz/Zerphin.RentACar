@@ -24,29 +24,24 @@ export class AuthService {
   private router = inject(Router);
   private storage = inject(StorageService);
 
-  // Signal for authentication state
   private authToken = signal<string | null>(null);
   private refreshTokenSignal = signal<string | null>(null);
   private currentUser = signal<User | null>(null);
 
-  // Computed signal for isAuthenticated
   isAuthenticated = computed(() => {
     return this.authToken() !== null && this.currentUser() !== null;
   });
 
-  // Public getter for current user
   get user(): User | null {
     return this.currentUser();
   }
 
-  // Get user full name
   get userFullName(): string {
     const user = this.currentUser();
     if (!user) return '';
     return `${user.firstName} ${user.lastName}`.trim();
   }
 
-  // Public getter for token
   get token(): string | null {
     return this.authToken();
   }
@@ -56,21 +51,39 @@ export class AuthService {
   }
 
   constructor() {
-    // Check if user is already logged in (e.g., from previous session)
+
     this.initializeAuth();
   }
 
-  /**
-   * Initialize authentication from storage
-   */
   private initializeAuth(): void {
-    const token = this.storage.getItemString('authToken');
-    const refreshToken = this.storage.getItemString('refreshToken');
-    const userData = this.storage.getItem<LoginUserResponse>('user');
+
+    const rememberMeLocal = this.storage.getItemString('rememberMe');
+    const rememberMeSession = this.storage.getItemStringSession('rememberMe');
+
+    let token: string | null = null;
+    let refreshToken: string | null = null;
+    let userData: LoginUserResponse | null = null;
+
+    if (rememberMeLocal === 'true') {
+
+      token = this.storage.getItemString('authToken');
+      refreshToken = this.storage.getItemString('refreshToken');
+      userData = this.storage.getItem<LoginUserResponse>('user');
+    } else if (rememberMeSession === 'false') {
+
+      token = this.storage.getItemStringSession('authToken');
+      refreshToken = this.storage.getItemStringSession('refreshToken');
+      userData = this.storage.getItemSession<LoginUserResponse>('user');
+    } else {
+
+      token = this.storage.getItemString('authToken') || this.storage.getItemStringSession('authToken');
+      refreshToken = this.storage.getItemString('refreshToken') || this.storage.getItemStringSession('refreshToken');
+      userData = this.storage.getItem<LoginUserResponse>('user') || this.storage.getItemSession<LoginUserResponse>('user');
+    }
 
     if (token && refreshToken && userData) {
       try {
-        // Convert LoginUserResponse to User
+
         const user: User = {
           id: userData.id,
           firstName: userData.firstName,
@@ -89,9 +102,6 @@ export class AuthService {
     }
   }
 
-  /**
-   * Convert role name to UserRole enum
-   */
   private getRoleFromName(roleName: string): number {
     const roleMap: Record<string, UserRole> = {
       Customer: UserRole.Customer,
@@ -102,16 +112,13 @@ export class AuthService {
     return roleMap[roleName] || UserRole.Customer;
   }
 
-  /**
-   * Login user
-   */
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  login(credentials: LoginRequest, rememberMe: boolean = true): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>('/Authentication/login', credentials)
       .pipe(
         tap((result) => {
           if (result) {
-            // Convert LoginUserResponse to User
+
             const loginUser = result.user;
             const user: User = {
               id: loginUser.id,
@@ -121,16 +128,16 @@ export class AuthService {
               roleName: loginUser.roleName,
               role: this.getRoleFromName(loginUser.roleName),
             };
-            
-            // Save tokens and user to localStorage
+
             this.setAuth(
               result.token,
               result.refreshToken,
               user,
-              result.expiresAt
+              result.expiresAt,
+              rememberMe
             );
 
-            console.log('Login successful - Tokens saved to localStorage');
+            console.log('Login successful - Tokens saved');
           }
         }),
         catchError((error) => {
@@ -140,29 +147,23 @@ export class AuthService {
       );
   }
 
-  /**
-   * Logout user
-   */
   logout(): void {
     this.clearAuth();
     this.router.navigate(['/login']);
   }
 
-  /**
-   * Set authentication data and save to localStorage
-   */
   private setAuth(
     token: string,
     refreshToken: string,
     user: User,
-    expiresAt: string
+    expiresAt: string,
+    rememberMe: boolean = true
   ): void {
-    // Update signals
+
     this.authToken.set(token);
     this.refreshTokenSignal.set(refreshToken);
     this.currentUser.set(user);
 
-    // Store in localStorage for persistence
     const loginUserResponse: LoginUserResponse = {
       id: user.id,
       firstName: user.firstName,
@@ -171,51 +172,65 @@ export class AuthService {
       roleName: user.roleName,
     };
 
-    // Save tokens and user data to localStorage
-    this.storage.setItem('authToken', token);
-    this.storage.setItem('refreshToken', refreshToken);
-    this.storage.setItem('user', loginUserResponse);
-    this.storage.setItem('expiresAt', expiresAt);
+    this.clearStorage();
 
-    console.log('Auth data saved to localStorage:', {
+    if (rememberMe) {
+
+      this.storage.setItem('authToken', token);
+      this.storage.setItem('refreshToken', refreshToken);
+      this.storage.setItem('user', loginUserResponse);
+      this.storage.setItem('expiresAt', expiresAt);
+      this.storage.setItem('rememberMe', 'true');
+    } else {
+
+      this.storage.setItemSession('authToken', token);
+      this.storage.setItemSession('refreshToken', refreshToken);
+      this.storage.setItemSession('user', loginUserResponse);
+      this.storage.setItemSession('expiresAt', expiresAt);
+      this.storage.setItemSession('rememberMe', 'false');
+    }
+
+    console.log('Auth data saved:', {
+      rememberMe,
+      storage: rememberMe ? 'localStorage' : 'sessionStorage',
       tokenSaved: !!token,
       refreshTokenSaved: !!refreshToken,
       expiresAt,
     });
   }
 
-  /**
-   * Clear authentication data
-   */
-  private clearAuth(): void {
-    this.authToken.set(null);
-    this.refreshTokenSignal.set(null);
-    this.currentUser.set(null);
+  private clearStorage(): void {
+
     this.storage.removeItem('authToken');
     this.storage.removeItem('refreshToken');
     this.storage.removeItem('user');
     this.storage.removeItem('expiresAt');
+    this.storage.removeItem('rememberMe');
+
+    this.storage.removeItemSession('authToken');
+    this.storage.removeItemSession('refreshToken');
+    this.storage.removeItemSession('user');
+    this.storage.removeItemSession('expiresAt');
+    this.storage.removeItemSession('rememberMe');
   }
 
-  /**
-   * Check if user has specific role
-   */
+  private clearAuth(): void {
+    this.authToken.set(null);
+    this.refreshTokenSignal.set(null);
+    this.currentUser.set(null);
+    this.clearStorage();
+  }
+
   hasRole(roleName: string): boolean {
     const user = this.currentUser();
     return user?.roleName === roleName;
   }
 
-  /**
-   * Check if user has any of the specified roles
-   */
   hasAnyRole(roleNames: string[]): boolean {
     const user = this.currentUser();
     return user?.roleName ? roleNames.includes(user.roleName) : false;
   }
 
-  /**
-   * Register new user
-   */
   register(registerData: RegisterRequest): Observable<ServiceResult<any>> {
     return this.http.post<ServiceResult<any>>(
       '/Authentication/register',
@@ -223,9 +238,6 @@ export class AuthService {
     );
   }
 
-  /**
-   * Refresh token
-   */
   refreshToken(): Observable<RefreshTokenResponse> {
     const refreshTokenValue = this.refreshTokenSignal();
     if (!refreshTokenValue) {
@@ -244,60 +256,78 @@ export class AuthService {
           if (result) {
             const currentUser = this.currentUser();
             if (currentUser) {
-              // Save new tokens to localStorage
+
+              const rememberMe = this.storage.getItemString('rememberMe') === 'true' || 
+                                 this.storage.getItemStringSession('rememberMe') === 'false';
+
               this.setAuth(
                 result.token,
                 result.refreshToken,
                 currentUser,
-                result.expiresAt
+                result.expiresAt,
+                rememberMe
               );
-              console.log('Token refreshed successfully - New tokens saved to localStorage');
+              console.log('Token refreshed successfully - New tokens saved');
             }
           }
         }),
         catchError((error) => {
           console.error('Token refresh error:', error);
-          // Clear auth data and redirect to login
+
           this.clearAuth();
           return throwError(() => error);
         })
       );
   }
 
-  /**
-   * Check if token is expired
-   */
   isTokenExpired(): boolean {
-    const expiresAt = this.storage.getItemString('expiresAt');
-    if (!expiresAt) {
+
+    const rememberMe = this.storage.getItemString('rememberMe') === 'true' || 
+                       this.storage.getItemStringSession('rememberMe') === 'false';
+
+    const expiresAt = rememberMe
+      ? this.storage.getItemString('expiresAt')
+      : this.storage.getItemStringSession('expiresAt');
+
+    const expiresAtValue = expiresAt || 
+                          this.storage.getItemString('expiresAt') || 
+                          this.storage.getItemStringSession('expiresAt');
+
+    if (!expiresAtValue) {
       return true;
     }
 
-    const expiryDate = new Date(expiresAt);
+    const expiryDate = new Date(expiresAtValue);
     const now = new Date();
-    
-    // Add 5 minute buffer before actual expiration
+
     const bufferMinutes = 5;
     const bufferTime = new Date(expiryDate.getTime() - bufferMinutes * 60 * 1000);
-    
+
     return now >= bufferTime;
   }
 
-  /**
-   * Check if token will expire soon (within buffer time)
-   */
   isTokenExpiringSoon(): boolean {
-    const expiresAt = this.storage.getItemString('expiresAt');
-    if (!expiresAt) {
+
+    const rememberMe = this.storage.getItemString('rememberMe') === 'true' || 
+                       this.storage.getItemStringSession('rememberMe') === 'false';
+
+    const expiresAt = rememberMe
+      ? this.storage.getItemString('expiresAt')
+      : this.storage.getItemStringSession('expiresAt');
+
+    const expiresAtValue = expiresAt || 
+                          this.storage.getItemString('expiresAt') || 
+                          this.storage.getItemStringSession('expiresAt');
+
+    if (!expiresAtValue) {
       return true;
     }
 
-    const expiryDate = new Date(expiresAt);
+    const expiryDate = new Date(expiresAtValue);
     const now = new Date();
     const bufferMinutes = 5;
     const bufferTime = new Date(expiryDate.getTime() - bufferMinutes * 60 * 1000);
-    
+
     return now >= bufferTime && now < expiryDate;
   }
 }
-

@@ -8,17 +8,12 @@ import {
   InsuranceSearchParams,
   PaginatedInsuranceResponse,
 } from '../models/insurance';
-
 @Injectable({
   providedIn: 'root',
 })
 export class InsuranceService {
   private httpService = inject(HttpService);
   private baseUrl = '/Insurances';
-
-  /**
-   * Search insurances with filters
-   */
   searchInsurances(
     params?: InsuranceSearchParams
   ): Observable<PaginatedInsuranceResponse> {
@@ -29,35 +24,18 @@ export class InsuranceService {
       }
     );
   }
-
-  /**
-   * Get insurance by ID
-   */
   getInsuranceById(id: string): Observable<Insurance> {
     return this.httpService.get<Insurance>(`${this.baseUrl}/id`, {
       params: { id },
     });
   }
-
-  /**
-   * Create new insurance
-   */
   createInsurance(command: CreateInsuranceCommand): Observable<Insurance> {
     return this.httpService.post<Insurance>(this.baseUrl, command);
   }
-
-  /**
-   * Update insurance
-   */
   updateInsurance(command: UpdateInsuranceCommand): Observable<Insurance> {
     return this.httpService.put<Insurance>(this.baseUrl, command);
   }
-
-  /**
-   * Delete insurance
-   */
   deleteInsurance(id: string): Observable<void> {
     return this.httpService.delete<void>(this.baseUrl, { params: { id } });
   }
-}
-
+}

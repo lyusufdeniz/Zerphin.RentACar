@@ -8,6 +8,7 @@ import {
   UserSearchParams,
   PaginatedUserResponse,
   DeleteUserCommand,
+  ChangePasswordCommand,
 } from '../models/user';
 import { forkJoin } from 'rxjs';
 
@@ -18,9 +19,6 @@ export class UserService {
   private httpService = inject(HttpService);
   private baseUrl = '/Users';
 
-  /**
-   * Search users with filters
-   */
   searchUsers(params?: UserSearchParams): Observable<PaginatedUserResponse> {
     return this.httpService.get<PaginatedUserResponse>(
       `${this.baseUrl}/search`,
@@ -30,35 +28,26 @@ export class UserService {
     );
   }
 
-  /**
-   * Get user by ID
-   */
   getUserById(id: string): Observable<User> {
     return this.httpService.get<User>(`${this.baseUrl}/${id}`);
   }
 
-  /**
-   * Create new user
-   */
   createUser(command: CreateUserCommand): Observable<User> {
     return this.httpService.post<User>(this.baseUrl, command);
   }
 
-  /**
-   * Update user
-   */
   updateUser(command: UpdateUserCommand): Observable<User> {
     return this.httpService.put<User>(this.baseUrl, command);
   }
 
-  /**
-   * Delete user
-   */
   deleteUser(id: string): Observable<void> {
     const command: DeleteUserCommand = { id };
     return this.httpService.delete<void>(this.baseUrl, {
       params: command as any,
     });
   }
-}
 
+  changePassword(command: ChangePasswordCommand): Observable<void> {
+    return this.httpService.put<void>(`${this.baseUrl}/change-password`, command);
+  }
+}

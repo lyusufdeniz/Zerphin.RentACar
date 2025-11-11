@@ -4,6 +4,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  computed,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +16,9 @@ import { VehicleService } from '../../services/vehicle.service';
 import { ToastService } from '../../services/toast.service';
 import { ModalService } from '../../services/modal.service';
 import { SwalService } from '../../services/swal.service';
+import { LanguageService } from '../../services/language.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { RentalFormComponent } from '../../components/rental-form/rental-form.component';
 import { RentalDetailComponent } from '../../components/rental-detail/rental-detail.component';
 import {
@@ -32,63 +37,106 @@ import { Vehicle } from '../../models/vehicle';
   templateUrl: './rentals.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RentalsComponent implements OnInit {
+export class RentalsComponent implements OnInit, OnDestroy {
   private rentalService = inject(RentalService);
   private vehicleService = inject(VehicleService);
   private toastService = inject(ToastService);
   private modalService = inject(ModalService);
   private swalService = inject(SwalService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
+  private languageSubscription?: Subscription;
 
-  // Data
+  translations = computed(() => {
+    const currentLang = this.languageService.currentLanguage();
+    return {
+      title: this.languageService.translate('pages.rentals.title'),
+      customer: this.languageService.translate('pages.rentals.customer'),
+      vehicle: this.languageService.translate('pages.rentals.vehicle'),
+      status: this.languageService.translate('pages.rentals.status'),
+      searchCustomer: this.languageService.translate('pages.rentals.searchCustomer'),
+      startDateFrom: this.languageService.translate('pages.rentals.startDateFrom'),
+      startDateTo: this.languageService.translate('pages.rentals.startDateTo'),
+      endDateFrom: this.languageService.translate('pages.rentals.endDateFrom'),
+      endDateTo: this.languageService.translate('pages.rentals.endDateTo'),
+      all: this.languageService.translate('pages.rentals.all'),
+      loading: this.languageService.translate('pages.rentals.loading'),
+      noData: this.languageService.translate('pages.rentals.noData'),
+      add: this.languageService.translate('pages.rentals.add'),
+      edit: this.languageService.translate('pages.rentals.edit'),
+      delete: this.languageService.translate('pages.rentals.delete'),
+      view: this.languageService.translate('pages.rentals.view'),
+      search: this.languageService.translate('common.search'),
+      clear: this.languageService.translate('common.clear'),
+      table: {
+        startDate: this.languageService.translate('pages.rentals.table.startDate'),
+        endDate: this.languageService.translate('pages.rentals.table.endDate'),
+        customer: this.languageService.translate('pages.rentals.table.customer'),
+        vehicle: this.languageService.translate('pages.rentals.table.vehicle'),
+        dailyPrice: this.languageService.translate('pages.rentals.table.dailyPrice'),
+        totalAmount: this.languageService.translate('pages.rentals.table.totalAmount'),
+        status: this.languageService.translate('pages.rentals.table.status'),
+        actions: this.languageService.translate('pages.rentals.table.actions'),
+      },
+      pagination: {
+        previous: this.languageService.translate('pages.rentals.pagination.previous'),
+        next: this.languageService.translate('pages.rentals.pagination.next'),
+      },
+    };
+  });
+
+  public languageServicePublic = this.languageService; 
+
   rentals: Rental[] = [];
   totalCount = 0;
   isLoading = false;
-  vehicles: Vehicle[] = []; // For vehicle dropdown in filters
+  vehicles: Vehicle[] = []; 
 
-  // Pagination
   currentPage = 1;
   pageSize = 100;
   totalPages = 0;
 
-  // Filters
   searchParams: RentalSearchParams = {
     PageNumber: 1,
     PageSize: 100,
   };
 
-  // Filter values
   searchCustomerId = '';
+  searchCustomerQuery = ''; 
   searchVehicleId = '';
-  selectedStatus?: RentalStatus;
+  selectedStatus: RentalStatus | null = null;
   startDateFrom?: string;
   startDateTo?: string;
   endDateFrom?: string;
   endDateTo?: string;
 
-  // Enums for template
   statuses = Object.values(RentalStatus).filter(
     (v) => typeof v === 'number'
   ) as RentalStatus[];
   statusNames = RentalStatusNames;
 
-  // Order
   orderBy = 'Id';
   isDescending = false;
 
   ngOnInit() {
     this.loadRentals();
     this.loadVehiclesForFilter();
+
+    this.languageSubscription = toObservable(this.languageService.currentLanguage).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
-  /**
-   * Load rentals with current search params
-   */
+  ngOnDestroy() {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
   loadRentals() {
     this.isLoading = true;
     this.cdr.markForCheck();
 
-    // Build search params
     const params: RentalSearchParams = {
       PageNumber: this.currentPage,
       PageSize: this.pageSize,
@@ -96,9 +144,34 @@ export class RentalsComponent implements OnInit {
       IsDescending: this.isDescending,
     };
 
-    if (this.searchCustomerId) params.CustomerId = this.searchCustomerId;
+    if (this.searchCustomerQuery.trim()) {
+      const query = this.searchCustomerQuery.trim();
+
+      if (/^\d+$/.test(query)) {
+
+        if (query.length === 11) {
+          params.CustomerIdentityNumber = query;
+        } else {
+          params.CustomerLicenseNumber = query;
+        }
+      } else {
+
+        const parts = query.split(/\s+/);
+        if (parts.length >= 2) {
+          params.CustomerFirstName = parts[0];
+          params.CustomerLastName = parts.slice(1).join(' ');
+        } else {
+
+          params.CustomerFirstName = query;
+        }
+      }
+    } else if (this.searchCustomerId) {
+      params.CustomerId = this.searchCustomerId;
+    }
     if (this.searchVehicleId) params.VehicleId = this.searchVehicleId;
-    if (this.selectedStatus) params.Status = this.selectedStatus;
+    if (this.selectedStatus !== null) {
+      params.Status = this.selectedStatus;
+    }
     if (this.startDateFrom) params.StartDateFrom = this.startDateFrom;
     if (this.startDateTo) params.StartDateTo = this.startDateTo;
     if (this.endDateFrom) params.EndDateFrom = this.endDateFrom;
@@ -116,14 +189,10 @@ export class RentalsComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
-        // Error is already handled by exception interceptor
       },
     });
   }
 
-  /**
-   * Load vehicles for filter dropdown
-   */
   loadVehiclesForFilter() {
     this.vehicleService.searchVehicles({ PageSize: 9999 }).subscribe({
       next: (response) => {
@@ -131,26 +200,20 @@ export class RentalsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        // Error is already handled by exception interceptor
       },
     });
   }
 
-  /**
-   * Search with filters
-   */
   search() {
     this.currentPage = 1;
     this.loadRentals();
   }
 
-  /**
-   * Clear all filters
-   */
   clearFilters() {
     this.searchCustomerId = '';
+    this.searchCustomerQuery = '';
     this.searchVehicleId = '';
-    this.selectedStatus = undefined;
+    this.selectedStatus = null;
     this.startDateFrom = undefined;
     this.startDateTo = undefined;
     this.endDateFrom = undefined;
@@ -160,9 +223,6 @@ export class RentalsComponent implements OnInit {
     this.search();
   }
 
-  /**
-   * Change page
-   */
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -170,18 +230,12 @@ export class RentalsComponent implements OnInit {
     }
   }
 
-  /**
-   * Change page size
-   */
   changePageSize(size: number) {
     this.pageSize = size;
     this.currentPage = 1;
     this.loadRentals();
   }
 
-  /**
-   * Sort by column
-   */
   sortBy(column: string) {
     if (this.orderBy === column) {
       this.isDescending = !this.isDescending;
@@ -192,35 +246,28 @@ export class RentalsComponent implements OnInit {
     this.loadRentals();
   }
 
-  /**
-   * Delete rental
-   */
   deleteRental(rental: Rental) {
     this.swalService
       .confirm(
-        'Kiralama Sil',
-        `Bu kiralamayı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`,
-        'Sil',
-        'İptal'
+        this.languageService.translate('messages.deleteConfirm.rental.title'),
+        this.languageService.translate('messages.deleteConfirm.rental.message'),
+        this.languageService.translate('messages.deleteConfirm.rental.confirm'),
+        this.languageService.translate('messages.deleteConfirm.rental.cancel')
       )
       .subscribe((result) => {
         if (result.isConfirmed) {
           this.rentalService.deleteRental(rental.id).subscribe({
             next: () => {
-              this.toastService.success('Kiralama başarıyla silindi');
+              this.toastService.success(this.languageService.translate('messages.success.rental.deleted'));
               this.loadRentals();
             },
             error: () => {
-              // Error is already handled by exception interceptor
             },
           });
         }
       });
   }
 
-  /**
-   * Get page numbers for pagination
-   */
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxPages = 5;
@@ -238,18 +285,12 @@ export class RentalsComponent implements OnInit {
     return pages;
   }
 
-  /**
-   * Format date for display
-   */
   formatDate(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString('tr-TR');
   }
 
-  /**
-   * Format date-time for display
-   */
   formatDateTime(dateString: string | undefined): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
@@ -262,32 +303,25 @@ export class RentalsComponent implements OnInit {
     });
   }
 
-  /**
-   * Get status badge class
-   */
   getStatusClass(status: RentalStatus): string {
     switch (status) {
       case RentalStatus.Active:
-        return 'status-active'; // Yeşil
+        return 'status-active'; 
       case RentalStatus.Completed:
-        return 'status-info'; // Mavi
+        return 'status-info'; 
       case RentalStatus.Cancelled:
-        return 'status-expired'; // Kırmızı
+        return 'status-expired'; 
       default:
         return '';
     }
   }
 
-  /**
-   * Open add rental modal
-   */
   openAddRentalModal() {
     const { close, contentRef } = this.modalService.open(RentalFormComponent, {
-      title: 'Yeni Kiralama Ekle',
+      title: this.languageService.translate('messages.modal.rental.add'),
       size: 'large',
     });
 
-    // Listen for saved event
     if (contentRef && contentRef.instance) {
       const formComponent = contentRef.instance as RentalFormComponent;
 
@@ -306,17 +340,13 @@ export class RentalsComponent implements OnInit {
     }
   }
 
-  /**
-   * Edit rental
-   */
   editRental(rental: Rental) {
     const { close, contentRef } = this.modalService.open(RentalFormComponent, {
-      title: 'Kiralama Düzenle',
+      title: this.languageService.translate('messages.modal.rental.edit'),
       size: 'large',
       inputs: { rental },
     });
 
-    // Listen for saved event
     if (contentRef && contentRef.instance) {
       const formComponent = contentRef.instance as RentalFormComponent;
 
@@ -335,12 +365,9 @@ export class RentalsComponent implements OnInit {
     }
   }
 
-  /**
-   * View rental details
-   */
   viewRentalDetails(rental: Rental) {
     this.modalService.open(RentalDetailComponent, {
-      title: 'Kiralama Detayları',
+      title: this.languageService.translate('messages.modal.rental.details'),
       size: 'large',
       inputs: { rentalId: rental.id },
     });

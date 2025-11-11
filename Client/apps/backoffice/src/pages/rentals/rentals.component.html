@@ -1,84 +1,81 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>Kiralamalar</h1>
+    <h1>{{ translations().title }}</h1>
     <app-favorite-button
-      title="Kiralamalar"
+      [title]="translations().title"
       path="/rentals"
     ></app-favorite-button>
   </div>
 
-  <!-- Filters -->
   <div class="filters-section">
     <div class="filters-grid">
       <div class="filter-item">
-        <label>Müşteri ID</label>
+        <label>{{ translations().customer }}</label>
         <input
           type="text"
-          [(ngModel)]="searchCustomerId"
-          placeholder="Müşteri ID ara..."
+          [(ngModel)]="searchCustomerQuery"
+          [placeholder]="translations().searchCustomer"
           (keyup.enter)="search()"
         />
       </div>
       <div class="filter-item">
-        <label>Araç</label>
+        <label>{{ translations().vehicle }}</label>
         <select [(ngModel)]="searchVehicleId">
-          <option [value]="''">Tümü</option>
+          <option [value]="''">{{ translations().all }}</option>
           <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">
             {{ vehicle.licensePlate }} - {{ vehicle.brand }} {{ vehicle.model }}
           </option>
         </select>
       </div>
       <div class="filter-item">
-        <label>Durum</label>
+        <label>{{ translations().status }}</label>
         <select [(ngModel)]="selectedStatus">
-          <option [value]="undefined">Tümü</option>
-          <option *ngFor="let status of statuses" [value]="status">
+          <option [ngValue]="null">{{ translations().all }}</option>
+          <option *ngFor="let status of statuses" [ngValue]="status">
             {{ statusNames[status] }}
           </option>
         </select>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Başlangıç Tarihi (Başlangıç)"
+          [label]="translations().startDateFrom"
           [(ngModel)]="startDateFrom"
         ></app-datepicker>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Başlangıç Tarihi (Bitiş)"
+          [label]="translations().startDateTo"
           [(ngModel)]="startDateTo"
         ></app-datepicker>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Bitiş Tarihi (Başlangıç)"
+          [label]="translations().endDateFrom"
           [(ngModel)]="endDateFrom"
         ></app-datepicker>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Bitiş Tarihi (Bitiş)"
+          [label]="translations().endDateTo"
           [(ngModel)]="endDateTo"
         ></app-datepicker>
       </div>
       <div class="filter-actions">
-        <button class="btn-primary" (click)="search()">Ara</button>
-        <button class="btn-secondary" (click)="clearFilters()">Temizle</button>
+        <button class="btn-primary" (click)="search()">{{ translations().search }}</button>
+        <button class="btn-secondary" (click)="clearFilters()">{{ translations().clear }}</button>
       </div>
     </div>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Kiralamalar yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
-  <!-- Rentals Table -->
   <div *ngIf="!isLoading" class="table-container">
     <div class="table-header">
       <div class="table-info">
-        <span>Toplam: {{ totalCount }} kiralama</span>
+        <span>{{ languageServicePublic.translateWithParams('pages.rentals.total', { count: totalCount.toString() }) }}</span>
       </div>
       <div class="table-actions">
         <button class="btn-primary" (click)="openAddRentalModal()">
@@ -95,7 +92,7 @@
               d="M12 4v16m8-8H4"
             />
           </svg>
-          Yeni Kiralama
+          {{ translations().add }}
         </button>
       </div>
     </div>
@@ -104,7 +101,7 @@
       <thead>
         <tr>
           <th (click)="sortBy('startDate')" class="sortable">
-            Başlangıç Tarihi
+            {{ translations().table.startDate }}
             <span
               *ngIf="orderBy === 'startDate'"
               class="sort-icon"
@@ -114,7 +111,7 @@
             </span>
           </th>
           <th (click)="sortBy('endDate')" class="sortable">
-            Bitiş Tarihi
+            {{ translations().table.endDate }}
             <span
               *ngIf="orderBy === 'endDate'"
               class="sort-icon"
@@ -123,10 +120,10 @@
               {{ isDescending ? '↓' : '↑' }}
             </span>
           </th>
-          <th>Müşteri</th>
-          <th>Araç</th>
+          <th>{{ translations().table.customer }}</th>
+          <th>{{ translations().table.vehicle }}</th>
           <th (click)="sortBy('dailyRate')" class="sortable">
-            Günlük Fiyat
+            {{ translations().table.dailyPrice }}
             <span
               *ngIf="orderBy === 'dailyRate'"
               class="sort-icon"
@@ -136,7 +133,7 @@
             </span>
           </th>
           <th (click)="sortBy('totalAmount')" class="sortable">
-            Toplam Tutar
+            {{ translations().table.totalAmount }}
             <span
               *ngIf="orderBy === 'totalAmount'"
               class="sort-icon"
@@ -145,8 +142,8 @@
               {{ isDescending ? '↓' : '↑' }}
             </span>
           </th>
-          <th>Durum</th>
-          <th class="actions-column">İşlemler</th>
+          <th>{{ translations().table.status }}</th>
+          <th class="actions-column">{{ translations().table.actions }}</th>
         </tr>
       </thead>
       <tbody>
@@ -189,7 +186,7 @@
             <div class="action-buttons">
               <button
                 class="btn-icon-view"
-                title="Detay Görüntüle"
+                [title]="translations().view"
                 (click)="viewRentalDetails(rental)"
                 type="button"
               >
@@ -210,7 +207,7 @@
               </button>
               <button
                 class="btn-icon-edit"
-                title="Düzenle"
+                [title]="translations().edit"
                 (click)="editRental(rental)"
                 type="button"
               >
@@ -225,7 +222,7 @@
               </button>
               <button
                 class="btn-icon-delete"
-                title="Sil"
+                [title]="translations().delete"
                 (click)="deleteRental(rental)"
                 type="button"
               >
@@ -244,17 +241,15 @@
       </tbody>
     </table>
 
-    <!-- Empty State -->
     <div *ngIf="rentals.length === 0" class="empty-state">
-      <p>Kiralama bulunamadı</p>
+      <p>{{ translations().noData }}</p>
     </div>
 
-    <!-- Pagination -->
     <div *ngIf="totalPages > 0" class="pagination">
       <div class="pagination-info">
         <span>
-          Sayfa {{ currentPage }} / {{ totalPages }} 
-          (Toplam: {{ totalCount }} kayıt)
+          {{ languageServicePublic.translateWithParams('pages.rentals.pagination.page', { current: currentPage.toString(), total: totalPages.toString() }) }} 
+          {{ languageServicePublic.translateWithParams('pages.rentals.pagination.total', { count: totalCount.toString() }) }}
         </span>
       </div>
       <div class="pagination-controls">
@@ -263,7 +258,7 @@
           [disabled]="currentPage === 1"
           (click)="changePage(currentPage - 1)"
         >
-          Önceki
+          {{ translations().pagination.previous }}
         </button>
         <div class="pagination-pages">
           <button
@@ -280,7 +275,7 @@
           [disabled]="currentPage === totalPages"
           (click)="changePage(currentPage + 1)"
         >
-          Sonraki
+          {{ translations().pagination.next }}
         </button>
         <select
           class="page-size-select"
@@ -298,4 +293,3 @@
     </div>
   </div>
 </div>
-

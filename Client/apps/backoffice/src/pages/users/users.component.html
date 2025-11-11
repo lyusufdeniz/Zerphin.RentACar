@@ -1,112 +1,64 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>Kullanıcılar/Müşteriler</h1>
+    <h1>{{ translations().title }}</h1>
     <app-favorite-button
-      title="Kullanıcılar/Müşteriler"
+      [title]="translations().title"
       path="/users"
     ></app-favorite-button>
   </div>
 
-  <!-- Filters -->
   <div class="filters-section">
     <div class="filters-grid">
       <div class="filter-item">
-        <label>Email</label>
+        <label>{{ translations().name }}</label>
         <input
           type="text"
-          [(ngModel)]="searchEmail"
-          placeholder="Email ara..."
+          [(ngModel)]="searchCustomerQuery"
+          [placeholder]="translations().searchName"
           (keyup.enter)="search()"
         />
       </div>
       <div class="filter-item">
-        <label>Ad</label>
-        <input
-          type="text"
-          [(ngModel)]="searchFirstName"
-          placeholder="Ad ara..."
-          (keyup.enter)="search()"
-        />
-      </div>
-      <div class="filter-item">
-        <label>Soyad</label>
-        <input
-          type="text"
-          [(ngModel)]="searchLastName"
-          placeholder="Soyad ara..."
-          (keyup.enter)="search()"
-        />
-      </div>
-      <div class="filter-item">
-        <label>Telefon</label>
-        <input
-          type="text"
-          [(ngModel)]="searchPhoneNumber"
-          placeholder="Telefon ara..."
-          (keyup.enter)="search()"
-        />
-      </div>
-      <div class="filter-item">
-        <label>TC Kimlik No</label>
-        <input
-          type="text"
-          [(ngModel)]="searchIdentityNumber"
-          placeholder="TC Kimlik No ara..."
-          (keyup.enter)="search()"
-        />
-      </div>
-      <div class="filter-item">
-        <label>Ehliyet No</label>
-        <input
-          type="text"
-          [(ngModel)]="searchLicenseNumber"
-          placeholder="Ehliyet No ara..."
-          (keyup.enter)="search()"
-        />
-      </div>
-      <div class="filter-item">
-        <label>Rol</label>
+        <label>{{ translations().role }}</label>
         <select [(ngModel)]="selectedRole">
-          <option [value]="undefined">Tümü</option>
-          <option *ngFor="let role of roles" [value]="role">
+          <option [ngValue]="null">{{ translations().all }}</option>
+          <option *ngFor="let role of roles" [ngValue]="role">
             {{ getRoleName(role) }}
           </option>
         </select>
       </div>
       <div class="filter-item">
-        <label>Aktif mi?</label>
+        <label>{{ translations().isActive }}</label>
         <select [(ngModel)]="selectedIsActive">
-          <option [value]="undefined">Tümü</option>
-          <option [value]="true">Aktif</option>
-          <option [value]="false">Pasif</option>
+          <option [ngValue]="null">{{ translations().all }}</option>
+          <option [ngValue]="true">{{ translations().active }}</option>
+          <option [ngValue]="false">{{ translations().inactive }}</option>
         </select>
       </div>
       <div class="filter-item">
-        <label>Doğrulanmış mı?</label>
+        <label>{{ translations().isVerified }}</label>
         <select [(ngModel)]="selectedIsVerified">
-          <option [value]="undefined">Tümü</option>
-          <option [value]="true">Evet</option>
-          <option [value]="false">Hayır</option>
+          <option [ngValue]="null">{{ translations().all }}</option>
+          <option [ngValue]="true">{{ translations().yes }}</option>
+          <option [ngValue]="false">{{ translations().no }}</option>
         </select>
       </div>
       <div class="filter-actions">
-        <button class="btn-primary" (click)="search()">Ara</button>
-        <button class="btn-secondary" (click)="clearFilters()">Temizle</button>
+        <button class="btn-primary" (click)="search()">{{ translations().search }}</button>
+        <button class="btn-secondary" (click)="clearFilters()">{{ translations().clear }}</button>
       </div>
     </div>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Kullanıcılar yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
-  <!-- Users Table -->
   <div *ngIf="!isLoading" class="table-container">
     <div class="table-header">
       <div class="table-info">
-        <span>Toplam: {{ totalCount }} kullanıcı</span>
+        <span>{{ languageServicePublic.translateWithParams('pages.users.total', { count: totalCount.toString() }) }}</span>
       </div>
       <div class="table-actions">
         <button class="btn-primary" (click)="openAddUserModal()">
@@ -123,7 +75,7 @@
               d="M12 4v16m8-8H4"
             />
           </svg>
-          Yeni Kullanıcı
+          {{ translations().add }}
         </button>
       </div>
     </div>
@@ -132,7 +84,7 @@
       <thead>
         <tr>
           <th (click)="sortBy('firstName')" class="sortable">
-            Ad
+            {{ translations().table.firstName }}
             <span
               *ngIf="orderBy === 'firstName'"
               class="sort-icon"
@@ -142,7 +94,7 @@
             </span>
           </th>
           <th (click)="sortBy('lastName')" class="sortable">
-            Soyad
+            {{ translations().table.lastName }}
             <span
               *ngIf="orderBy === 'lastName'"
               class="sort-icon"
@@ -152,7 +104,7 @@
             </span>
           </th>
           <th (click)="sortBy('email')" class="sortable">
-            Email
+            {{ translations().table.email }}
             <span
               *ngIf="orderBy === 'email'"
               class="sort-icon"
@@ -161,10 +113,10 @@
               {{ isDescending ? '↓' : '↑' }}
             </span>
           </th>
-          <th>Telefon</th>
-          <th>Rol</th>
-          <th>Durum</th>
-          <th class="actions-column">İşlemler</th>
+          <th>{{ translations().table.phone }}</th>
+          <th>{{ translations().table.role }}</th>
+          <th>{{ translations().table.status }}</th>
+          <th class="actions-column">{{ translations().table.actions }}</th>
         </tr>
       </thead>
       <tbody>
@@ -182,14 +134,14 @@
               [class.status-active]="user.isActive"
               [class.status-expired]="!user.isActive"
             >
-              {{ user.isActive ? 'Aktif' : 'Pasif' }}
+              {{ user.isActive ? translations().status.active : translations().status.inactive }}
             </span>
           </td>
           <td class="actions-column">
             <div class="action-buttons">
               <button
                 class="btn-icon-view"
-                title="Detay Görüntüle"
+                [title]="translations().view"
                 (click)="viewUserDetail(user)"
                 type="button"
               >
@@ -210,7 +162,7 @@
               </button>
               <button
                 class="btn-icon-edit"
-                title="Düzenle"
+                [title]="translations().edit"
                 (click)="editUser(user)"
                 type="button"
               >
@@ -225,7 +177,7 @@
               </button>
               <button
                 class="btn-icon-delete"
-                title="Sil"
+                [title]="translations().delete"
                 (click)="deleteUser(user)"
                 type="button"
               >
@@ -244,17 +196,15 @@
       </tbody>
     </table>
 
-    <!-- Empty State -->
     <div *ngIf="users.length === 0" class="empty-state">
-      <p>Kullanıcı bulunamadı</p>
+      <p>{{ translations().noData }}</p>
     </div>
 
-    <!-- Pagination -->
     <div *ngIf="totalPages > 0" class="pagination">
       <div class="pagination-info">
         <span>
-          Sayfa {{ currentPage }} / {{ totalPages }} 
-          (Toplam: {{ totalCount }} kayıt)
+          {{ languageServicePublic.translateWithParams('pages.users.pagination.page', { current: currentPage.toString(), total: totalPages.toString() }) }} 
+          {{ languageServicePublic.translateWithParams('pages.users.pagination.total', { count: totalCount.toString() }) }}
         </span>
       </div>
       <div class="pagination-controls">
@@ -263,7 +213,7 @@
           [disabled]="currentPage === 1"
           (click)="changePage(currentPage - 1)"
         >
-          Önceki
+          {{ translations().pagination.previous }}
         </button>
         <div class="pagination-pages">
           <button
@@ -280,7 +230,7 @@
           [disabled]="currentPage === totalPages"
           (click)="changePage(currentPage + 1)"
         >
-          Sonraki
+          {{ translations().pagination.next }}
         </button>
         <select
           class="page-size-select"
@@ -298,4 +248,3 @@
     </div>
   </div>
 </div>
-

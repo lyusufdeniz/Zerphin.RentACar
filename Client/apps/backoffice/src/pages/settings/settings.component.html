@@ -1,0 +1,359 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>{{ translations().title }}</h1>
+    <app-favorite-button
+      [title]="translations().title"
+      icon="⚙️"
+      path="/settings"
+    ></app-favorite-button>
+  </div>
+  <div class="settings-container">
+    <div class="settings-tabs">
+      <button
+        class="settings-tab"
+        [class.active]="activeTab === 'password'"
+        (click)="setActiveTab('password')"
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="tab-icon">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+          />
+        </svg>
+        <span>{{ translations().tabs.password }}</span>
+      </button>
+      <button
+        class="settings-tab"
+        [class.active]="activeTab === 'appearance'"
+        (click)="setActiveTab('appearance')"
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="tab-icon">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+          />
+        </svg>
+        <span>{{ translations().tabs.appearance }}</span>
+      </button>
+      <button
+        class="settings-tab"
+        [class.active]="activeTab === 'language'"
+        (click)="setActiveTab('language')"
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="tab-icon">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+          />
+        </svg>
+        <span>{{ translations().tabs.language }}</span>
+      </button>
+      <button
+        class="settings-tab"
+        [class.active]="activeTab === 'favorites'"
+        (click)="setActiveTab('favorites')"
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="tab-icon">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+          />
+        </svg>
+        <span>{{ translations().tabs.favorites }}</span>
+      </button>
+    </div>
+    <div class="settings-tab-content">
+      <div class="settings-section" *ngIf="activeTab === 'password'">
+      <div class="settings-section-header">
+        <h2>{{ translations().password.change }}</h2>
+        <p class="section-description">
+          {{ translations().password.description }}
+        </p>
+      </div>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="form-group">
+          <label for="currentPassword">{{ translations().password.current }}</label>
+          <div class="input-wrapper">
+            <input
+              id="currentPassword"
+              type="{{ showCurrentPassword ? 'text' : 'password' }}"
+              formControlName="currentPassword"
+              [placeholder]="translations().password.currentPlaceholder"
+              [class.error]="
+                f['currentPassword'].invalid && f['currentPassword'].touched
+              "
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="showCurrentPassword = !showCurrentPassword"
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                *ngIf="!showCurrentPassword"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                *ngIf="showCurrentPassword"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.29 3.29m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.007m0 0L19 16"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              f['currentPassword'].invalid && f['currentPassword'].touched
+            "
+          >
+            {{ translations().password.currentRequired }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">{{ translations().password.new }}</label>
+          <div class="input-wrapper">
+            <input
+              id="newPassword"
+              type="{{ showNewPassword ? 'text' : 'password' }}"
+              formControlName="newPassword"
+              [placeholder]="translations().password.newPlaceholder"
+              [class.error]="
+                f['newPassword'].invalid && f['newPassword'].touched
+              "
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="showNewPassword = !showNewPassword"
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                *ngIf="!showNewPassword"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                *ngIf="showNewPassword"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.29 3.29m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.007m0 0L19 16"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="f['newPassword'].invalid && f['newPassword'].touched"
+          >
+            <div *ngIf="f['newPassword'].errors?.['required']">
+              {{ translations().password.newRequired }}
+            </div>
+            <div *ngIf="f['newPassword'].errors?.['minlength']">
+              {{ translations().password.newMinLength }}
+            </div>
+            <div *ngIf="f['newPassword'].errors?.['pattern']">
+              {{ translations().password.newPattern }}
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">{{ translations().password.confirm }}</label>
+          <div class="input-wrapper">
+            <input
+              id="confirmPassword"
+              type="{{ showConfirmPassword ? 'text' : 'password' }}"
+              formControlName="confirmPassword"
+              [placeholder]="translations().password.confirmPlaceholder"
+              [class.error]="
+                f['confirmPassword'].invalid && f['confirmPassword'].touched
+              "
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="showConfirmPassword = !showConfirmPassword"
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                *ngIf="!showConfirmPassword"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                *ngIf="showConfirmPassword"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.29 3.29m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.007m0 0L19 16"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              f['confirmPassword'].invalid && f['confirmPassword'].touched
+            "
+          >
+            <div *ngIf="f['confirmPassword'].errors?.['required']">
+              {{ translations().password.confirmRequired }}
+            </div>
+            <div *ngIf="f['confirmPassword'].errors?.['passwordMismatch']">
+              {{ translations().password.confirmMismatch }}
+            </div>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="passwordForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">{{ translations().password.changeButton }}</span>
+          <span *ngIf="isLoading">{{ translations().password.changing }}</span>
+        </button>
+      </form>
+    </div>
+      <div class="settings-section" *ngIf="activeTab === 'appearance'">
+        <div class="settings-section-header">
+          <h2>{{ translations().theme.title }}</h2>
+          <p class="section-description">
+            {{ translations().theme.description }}
+          </p>
+        </div>
+        <div class="settings-options">
+          <div
+            *ngFor="let theme of themes()"
+            class="option-item"
+            [class.active]="currentTheme() === theme.value"
+            (click)="changeTheme(theme.value)"
+          >
+            <div class="option-content">
+              <span class="option-label">{{ theme.label }}</span>
+            </div>
+            <div class="option-indicator" *ngIf="currentTheme() === theme.value">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section" *ngIf="activeTab === 'language'">
+        <div class="settings-section-header">
+          <h2>{{ translations().language.title }}</h2>
+          <p class="section-description">
+            {{ translations().language.description }}
+          </p>
+        </div>
+        <div class="settings-options">
+          <div
+            *ngFor="let language of languages"
+            class="option-item"
+            [class.active]="currentLanguage() === language.value"
+            (click)="changeLanguage(language.value)"
+          >
+            <div class="option-content">
+              <span class="option-label">{{ language.flag }} {{ language.label }}</span>
+            </div>
+            <div
+              class="option-indicator"
+              *ngIf="currentLanguage() === language.value"
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section" *ngIf="activeTab === 'favorites'">
+        <div class="settings-section-header">
+          <h2>{{ translations().favorites.title }}</h2>
+          <p class="section-description">
+            {{ translations().favorites.description }}
+          </p>
+        </div>
+        <button class="btn-secondary" (click)="clearFavorites()">
+          {{ translations().favorites.clear }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

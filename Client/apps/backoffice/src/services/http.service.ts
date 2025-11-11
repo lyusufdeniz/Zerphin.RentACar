@@ -34,32 +34,34 @@ export class HttpService {
   private http = inject(HttpClient);
   private baseUrl = environment?.apiUrl || '';
 
-  /**
-   * Get default headers with authorization token
-   * Note: Token is now handled by authInterceptor, but we keep this for backward compatibility
-   */
   private getHeaders(): HttpHeaders {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
 
-    // Try to get token from localStorage
-    // Interceptor will handle token refresh if needed
     try {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
+
+      const rememberMe = localStorage.getItem('rememberMe') === 'true' || 
+                         sessionStorage.getItem('rememberMe') === 'false';
+
+      const token = rememberMe
+        ? localStorage.getItem('authToken')
+        : sessionStorage.getItem('authToken');
+
+      const tokenValue = token || 
+                        localStorage.getItem('authToken') || 
+                        sessionStorage.getItem('authToken');
+
+      if (tokenValue) {
+        headers = headers.set('Authorization', `Bearer ${tokenValue}`);
       }
     } catch (error) {
-      console.error('Error getting auth token from localStorage:', error);
+      console.error('Error getting auth token from storage:', error);
     }
 
     return headers;
   }
 
-  /**
-   * GET request
-   */
   get<T>(url: string, options?: HttpOptions): Observable<T> {
     const headers = options?.headers || this.getHeaders();
     return this.http
@@ -75,9 +77,6 @@ export class HttpService {
       );
   }
 
-  /**
-   * POST request
-   */
   post<T>(url: string, body?: any, options?: HttpOptions): Observable<T> {
     const headers = options?.headers || this.getHeaders();
     return this.http
@@ -93,9 +92,6 @@ export class HttpService {
       );
   }
 
-  /**
-   * PUT request
-   */
   put<T>(url: string, body?: any, options?: HttpOptions): Observable<T> {
     const headers = options?.headers || this.getHeaders();
     return this.http
@@ -111,9 +107,6 @@ export class HttpService {
       );
   }
 
-  /**
-   * PATCH request
-   */
   patch<T>(url: string, body?: any, options?: HttpOptions): Observable<T> {
     const headers = options?.headers || this.getHeaders();
     return this.http
@@ -129,9 +122,6 @@ export class HttpService {
       );
   }
 
-  /**
-   * DELETE request
-   */
   delete<T>(url: string, options?: HttpOptions): Observable<T> {
     const headers = options?.headers || this.getHeaders();
     return this.http
@@ -147,59 +137,49 @@ export class HttpService {
       );
   }
 
-  /**
-   * Extract data from ServiceResult response
-   */
   private extractServiceResult<T>(response: ServiceResult<T>): T {
-    // Check if response is ServiceResult format
+
     if (response && typeof response === 'object' && 'errorMessage' in response) {
       const serviceResult = response as ServiceResult<T>;
-      
-      // If there are error messages, throw error
+
       if (serviceResult.errorMessage && serviceResult.errorMessage.length > 0) {
         const error = new Error(serviceResult.errorMessage.join(', '));
         (error as any).errorMessage = serviceResult.errorMessage;
         throw error;
       }
-      
-      // Return data if available
+
       if (serviceResult.data !== null && serviceResult.data !== undefined) {
         return serviceResult.data;
       }
-      
-      // If data is null but no error message, throw generic error
+
       throw new Error('İşlem başarısız oldu');
     }
-    
-    // If response is not ServiceResult format, return as is
+
     return response as T;
   }
 
-  /**
-   * Handle HTTP errors
-   */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Bir hata oluştu';
     let errorMessages: string[] | null = null;
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
+
       errorMessage = `Hata: ${error.error.message}`;
       errorMessages = [errorMessage];
     } else {
-      // Server-side error - Check if ServiceResult format
+
       if (error.error?.errorMessage && Array.isArray(error.error.errorMessage)) {
         errorMessages = error.error.errorMessage;
         errorMessage = errorMessages ? errorMessages.join(', ') : 'Bir hata oluştu';
       } else {
-        // Server-side error - Standard format
+
         switch (error.status) {
           case 400:
             errorMessage = error.error?.message || 'Geçersiz istek';
             break;
           case 401:
             errorMessage = error.error?.message || 'Yetkisiz erişim';
-            // Clear auth and redirect to login
+
             localStorage.removeItem('authToken');
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');
@@ -227,18 +207,11 @@ export class HttpService {
     return throwError(() => errorObj);
   }
 
-  /**
-   * Set base URL
-   */
   setBaseUrl(url: string): void {
     this.baseUrl = url;
   }
 
-  /**
-   * Get base URL
-   */
   getBaseUrl(): string {
     return this.baseUrl;
   }
 }
-

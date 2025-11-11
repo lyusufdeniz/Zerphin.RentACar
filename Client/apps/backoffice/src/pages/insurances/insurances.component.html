@@ -1,75 +1,72 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>Sigortalar</h1>
+    <h1>{{ translations().title }}</h1>
     <app-favorite-button
-      title="Sigortalar"
+      [title]="translations().title"
       path="/insurances"
     ></app-favorite-button>
   </div>
 
-  <!-- Filters -->
   <div class="filters-section">
     <div class="filters-grid">
       <div class="filter-item">
-        <label>Poliçe No</label>
+        <label>{{ translations().policyNumber }}</label>
         <input
           type="text"
           [(ngModel)]="searchPolicyNumber"
-          placeholder="Poliçe numarası ara..."
+          [placeholder]="translations().policyNumberPlaceholder"
           (keyup.enter)="search()"
         />
       </div>
       <div class="filter-item">
-        <label>Plaka</label>
+        <label>{{ translations().licensePlate }}</label>
         <input
           type="text"
           [(ngModel)]="searchLicensePlate"
-          placeholder="Plaka ara..."
+          [placeholder]="translations().licensePlatePlaceholder"
           (keyup.enter)="search()"
         />
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Başlangıç Tarihi (Başlangıç)"
+          [label]="translations().startDateFrom"
           [(ngModel)]="startDateFrom"
         ></app-datepicker>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Başlangıç Tarihi (Bitiş)"
+          [label]="translations().startDateTo"
           [(ngModel)]="startDateTo"
         ></app-datepicker>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Bitiş Tarihi (Başlangıç)"
+          [label]="translations().endDateFrom"
           [(ngModel)]="endDateFrom"
         ></app-datepicker>
       </div>
       <div class="filter-item">
         <app-datepicker
-          label="Bitiş Tarihi (Bitiş)"
+          [label]="translations().endDateTo"
           [(ngModel)]="endDateTo"
         ></app-datepicker>
       </div>
       <div class="filter-actions">
-        <button class="btn-primary" (click)="search()">Ara</button>
-        <button class="btn-secondary" (click)="clearFilters()">Temizle</button>
+        <button class="btn-primary" (click)="search()">{{ translations().search }}</button>
+        <button class="btn-secondary" (click)="clearFilters()">{{ translations().clear }}</button>
       </div>
     </div>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Sigortalar yükleniyor...</p>
+    <p>{{ translations().loading }}</p>
   </div>
 
-  <!-- Insurances Table -->
   <div *ngIf="!isLoading" class="table-container">
     <div class="table-header">
       <div class="table-info">
-        <span>Toplam: {{ totalCount }} sigorta</span>
+        <span>{{ languageServicePublic.translateWithParams('pages.insurances.total', { count: totalCount.toString() }) }}</span>
       </div>
       <div class="table-actions">
         <button class="btn-primary" (click)="openAddInsuranceModal()">
@@ -86,7 +83,7 @@
               d="M12 4v16m8-8H4"
             />
           </svg>
-          Yeni Sigorta
+          {{ translations().add }}
         </button>
       </div>
     </div>
@@ -95,7 +92,7 @@
       <thead>
         <tr>
           <th (click)="sortBy('policyNumber')" class="sortable">
-            Poliçe No
+            {{ translations().table.policyNumber }}
             <span
               *ngIf="orderBy === 'policyNumber'"
               class="sort-icon"
@@ -104,10 +101,10 @@
               {{ isDescending ? '↓' : '↑' }}
             </span>
           </th>
-          <th>Sigorta Şirketi</th>
-          <th>Araç</th>
+          <th>{{ translations().table.insuranceCompany }}</th>
+          <th>{{ translations().table.vehicle }}</th>
           <th (click)="sortBy('startDate')" class="sortable">
-            Başlangıç Tarihi
+            {{ translations().table.startDate }}
             <span
               *ngIf="orderBy === 'startDate'"
               class="sort-icon"
@@ -117,7 +114,7 @@
             </span>
           </th>
           <th (click)="sortBy('endDate')" class="sortable">
-            Bitiş Tarihi
+            {{ translations().table.endDate }}
             <span
               *ngIf="orderBy === 'endDate'"
               class="sort-icon"
@@ -127,7 +124,7 @@
             </span>
           </th>
           <th (click)="sortBy('premiumAmount')" class="sortable">
-            Prim Tutarı
+            {{ translations().table.premiumAmount }}
             <span
               *ngIf="orderBy === 'premiumAmount'"
               class="sort-icon"
@@ -136,8 +133,8 @@
               {{ isDescending ? '↓' : '↑' }}
             </span>
           </th>
-          <th>Durum</th>
-          <th class="actions-column">İşlemler</th>
+          <th>{{ translations().table.status }}</th>
+          <th class="actions-column">{{ translations().table.actions }}</th>
         </tr>
       </thead>
       <tbody>
@@ -177,7 +174,7 @@
             <div class="action-buttons">
               <button
                 class="btn-icon-view"
-                title="Detay Görüntüle"
+                [title]="translations().view"
                 (click)="viewInsuranceDetails(insurance)"
                 type="button"
               >
@@ -198,7 +195,7 @@
               </button>
               <button
                 class="btn-icon-edit"
-                title="Düzenle"
+                [title]="translations().edit"
                 (click)="editInsurance(insurance)"
                 type="button"
               >
@@ -213,7 +210,7 @@
               </button>
               <button
                 class="btn-icon-delete"
-                title="Sil"
+                [title]="translations().delete"
                 (click)="deleteInsurance(insurance)"
                 type="button"
               >
@@ -232,17 +229,15 @@
       </tbody>
     </table>
 
-    <!-- Empty State -->
     <div *ngIf="insurances.length === 0" class="empty-state">
-      <p>Sigorta bulunamadı</p>
+      <p>{{ translations().noData }}</p>
     </div>
 
-    <!-- Pagination -->
     <div *ngIf="totalPages > 0" class="pagination">
       <div class="pagination-info">
         <span>
-          Sayfa {{ currentPage }} / {{ totalPages }} 
-          (Toplam: {{ totalCount }} kayıt)
+          {{ languageServicePublic.translateWithParams('pages.insurances.pagination.page', { current: currentPage.toString(), total: totalPages.toString() }) }} 
+          {{ languageServicePublic.translateWithParams('pages.insurances.pagination.total', { count: totalCount.toString() }) }}
         </span>
       </div>
       <div class="pagination-controls">
@@ -251,7 +246,7 @@
           [disabled]="currentPage === 1"
           (click)="changePage(currentPage - 1)"
         >
-          Önceki
+          {{ translations().pagination.previous }}
         </button>
         <div class="pagination-pages">
           <button
@@ -268,7 +263,7 @@
           [disabled]="currentPage === totalPages"
           (click)="changePage(currentPage + 1)"
         >
-          Sonraki
+          {{ translations().pagination.next }}
         </button>
         <select
           class="page-size-select"
@@ -286,4 +281,3 @@
     </div>
   </div>
 </div>
-

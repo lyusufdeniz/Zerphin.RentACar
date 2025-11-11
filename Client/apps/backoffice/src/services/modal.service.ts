@@ -28,18 +28,12 @@ export class ModalService {
     this.createContainer();
   }
 
-  /**
-   * Create modal container
-   */
   private createContainer() {
     this.modalContainer = document.createElement('div');
     this.modalContainer.className = 'modal-service-container';
     document.body.appendChild(this.modalContainer);
   }
 
-  /**
-   * Open modal with content component
-   */
   open<T>(
     component: Type<T>,
     config?: ModalConfig & { inputs?: { [key: string]: any } }
@@ -48,12 +42,10 @@ export class ModalService {
       this.createContainer();
     }
 
-    // Create modal component
     const modalRef = createComponent(ModalComponent, {
       environmentInjector: this.injector,
     });
 
-    // Configure modal
     if (config) {
       if (config.title) modalRef.setInput('title', config.title);
       if (config.size) modalRef.setInput('size', config.size);
@@ -65,30 +57,24 @@ export class ModalService {
         modalRef.setInput('closeOnEscape', config.closeOnEscape);
     }
 
-    // Create content component
     const contentRef = createComponent(component, {
       environmentInjector: this.injector,
     });
 
-    // Set inputs if provided
     if (config?.inputs) {
       Object.keys(config.inputs).forEach((key) => {
         contentRef.setInput(key, config.inputs![key]);
       });
     }
 
-    // Handle close event
     const closeFn = () => this.closeModal(modalRef);
     modalRef.instance.close.subscribe(closeFn);
 
-    // Attach to view
     this.appRef.attachView(modalRef.hostView);
     this.appRef.attachView(contentRef.hostView);
 
-    // Append modal to container
     this.modalContainer!.appendChild(modalRef.location.nativeElement);
-    
-    // Project content into modal body
+
     setTimeout(() => {
       const modalBody = modalRef.location.nativeElement.querySelector('.modal-body');
       if (modalBody) {
@@ -102,9 +88,6 @@ export class ModalService {
     return { modalRef, contentRef, close: closeFn };
   }
 
-  /**
-   * Open simple modal with HTML content
-   */
   openSimple(
     title: string,
     content: string,
@@ -130,7 +113,6 @@ export class ModalService {
         modalRef.setInput('closeOnEscape', config.closeOnEscape);
     }
 
-    // Set content
     const modalBody = modalRef.location.nativeElement.querySelector('.modal-body');
     if (modalBody) {
       modalBody.innerHTML = content;
@@ -149,22 +131,17 @@ export class ModalService {
     return { modalRef, close: closeFn };
   }
 
-  /**
-   * Close modal
-   */
   closeModal(modalRef: ComponentRef<ModalComponent>) {
     const index = this.activeModals.indexOf(modalRef);
     if (index > -1) {
       this.activeModals.splice(index, 1);
     }
 
-    // Get and destroy content ref if exists
     const contentRef = this.contentRefs.get(modalRef);
     if (contentRef) {
       this.contentRefs.delete(modalRef);
     }
 
-    // Animate out
     const element = modalRef.location.nativeElement;
     element.classList.add('modal-closing');
 
@@ -178,18 +155,11 @@ export class ModalService {
     }, 300);
   }
 
-  /**
-   * Close all modals
-   */
   closeAll() {
     this.activeModals.forEach((modal) => this.closeModal(modal));
   }
 
-  /**
-   * Check if any modal is open
-   */
   hasOpenModals(): boolean {
     return this.activeModals.length > 0;
   }
 }
-

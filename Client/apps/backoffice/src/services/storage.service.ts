@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
-  /**
-   * Set item in localStorage
-   */
   setItem(key: string, value: any): void {
     try {
       const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
@@ -15,18 +11,12 @@ export class StorageService {
       console.error(`Error setting localStorage key "${key}":`, error);
     }
   }
-
-  /**
-   * Get item from localStorage
-   */
   getItem<T>(key: string): T | null {
     try {
       const item = localStorage.getItem(key);
       if (item === null) {
         return null;
       }
-
-      // Try to parse as JSON, if fails return as string
       try {
         return JSON.parse(item) as T;
       } catch {
@@ -37,10 +27,6 @@ export class StorageService {
       return null;
     }
   }
-
-  /**
-   * Get item as string from localStorage
-   */
   getItemString(key: string): string | null {
     try {
       return localStorage.getItem(key);
@@ -49,10 +35,6 @@ export class StorageService {
       return null;
     }
   }
-
-  /**
-   * Remove item from localStorage
-   */
   removeItem(key: string): void {
     try {
       localStorage.removeItem(key);
@@ -60,10 +42,6 @@ export class StorageService {
       console.error(`Error removing localStorage key "${key}":`, error);
     }
   }
-
-  /**
-   * Clear all items from localStorage
-   */
   clear(): void {
     try {
       localStorage.clear();
@@ -71,17 +49,9 @@ export class StorageService {
       console.error('Error clearing localStorage:', error);
     }
   }
-
-  /**
-   * Check if key exists in localStorage
-   */
   hasItem(key: string): boolean {
     return localStorage.getItem(key) !== null;
   }
-
-  /**
-   * Get all keys from localStorage
-   */
   getAllKeys(): string[] {
     const keys: string[] = [];
     try {
@@ -96,6 +66,50 @@ export class StorageService {
     }
     return keys;
   }
-}
-
-
+  setItemSession(key: string, value: any): void {
+    try {
+      const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+      sessionStorage.setItem(key, stringValue);
+    } catch (error) {
+      console.error(`Error setting sessionStorage key "${key}":`, error);
+    }
+  }
+  getItemSession<T>(key: string): T | null {
+    try {
+      const item = sessionStorage.getItem(key);
+      if (item === null) {
+        return null;
+      }
+      try {
+        return JSON.parse(item) as T;
+      } catch {
+        return item as T;
+      }
+    } catch (error) {
+      console.error(`Error getting sessionStorage key "${key}":`, error);
+      return null;
+    }
+  }
+  getItemStringSession(key: string): string | null {
+    try {
+      return sessionStorage.getItem(key);
+    } catch (error) {
+      console.error(`Error getting sessionStorage key "${key}":`, error);
+      return null;
+    }
+  }
+  removeItemSession(key: string): void {
+    try {
+      sessionStorage.removeItem(key);
+    } catch (error) {
+      console.error(`Error removing sessionStorage key "${key}":`, error);
+    }
+  }
+  clearSession(): void {
+    try {
+      sessionStorage.clear();
+    } catch (error) {
+      console.error('Error clearing sessionStorage:', error);
+    }
+  }
+}

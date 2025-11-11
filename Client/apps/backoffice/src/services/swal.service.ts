@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { SwalComponent, SwalConfig, SwalType } from '../components/swal/swal.component';
+import { LanguageService } from './language.service';
 
 export interface SwalOptions {
   title?: string;
@@ -34,6 +35,7 @@ export interface SwalResult {
 export class SwalService {
   private appRef = inject(ApplicationRef);
   private injector = inject(EnvironmentInjector);
+  private languageService = inject(LanguageService);
   private swalContainer?: HTMLElement;
 
   constructor() {
@@ -46,9 +48,6 @@ export class SwalService {
     document.body.appendChild(this.swalContainer);
   }
 
-  /**
-   * Show confirmation alert
-   */
   fire(options: SwalOptions): Observable<SwalResult> {
     return new Observable((observer) => {
       if (!this.swalContainer) {
@@ -59,17 +58,15 @@ export class SwalService {
         environmentInjector: this.injector,
       });
 
-      // Configure swal
-      componentRef.setInput('title', options.title || 'Emin misiniz?');
+      componentRef.setInput('title', options.title || this.languageService.translate('messages.swal.defaultTitle'));
       componentRef.setInput('text', options.text || '');
       componentRef.setInput('type', options.type || options.icon || 'warning');
       componentRef.setInput('showCancelButton', options.showCancelButton !== false);
-      componentRef.setInput('confirmButtonText', options.confirmButtonText || 'Evet');
-      componentRef.setInput('cancelButtonText', options.cancelButtonText || 'İptal');
+      componentRef.setInput('confirmButtonText', options.confirmButtonText || this.languageService.translate('messages.swal.defaultConfirm'));
+      componentRef.setInput('cancelButtonText', options.cancelButtonText || this.languageService.translate('messages.swal.defaultCancel'));
       componentRef.setInput('confirmButtonColor', options.confirmButtonColor || '#00d084');
       componentRef.setInput('cancelButtonColor', options.cancelButtonColor || '#666666');
 
-      // Handle result
       const confirmSub = componentRef.instance.confirmed.subscribe(() => {
         confirmSub.unsubscribe();
         cancelSub.unsubscribe();
@@ -97,75 +94,59 @@ export class SwalService {
         observer.complete();
       });
 
-      // Attach to view
       this.appRef.attachView(componentRef.hostView);
       this.swalContainer!.appendChild(componentRef.location.nativeElement);
     });
   }
 
-  /**
-   * Show success alert
-   */
   success(title: string, text?: string): Observable<SwalResult> {
     return this.fire({
       title,
       text,
       type: 'success',
       showCancelButton: false,
-      confirmButtonText: 'Tamam',
+      confirmButtonText: this.languageService.translate('messages.swal.ok'),
     });
   }
 
-  /**
-   * Show error alert
-   */
   error(title: string, text?: string): Observable<SwalResult> {
     return this.fire({
       title,
       text,
       type: 'error',
       showCancelButton: false,
-      confirmButtonText: 'Tamam',
+      confirmButtonText: this.languageService.translate('messages.swal.ok'),
     });
   }
 
-  /**
-   * Show warning alert
-   */
   warning(title: string, text?: string): Observable<SwalResult> {
     return this.fire({
       title,
       text,
       type: 'warning',
       showCancelButton: false,
-      confirmButtonText: 'Tamam',
+      confirmButtonText: this.languageService.translate('messages.swal.ok'),
     });
   }
 
-  /**
-   * Show info alert
-   */
   info(title: string, text?: string): Observable<SwalResult> {
     return this.fire({
       title,
       text,
       type: 'info',
       showCancelButton: false,
-      confirmButtonText: 'Tamam',
+      confirmButtonText: this.languageService.translate('messages.swal.ok'),
     });
   }
 
-  /**
-   * Show confirmation dialog
-   */
   confirm(title: string, text?: string, confirmText?: string, cancelText?: string): Observable<SwalResult> {
     return this.fire({
       title,
       text,
       type: 'warning',
       showCancelButton: true,
-      confirmButtonText: confirmText || 'Evet',
-      cancelButtonText: cancelText || 'İptal',
+      confirmButtonText: confirmText || this.languageService.translate('messages.swal.defaultConfirm'),
+      cancelButtonText: cancelText || this.languageService.translate('messages.swal.defaultCancel'),
     });
   }
 
@@ -183,4 +164,3 @@ export class SwalService {
     }
   }
 }
-
