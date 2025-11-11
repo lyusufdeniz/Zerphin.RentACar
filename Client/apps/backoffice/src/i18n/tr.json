@@ -1,0 +1,792 @@
+{
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "view": "Görüntüle",
+    "search": "Ara",
+    "clear": "Temizle",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarılı",
+    "confirm": "Onayla",
+    "yes": "Evet",
+    "no": "Hayır",
+    "close": "Kapat",
+    "back": "Geri",
+    "next": "İleri",
+    "previous": "Önceki",
+    "submit": "Gönder",
+    "reset": "Sıfırla",
+    "filter": "Filtrele",
+    "all": "Tümü",
+    "active": "Aktif",
+    "inactive": "Pasif",
+    "verified": "Doğrulanmış",
+    "unverified": "Doğrulanmamış",
+    "user": "Kullanıcı",
+    "logout": "Çıkış Yap"
+  },
+  "login": {
+    "title": "Giriş Yap",
+    "welcome": "Yönetim Paneline Hoş Geldiniz",
+    "description": "Araç kiralama yönetim sisteminize giriş yaparak tüm işlemlerinizi kolayca yönetebilirsiniz.",
+    "email": "Email",
+    "emailPlaceholder": "Email adresinizi girin",
+    "password": "Şifre",
+    "passwordPlaceholder": "Şifrenizi girin",
+    "rememberMe": "Beni Hatırla",
+    "forgotPassword": "Şifremi Unuttum",
+    "loginButton": "Giriş Yap",
+    "loggingIn": "Giriş yapılıyor...",
+    "noAccount": "Hesabınız yok mu?",
+    "register": "Kayıt Ol",
+    "emailRequired": "Email gereklidir",
+    "emailInvalid": "Geçerli bir email adresi giriniz",
+    "passwordRequired": "Şifre gereklidir",
+    "loginSuccess": "Giriş başarılı! Yönlendiriliyorsunuz...",
+    "loginFailed": "Giriş başarısız. Lütfen tekrar deneyin.",
+    "features": {
+      "secureAccess": "Güvenli ve Hızlı Erişim",
+      "easyManagement": "Kolay Araç Yönetimi",
+      "detailedReporting": "Detaylı Raporlama"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "cars": "Araçlar",
+    "rentals": "Kiralama",
+    "users": "Kullanıcılar/Müşteriler",
+    "insurances": "Sigortalar",
+    "settings": "Ayarlar"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "refresh": "Yenile",
+    "loading": "Yükleniyor...",
+    "loadingStats": "İstatistikler yükleniyor...",
+    "vehicles": {
+      "title": "Araçlar",
+      "total": "Toplam Araç",
+      "available": "Müsait",
+      "rented": "Kiralanmış",
+      "maintenance": "Bakımda"
+    },
+    "rentals": {
+      "title": "Kiralamalar",
+      "total": "Toplam Kiralama",
+      "totalRevenue": "Toplam Gelir",
+      "averageAmount": "Ortalama Tutar",
+      "active": "Aktif"
+    },
+    "insurances": {
+      "title": "Sigortalar",
+      "total": "Toplam Sigorta",
+      "active": "Aktif",
+      "expired": "Süresi Dolmuş",
+      "expiringSoon": "Yakında Dolacak"
+    },
+    "users": {
+      "title": "Kullanıcılar",
+      "total": "Toplam Kullanıcı",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "newLast30Days": "Yeni (30 gün)"
+    },
+    "charts": {
+      "vehicleStatus": "Araç Durum Dağılımı",
+      "vehicleCategory": "Araç Kategori Dağılımı",
+      "rentalStatus": "Kiralama Durum Dağılımı",
+      "userRole": "Kullanıcı Rol Dağılımı"
+    }
+  },
+  "pages": {
+    "cars": {
+      "title": "Araçlar",
+      "brand": "Marka",
+      "model": "Model",
+      "licensePlate": "Plaka",
+      "category": "Kategori",
+      "status": "Durum",
+      "searchBrand": "Marka ara...",
+      "searchModel": "Model ara...",
+      "searchLicensePlate": "Plaka ara...",
+      "minPrice": "Min Fiyat",
+      "maxPrice": "Max Fiyat",
+      "min": "Min",
+      "max": "Max",
+      "all": "Tümü",
+      "loading": "Araçlar yükleniyor...",
+      "noData": "Araç bulunamadı",
+      "add": "Araç Ekle",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "view": "Görüntüle",
+      "total": "Toplam: {{count}} araç",
+      "table": {
+        "image": "Resim",
+        "brand": "Marka",
+        "model": "Model",
+        "licensePlate": "Plaka",
+        "category": "Kategori",
+        "status": "Durum",
+        "dailyPrice": "Günlük Fiyat",
+        "year": "Yıl",
+        "km": "KM",
+        "actions": "İşlemler"
+      },
+      "pagination": {
+        "page": "Sayfa {{current}} / {{total}}",
+        "total": "(Toplam: {{count}} kayıt)",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      }
+    },
+    "rentals": {
+      "title": "Kiralamalar",
+      "customer": "Müşteri",
+      "vehicle": "Araç",
+      "status": "Durum",
+      "searchCustomer": "Müşteri ara (TC, Ehliyet, Ad Soyad)...",
+      "startDateFrom": "Başlangıç Tarihi (Başlangıç)",
+      "startDateTo": "Başlangıç Tarihi (Bitiş)",
+      "endDateFrom": "Bitiş Tarihi (Başlangıç)",
+      "endDateTo": "Bitiş Tarihi (Bitiş)",
+      "all": "Tümü",
+      "loading": "Kiralamalar yükleniyor...",
+      "noData": "Kiralama bulunamadı",
+      "add": "Kiralama Ekle",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "view": "Görüntüle",
+      "total": "Toplam: {{count}} kiralama",
+      "table": {
+        "startDate": "Başlangıç Tarihi",
+        "endDate": "Bitiş Tarihi",
+        "customer": "Müşteri",
+        "vehicle": "Araç",
+        "dailyPrice": "Günlük Fiyat",
+        "totalAmount": "Toplam Tutar",
+        "status": "Durum",
+        "actions": "İşlemler"
+      },
+      "pagination": {
+        "page": "Sayfa {{current}} / {{total}}",
+        "total": "(Toplam: {{count}} kayıt)",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      }
+    },
+    "users": {
+      "title": "Kullanıcılar/Müşteriler",
+      "name": "Ad Soyad",
+      "role": "Rol",
+      "isActive": "Aktif mi?",
+      "isVerified": "Doğrulanmış mı?",
+      "searchName": "Ad Soyad ara...",
+      "all": "Tümü",
+      "loading": "Kullanıcılar yükleniyor...",
+      "noData": "Kullanıcı bulunamadı",
+      "add": "Kullanıcı Ekle",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "view": "Görüntüle",
+      "total": "Toplam: {{count}} kullanıcı",
+      "table": {
+        "firstName": "Ad",
+        "lastName": "Soyad",
+        "email": "Email",
+        "phone": "Telefon",
+        "role": "Rol",
+        "status": "Durum",
+        "actions": "İşlemler"
+      },
+      "status": {
+        "active": "Aktif",
+        "inactive": "Pasif"
+      },
+      "pagination": {
+        "page": "Sayfa {{current}} / {{total}}",
+        "total": "(Toplam: {{count}} kayıt)",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      }
+    },
+    "insurances": {
+      "title": "Sigortalar",
+      "policyNumber": "Poliçe No",
+      "policyNumberPlaceholder": "Poliçe numarası ara...",
+      "licensePlate": "Plaka",
+      "licensePlatePlaceholder": "Plaka ara...",
+      "startDateFrom": "Başlangıç Tarihi (Başlangıç)",
+      "startDateTo": "Başlangıç Tarihi (Bitiş)",
+      "endDateFrom": "Bitiş Tarihi (Başlangıç)",
+      "endDateTo": "Bitiş Tarihi (Bitiş)",
+      "loading": "Sigortalar yükleniyor...",
+      "noData": "Sigorta bulunamadı",
+      "add": "Sigorta Ekle",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "view": "Görüntüle",
+      "total": "Toplam: {{count}} sigorta",
+      "table": {
+        "policyNumber": "Poliçe No",
+        "insuranceCompany": "Sigorta Şirketi",
+        "vehicle": "Araç",
+        "startDate": "Başlangıç Tarihi",
+        "endDate": "Bitiş Tarihi",
+        "premiumAmount": "Prim Tutarı",
+        "status": "Durum",
+        "actions": "İşlemler"
+      },
+      "pagination": {
+        "page": "Sayfa {{current}} / {{total}}",
+        "total": "(Toplam: {{count}} kayıt)",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      }
+    },
+    "settings": "Ayarlar"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "tabs": {
+      "password": "Şifre",
+      "appearance": "Görünüm",
+      "language": "Dil",
+      "favorites": "Favoriler"
+    },
+    "password": {
+      "change": "Şifre Değiştirme",
+      "description": "Hesabınızın güvenliği için güçlü bir şifre kullanın",
+      "current": "Mevcut Şifre",
+      "currentPlaceholder": "Mevcut şifrenizi girin",
+      "currentRequired": "Mevcut şifre gereklidir",
+      "new": "Yeni Şifre",
+      "newPlaceholder": "Yeni şifrenizi girin",
+      "newRequired": "Yeni şifre gereklidir",
+      "newMinLength": "Şifre en az 8 karakter olmalıdır",
+      "newPattern": "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir",
+      "confirm": "Yeni Şifre (Tekrar)",
+      "confirmPlaceholder": "Yeni şifrenizi tekrar girin",
+      "confirmRequired": "Şifre tekrarı gereklidir",
+      "confirmMismatch": "Şifreler eşleşmiyor",
+      "changeButton": "Şifreyi Değiştir",
+      "changing": "Değiştiriliyor...",
+      "success": "Şifre başarıyla değiştirildi",
+      "error": "Şifre değiştirilemedi"
+    },
+    "theme": {
+      "title": "Görünüm Ayarları",
+      "description": "Uygulamanın görünümünü tercihinize göre ayarlayın",
+      "light": "Açık Tema",
+      "dark": "Koyu Tema",
+      "changed": "Tema değiştirildi"
+    },
+    "language": {
+      "title": "Dil Ayarları",
+      "description": "Uygulamanın dilini seçin",
+      "changed": "Dil değiştirildi"
+    },
+    "favorites": {
+      "title": "Favori Sayfalar",
+      "description": "Favori sayfalarınızı yönetin",
+      "clear": "Favorileri Sıfırla",
+      "clearConfirm": "Tüm favori sayfaları silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+      "cleared": "Favoriler başarıyla temizlendi",
+      "add": "Favorilere Ekle",
+      "remove": "Favorilerden Kaldır",
+      "empty": "Henüz favori sayfa eklenmemiş",
+      "hint": "Sayfaların üzerindeki yıldız butonuna tıklayarak favorilere ekleyebilirsiniz",
+      "processing": "İşleniyor..."
+    }
+  },
+  "language": {
+    "select": "Dil Seçin",
+    "turkish": "Türkçe",
+    "english": "English"
+  },
+  "modals": {
+    "common": {
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "update": "Güncelle",
+      "saving": "Kaydediliyor...",
+      "select": "Seç",
+      "clearSelection": "Seçimi Temizle"
+    },
+    "rental": {
+      "title": "Kiralama",
+      "customer": "Müşteri",
+      "customerSelect": "Müşteri Seç",
+      "customerId": "Müşteri ID",
+      "vehicle": "Araç",
+      "vehicleSelect": "Araç Seç",
+      "vehicleId": "Araç ID",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "dailyRate": "Günlük Fiyat (TL)",
+      "dailyRatePlaceholder": "0.00",
+      "dailyRateHint": "Araç seçildiğinde otomatik olarak doldurulur",
+      "totalAmount": "Toplam Tutar (TL)",
+      "totalAmountPlaceholder": "0.00",
+      "totalAmountHint": "Tarih ve günlük fiyata göre otomatik hesaplanır",
+      "actualReturnDate": "Gerçek İade Tarihi",
+      "lateFee": "Gecikme Ücreti (TL)",
+      "lateFeePlaceholder": "0.00",
+      "damageFee": "Hasar Ücreti (TL)",
+      "damageFeePlaceholder": "0.00",
+      "kmAtStart": "Başlangıç KM",
+      "kmAtStartPlaceholder": "0",
+      "kmAtReturn": "İade KM",
+      "kmAtReturnPlaceholder": "0",
+      "pickupLocation": "Teslim Konumu",
+      "pickupLocationPlaceholder": "Teslim konumu...",
+      "returnLocation": "İade Konumu",
+      "returnLocationPlaceholder": "İade konumu...",
+      "notes": "Notlar",
+      "notesPlaceholder": "Kiralama ile ilgili notlar..."
+    },
+    "user": {
+      "title": "Kullanıcı",
+      "firstName": "Ad",
+      "firstNamePlaceholder": "Ad",
+      "lastName": "Soyad",
+      "lastNamePlaceholder": "Soyad",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "phoneNumber": "Telefon",
+      "phoneNumberPlaceholder": "+905551234567",
+      "password": "Şifre",
+      "passwordPlaceholder": "Minimum 8 karakter (büyük/küçük harf, rakam, özel karakter)",
+      "role": "Rol",
+      "address": "Adres",
+      "addressPlaceholder": "Adres",
+      "identityNumber": "TC Kimlik No",
+      "identityNumberPlaceholder": "TC Kimlik No",
+      "birthDate": "Doğum Tarihi",
+      "customerInfo": "Müşteri Bilgileri",
+      "licenseNumber": "Ehliyet Numarası",
+      "licenseNumberPlaceholder": "Ehliyet numarası",
+      "licenseExpiryDate": "Ehliyet Geçerlilik Tarihi",
+      "licenseClass": "Ehliyet Sınıfı",
+      "licenseClassPlaceholder": "B, B1, vb.",
+      "emergencyContactName": "Acil Durum İletişim Adı",
+      "emergencyContactNamePlaceholder": "Acil durum kişi adı",
+      "emergencyContactPhone": "Acil Durum İletişim Telefonu",
+      "emergencyContactPhonePlaceholder": "0555 123 45 67",
+      "creditScore": "Kredi Skoru",
+      "creditScorePlaceholder": "0",
+      "isVerified": "Doğrulandı",
+      "hasInsurance": "Sigortası Var",
+      "insuranceCompany": "Sigorta Şirketi",
+      "insuranceCompanyPlaceholder": "Sigorta şirketi adı",
+      "insurancePolicyNumber": "Sigorta Poliçe Numarası",
+      "insurancePolicyNumberPlaceholder": "Poliçe numarası",
+      "specialNotes": "Özel Notlar",
+      "specialNotesPlaceholder": "Özel notlar..."
+    },
+    "insurance": {
+      "title": "Sigorta",
+      "vehicle": "Araç",
+      "vehicleSelect": "Araç seçin",
+      "loadingVehicles": "Araçlar yükleniyor...",
+      "policyNumber": "Poliçe Numarası",
+      "policyNumberPlaceholder": "Poliçe numarası girin",
+      "insuranceCompany": "Sigorta Şirketi",
+      "insuranceCompanyPlaceholder": "Sigorta şirketi adı girin",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "endDateError": "Bitiş tarihi başlangıç tarihinden önce olamaz",
+      "premiumAmount": "Prim Tutarı (TL)",
+      "premiumAmountPlaceholder": "0.00",
+      "coverageType": "Kapsam Türü",
+      "coverageTypePlaceholder": "Örn: Kasko, Trafik, vs.",
+      "coverageLimit": "Kapsam Limiti (TL)",
+      "coverageLimitPlaceholder": "0.00",
+      "deductible": "Muafiyet (TL)",
+      "deductiblePlaceholder": "0.00",
+      "coverageDetails": "Kapsam Detayları",
+      "coverageDetailsPlaceholder": "Kapsam detayları...",
+      "contactInfo": "İletişim Bilgileri",
+      "contactInfoPlaceholder": "İletişim bilgileri..."
+    },
+    "vehicle": {
+      "title": "Araç",
+      "brand": "Marka",
+      "brandPlaceholder": "Marka girin",
+      "model": "Model",
+      "modelPlaceholder": "Model girin",
+      "licensePlate": "Plaka",
+      "licensePlatePlaceholder": "34ABC123",
+      "year": "Yıl",
+      "yearPlaceholder": "2024",
+      "color": "Renk",
+      "colorPlaceholder": "Beyaz",
+      "category": "Kategori",
+      "dailyRentalPrice": "Günlük Kira Fiyatı (TL)",
+      "dailyRentalPricePlaceholder": "0.00",
+      "seatingCapacity": "Koltuk Sayısı",
+      "seatingCapacityPlaceholder": "5",
+      "fuelType": "Yakıt Türü",
+      "fuelTypePlaceholder": "Benzin, Dizel, Elektrik, Hibrit",
+      "transmission": "Vites",
+      "transmissionPlaceholder": "Manuel, Otomatik",
+      "km": "Kilometre",
+      "kmPlaceholder": "0",
+      "description": "Açıklama",
+      "descriptionPlaceholder": "Araç açıklaması...",
+      "image": "Araç Resmi",
+      "imageHint": "JPG, PNG veya GIF formatında resim yükleyin (max 5MB)",
+      "hasAirConditioning": "Klima Var",
+      "hasGPS": "GPS Var",
+      "select": "Seçiniz",
+      "features": "Özellikler",
+      "bluetooth": "Bluetooth"
+    }
+  },
+  "messages": {
+    "deleteConfirm": {
+      "rental": {
+        "title": "Kiralama Sil",
+        "message": "Bu kiralamayı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+        "confirm": "Sil",
+        "cancel": "İptal"
+      },
+      "user": {
+        "title": "Kullanıcı Sil",
+        "message": "Bu kullanıcıyı silmek istediğinizden emin misiniz?",
+        "confirm": "Sil",
+        "cancel": "İptal"
+      },
+      "insurance": {
+        "title": "Sigorta Sil",
+        "message": "{{policyNumber}} poliçe numaralı sigortayı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+        "confirm": "Sil",
+        "cancel": "İptal"
+      },
+      "vehicle": {
+        "title": "Araç Sil",
+        "message": "{{brand}} {{model}} aracını silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+        "confirm": "Sil",
+        "cancel": "İptal"
+      }
+    },
+    "success": {
+      "rental": {
+        "deleted": "Kiralama başarıyla silindi",
+        "created": "Kiralama başarıyla oluşturuldu",
+        "updated": "Kiralama başarıyla güncellendi"
+      },
+      "user": {
+        "deleted": "Kullanıcı başarıyla silindi",
+        "created": "Kullanıcı başarıyla oluşturuldu",
+        "createdWithCustomer": "Kullanıcı ve müşteri başarıyla oluşturuldu",
+        "updateNotAvailable": "Kullanıcı güncelleme özelliği henüz kullanılamıyor"
+      },
+      "insurance": {
+        "deleted": "Sigorta başarıyla silindi",
+        "created": "Sigorta başarıyla oluşturuldu",
+        "updated": "Sigorta başarıyla güncellendi"
+      },
+      "vehicle": {
+        "deleted": "Araç başarıyla silindi",
+        "created": "Araç başarıyla oluşturuldu",
+        "updated": "Araç başarıyla güncellendi"
+      }
+    },
+    "modal": {
+      "rental": {
+        "add": "Yeni Kiralama Ekle",
+        "edit": "Kiralama Düzenle",
+        "details": "Kiralama Detayları"
+      },
+      "user": {
+        "add": "Yeni Kullanıcı Ekle",
+        "edit": "Kullanıcı Düzenle",
+        "details": "{{firstName}} {{lastName}} - Detaylar"
+      },
+      "insurance": {
+        "add": "Yeni Sigorta Ekle",
+        "edit": "Sigorta Düzenle",
+        "details": "Sigorta Detayları"
+      },
+      "vehicle": {
+        "add": "Yeni Araç Ekle",
+        "edit": "Araç Düzenle",
+        "details": "{{brand}} {{model}} - Detaylar"
+      },
+      "customerSelect": "Müşteri Seç",
+      "vehicleSelect": "Araç Seç"
+    },
+    "errors": {
+      "statistics": {
+        "vehicle": "Araç istatistikleri yüklenirken hata oluştu",
+        "rental": "Kiralama istatistikleri yüklenirken hata oluştu",
+        "insurance": "Sigorta istatistikleri yüklenirken hata oluştu",
+        "user": "Kullanıcı istatistikleri yüklenirken hata oluştu"
+      },
+      "validation": {
+        "required": "Bu alan zorunludur",
+        "min": "Minimum değer {{min}} olmalıdır",
+        "max": "Maksimum değer {{max}} olmalıdır",
+        "maxlength": "Maksimum {{length}} karakter olmalıdır",
+        "invalid": "Geçersiz değer",
+        "invalidFormat": "Geçersiz format",
+        "dateRange": "Bitiş tarihi başlangıç tarihinden önce olamaz",
+        "fillAllRequired": "Lütfen tüm zorunlu alanları doldurun",
+        "imageRequired": "Lütfen bir resim dosyası seçin",
+        "imageSize": "Resim boyutu 5MB'dan büyük olamaz",
+        "imageUpload": "Resim yüklenirken hata oluştu"
+      },
+      "userForm": {
+        "firstNameRequired": "Ad gereklidir",
+        "lastNameRequired": "Soyad gereklidir",
+        "emailRequired": "Email gereklidir",
+        "phoneRequired": "Telefon numarası gereklidir",
+        "passwordRequired": "Şifre gereklidir",
+        "emailInvalid": "Geçersiz email formatı",
+        "passwordMinLength": "Şifre en az 8 karakter olmalıdır",
+        "firstNameMaxLength": "Ad 50 karakteri geçemez",
+        "lastNameMaxLength": "Soyad 50 karakteri geçemez",
+        "emailMaxLength": "Email 100 karakteri geçemez",
+        "addressMaxLength": "Adres 200 karakteri geçemez",
+        "identityNumberMaxLength": "Kimlik numarası 20 karakteri geçemez",
+        "phoneInvalid": "Geçersiz telefon numarası formatı",
+        "passwordPattern": "Şifre en az bir küçük harf, bir büyük harf, bir rakam ve bir özel karakter içermelidir",
+        "minimumAge": "Kullanıcı en az 18 yaşında olmalıdır"
+      },
+      "http": {
+        "connectionError": "Bağlantı hatası oluştu",
+        "serverUnreachable": "Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.",
+        "badRequest": "Geçersiz istek",
+        "forbidden": "Bu işlem için yetkiniz bulunmamaktadır",
+        "notFound": "Kayıt bulunamadı",
+        "serverError": "Sunucuya bağlanılamadı. Lütfen daha sonra tekrar deneyin.",
+        "unknownError": "Bir hata oluştu ({{status}})"
+      }
+    },
+    "dashboard": {
+      "chartLabels": {
+        "rentalCount": "Kiralama Sayısı",
+        "totalAmount": "Toplam Tutar (TL)"
+      }
+    },
+    "swal": {
+      "defaultTitle": "Emin misiniz?",
+      "defaultConfirm": "Evet",
+      "defaultCancel": "İptal",
+      "ok": "Tamam"
+    },
+    "fuelTypes": {
+      "gasoline": "Benzin",
+      "diesel": "Dizel",
+      "electric": "Elektrik",
+      "hybrid": "Hibrit",
+      "lpg": "LPG"
+    },
+    "transmissionTypes": {
+      "manual": "Manuel",
+      "automatic": "Otomatik",
+      "semiAutomatic": "Yarı Otomatik"
+    },
+    "details": {
+      "loading": "Yükleniyor...",
+      "notFound": {
+        "rental": "Kiralama detayları bulunamadı",
+        "user": "Kullanıcı detayları bulunamadı",
+        "insurance": "Sigorta detayları bulunamadı",
+        "vehicle": "Araç detayları bulunamadı"
+      },
+      "loadingError": {
+        "rental": "Kiralama detayları yüklenirken hata oluştu",
+        "user": "Kullanıcı detayları yüklenirken hata oluştu",
+        "insurance": "Sigorta detayları yüklenirken hata oluştu",
+        "vehicle": "Araç detayları yüklenirken hata oluştu"
+      },
+      "vehicle": {
+        "generalInfo": "Genel Bilgiler",
+        "brand": "Marka:",
+        "model": "Model:",
+        "year": "Yıl:",
+        "color": "Renk:",
+        "category": "Kategori:",
+        "status": "Durum:",
+        "rentalInfo": "Kiralama Bilgileri",
+        "dailyPrice": "Günlük Fiyat:",
+        "seatingCapacity": "Koltuk Sayısı:",
+        "person": "kişi",
+        "technicalInfo": "Teknik Bilgiler",
+        "fuelType": "Yakıt Türü:",
+        "transmission": "Vites:",
+        "km": "Kilometre:",
+        "kmUnit": "km",
+        "features": "Özellikler",
+        "airConditioning": "Klima",
+        "gps": "GPS",
+        "bluetooth": "Bluetooth",
+        "description": "Açıklama"
+      },
+      "rental": {
+        "loading": "Kiralama detayları yükleniyor...",
+        "rentalInfo": "Kiralama Bilgileri",
+        "status": "Durum:",
+        "customerName": "Müşteri Adı:",
+        "customerEmail": "Müşteri Email:",
+        "customerPhone": "Müşteri Telefon:",
+        "vehicleInfo": "Araç Bilgileri",
+        "licensePlate": "Plaka:",
+        "brandModel": "Marka/Model:",
+        "year": "Yıl:",
+        "color": "Renk:",
+        "category": "Kategori:",
+        "fuelType": "Yakıt Tipi:",
+        "transmission": "Şanzıman:",
+        "seatingCapacity": "Koltuk Sayısı:",
+        "person": "kişi",
+        "km": "Kilometre:",
+        "kmUnit": "km",
+        "dateInfo": "Tarih Bilgileri",
+        "startDate": "Başlangıç Tarihi:",
+        "endDate": "Bitiş Tarihi:",
+        "actualReturnDate": "Gerçek İade Tarihi:",
+        "createdAt": "Oluşturma Tarihi:",
+        "updatedAt": "Güncelleme Tarihi:",
+        "financialInfo": "Finansal Bilgiler",
+        "dailyPrice": "Günlük Fiyat:",
+        "totalAmount": "Toplam Tutar:",
+        "lateFee": "Gecikme Ücreti:",
+        "damageFee": "Hasar Ücreti:",
+        "vatIncluded": "* Tüm tutarlar KDV dahildir",
+        "locationInfo": "Konum Bilgileri",
+        "pickupLocation": "Teslim Konumu:",
+        "returnLocation": "İade Konumu:",
+        "kmInfo": "Kilometre Bilgileri",
+        "kmAtStart": "Başlangıç KM:",
+        "kmAtReturn": "İade KM:",
+        "kmUsed": "Kullanılan KM:",
+        "notes": "Notlar"
+      },
+      "user": {
+        "loading": "Kullanıcı detayları yükleniyor...",
+        "personalInfo": "Kişisel Bilgiler",
+        "firstName": "Ad:",
+        "lastName": "Soyad:",
+        "email": "Email:",
+        "phone": "Telefon:",
+        "identityNumber": "TC Kimlik No:",
+        "birthDate": "Doğum Tarihi:",
+        "address": "Adres:",
+        "accountInfo": "Hesap Bilgileri",
+        "role": "Rol:",
+        "status": "Durum:",
+        "createdAt": "Oluşturma Tarihi:",
+        "updatedAt": "Güncelleme Tarihi:",
+        "customerInfo": "Müşteri Bilgileri",
+        "licenseNumber": "Ehliyet Numarası:",
+        "licenseExpiryDate": "Ehliyet Geçerlilik Tarihi:",
+        "licenseClass": "Ehliyet Sınıfı:",
+        "emergencyContactName": "Acil Durum İletişim Adı:",
+        "emergencyContactPhone": "Acil Durum İletişim Telefonu:",
+        "isVerified": "Doğrulanmış mı?",
+        "verificationDate": "Doğrulama Tarihi:",
+        "creditScore": "Kredi Skoru:",
+        "hasInsurance": "Sigortası Var mı?",
+        "insuranceCompany": "Sigorta Şirketi:",
+        "insurancePolicyNumber": "Poliçe Numarası:",
+        "specialNotes": "Özel Notlar:"
+      },
+      "insurance": {
+        "loading": "Sigorta detayları yükleniyor...",
+        "policyInfo": "Poliçe Bilgileri",
+        "policyNumber": "Poliçe Numarası:",
+        "insuranceCompany": "Sigorta Şirketi:",
+        "status": "Durum:",
+        "dateInfo": "Tarih Bilgileri",
+        "startDate": "Başlangıç Tarihi:",
+        "endDate": "Bitiş Tarihi:",
+        "createdAt": "Oluşturma Tarihi:",
+        "updatedAt": "Güncelleme Tarihi:",
+        "financialInfo": "Finansal Bilgiler",
+        "premiumAmount": "Prim Tutarı:",
+        "coverageLimit": "Kapsam Limiti:",
+        "deductible": "Muafiyet:",
+        "coverageInfo": "Kapsam Bilgileri",
+        "coverageType": "Kapsam Türü:",
+        "coverageDetails": "Kapsam Detayları:",
+        "vehicleInfo": "Araç Bilgileri",
+        "vehicleId": "Araç ID:",
+        "licensePlate": "Plaka:",
+        "brandModel": "Marka/Model:",
+        "contactInfo": "İletişim Bilgileri",
+        "contact": "İletişim:",
+        "notes": "Notlar"
+      }
+    },
+    "datepicker": {
+      "placeholder": "Tarih seçin",
+      "previousYears": "Önceki yıllar",
+      "nextYears": "Sonraki yıllar",
+      "previousMonth": "Önceki ay",
+      "nextMonth": "Sonraki ay",
+      "months": {
+        "january": "Ocak",
+        "february": "Şubat",
+        "march": "Mart",
+        "april": "Nisan",
+        "may": "Mayıs",
+        "june": "Haziran",
+        "july": "Temmuz",
+        "august": "Ağustos",
+        "september": "Eylül",
+        "october": "Ekim",
+        "november": "Kasım",
+        "december": "Aralık"
+      },
+      "weekDays": {
+        "monday": "Pzt",
+        "tuesday": "Sal",
+        "wednesday": "Çar",
+        "thursday": "Per",
+        "friday": "Cum",
+        "saturday": "Cmt",
+        "sunday": "Paz"
+      }
+    },
+    "select": {
+      "customer": {
+        "searchPlaceholder": "Ad, soyad, email, telefon veya ehliyet no ile ara...",
+        "searchButton": "Ara",
+        "clearButton": "Temizle",
+        "loading": "Müşteriler yükleniyor...",
+        "notFound": "Müşteri bulunamadı",
+        "licensePrefix": "Ehliyet:",
+        "previous": "Önceki",
+        "next": "Sonraki",
+        "pageInfo": "Sayfa {{currentPage}} / {{totalPages}} (Toplam: {{totalCount}})"
+      },
+      "vehicle": {
+        "searchPlaceholder": "Marka, model veya plaka ile ara...",
+        "searchButton": "Ara",
+        "clearButton": "Temizle",
+        "loading": "Araçlar yükleniyor...",
+        "notFound": "Araç bulunamadı",
+        "pricePerDay": "{{price}} TL/gün",
+        "previous": "Önceki",
+        "next": "Sonraki",
+        "pageInfo": "Sayfa {{currentPage}} / {{totalPages}} (Toplam: {{totalCount}})",
+        "categories": {
+          "hatchback": "Hatchback",
+          "sedan": "Sedan",
+          "suv": "SUV",
+          "pickup": "Pickup"
+        },
+        "status": {
+          "available": "Müsait",
+          "rented": "Kiralanmış"
+        }
+      }
+    }
+  }
+}

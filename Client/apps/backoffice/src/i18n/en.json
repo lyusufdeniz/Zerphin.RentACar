@@ -1,0 +1,792 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "clear": "Clear",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "filter": "Filter",
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "user": "User",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Login",
+    "welcome": "Welcome to Management Panel",
+    "description": "Log in to your vehicle rental management system to easily manage all your operations.",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember Me",
+    "forgotPassword": "Forgot Password",
+    "loginButton": "Login",
+    "loggingIn": "Logging in...",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "loginSuccess": "Login successful! Redirecting...",
+    "loginFailed": "Login failed. Please try again.",
+    "features": {
+      "secureAccess": "Secure and Fast Access",
+      "easyManagement": "Easy Vehicle Management",
+      "detailedReporting": "Detailed Reporting"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "cars": "Cars",
+    "rentals": "Rentals",
+    "users": "Users/Customers",
+    "insurances": "Insurances",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "loadingStats": "Loading statistics...",
+    "vehicles": {
+      "title": "Vehicles",
+      "total": "Total Vehicles",
+      "available": "Available",
+      "rented": "Rented",
+      "maintenance": "Maintenance"
+    },
+    "rentals": {
+      "title": "Rentals",
+      "total": "Total Rentals",
+      "totalRevenue": "Total Revenue",
+      "averageAmount": "Average Amount",
+      "active": "Active"
+    },
+    "insurances": {
+      "title": "Insurances",
+      "total": "Total Insurances",
+      "active": "Active",
+      "expired": "Expired",
+      "expiringSoon": "Expiring Soon"
+    },
+    "users": {
+      "title": "Users",
+      "total": "Total Users",
+      "active": "Active",
+      "inactive": "Inactive",
+      "newLast30Days": "New (30 days)"
+    },
+    "charts": {
+      "vehicleStatus": "Vehicle Status Distribution",
+      "vehicleCategory": "Vehicle Category Distribution",
+      "rentalStatus": "Rental Status Distribution",
+      "userRole": "User Role Distribution"
+    }
+  },
+  "pages": {
+    "cars": {
+      "title": "Cars",
+      "brand": "Brand",
+      "model": "Model",
+      "licensePlate": "License Plate",
+      "category": "Category",
+      "status": "Status",
+      "searchBrand": "Search brand...",
+      "searchModel": "Search model...",
+      "searchLicensePlate": "Search license plate...",
+      "minPrice": "Min Price",
+      "maxPrice": "Max Price",
+      "min": "Min",
+      "max": "Max",
+      "all": "All",
+      "loading": "Loading vehicles...",
+      "noData": "No vehicles found",
+      "add": "Add Vehicle",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "total": "Total: {{count}} vehicles",
+      "table": {
+        "image": "Image",
+        "brand": "Brand",
+        "model": "Model",
+        "licensePlate": "License Plate",
+        "category": "Category",
+        "status": "Status",
+        "dailyPrice": "Daily Price",
+        "year": "Year",
+        "km": "KM",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "page": "Page {{current}} / {{total}}",
+        "total": "(Total: {{count}} records)",
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
+    "rentals": {
+      "title": "Rentals",
+      "customer": "Customer",
+      "vehicle": "Vehicle",
+      "status": "Status",
+      "searchCustomer": "Search customer (ID, TC, License, Name)...",
+      "startDateFrom": "Start Date (From)",
+      "startDateTo": "Start Date (To)",
+      "endDateFrom": "End Date (From)",
+      "endDateTo": "End Date (To)",
+      "all": "All",
+      "loading": "Loading rentals...",
+      "noData": "No rentals found",
+      "add": "Add Rental",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "total": "Total: {{count}} rentals",
+      "table": {
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "customer": "Customer",
+        "vehicle": "Vehicle",
+        "dailyPrice": "Daily Price",
+        "totalAmount": "Total Amount",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "page": "Page {{current}} / {{total}}",
+        "total": "(Total: {{count}} records)",
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
+    "users": {
+      "title": "Users/Customers",
+      "name": "Name",
+      "role": "Role",
+      "isActive": "Is Active?",
+      "isVerified": "Is Verified?",
+      "searchName": "Search name...",
+      "all": "All",
+      "loading": "Loading users...",
+      "noData": "No users found",
+      "add": "Add User",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "total": "Total: {{count}} users",
+      "table": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "pagination": {
+        "page": "Page {{current}} / {{total}}",
+        "total": "(Total: {{count}} records)",
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
+    "insurances": {
+      "title": "Insurances",
+      "policyNumber": "Policy Number",
+      "policyNumberPlaceholder": "Search policy number...",
+      "licensePlate": "License Plate",
+      "licensePlatePlaceholder": "Search license plate...",
+      "startDateFrom": "Start Date (From)",
+      "startDateTo": "Start Date (To)",
+      "endDateFrom": "End Date (From)",
+      "endDateTo": "End Date (To)",
+      "loading": "Loading insurances...",
+      "noData": "No insurances found",
+      "add": "Add Insurance",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "total": "Total: {{count}} insurances",
+      "table": {
+        "policyNumber": "Policy Number",
+        "insuranceCompany": "Insurance Company",
+        "vehicle": "Vehicle",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "premiumAmount": "Premium Amount",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "page": "Page {{current}} / {{total}}",
+        "total": "(Total: {{count}} records)",
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "password": "Password",
+      "appearance": "Appearance",
+      "language": "Language",
+      "favorites": "Favorites"
+    },
+    "password": {
+      "change": "Change Password",
+      "description": "Use a strong password for your account security",
+      "current": "Current Password",
+      "currentPlaceholder": "Enter your current password",
+      "currentRequired": "Current password is required",
+      "new": "New Password",
+      "newPlaceholder": "Enter your new password",
+      "newRequired": "New password is required",
+      "newMinLength": "Password must be at least 8 characters",
+      "newPattern": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+      "confirm": "Confirm New Password",
+      "confirmPlaceholder": "Re-enter your new password",
+      "confirmRequired": "Password confirmation is required",
+      "confirmMismatch": "Passwords do not match",
+      "changeButton": "Change Password",
+      "changing": "Changing...",
+      "success": "Password changed successfully",
+      "error": "Failed to change password"
+    },
+    "theme": {
+      "title": "Appearance Settings",
+      "description": "Customize the appearance of the application",
+      "light": "Light Theme",
+      "dark": "Dark Theme",
+      "changed": "Theme changed"
+    },
+    "language": {
+      "title": "Language Settings",
+      "description": "Select the application language",
+      "changed": "Language changed"
+    },
+    "favorites": {
+      "title": "Favorite Pages",
+      "description": "Manage your favorite pages",
+      "clear": "Clear Favorites",
+      "clearConfirm": "Are you sure you want to delete all favorite pages? This action cannot be undone.",
+      "cleared": "Favorites cleared successfully",
+      "add": "Add to Favorites",
+      "remove": "Remove from Favorites",
+      "empty": "No favorite pages added yet",
+      "hint": "Click the star button on pages to add them to favorites",
+      "processing": "Processing..."
+    }
+  },
+  "language": {
+    "select": "Select Language",
+    "turkish": "Türkçe",
+    "english": "English"
+  },
+  "modals": {
+    "common": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "update": "Update",
+      "saving": "Saving...",
+      "select": "Select",
+      "clearSelection": "Clear Selection"
+    },
+    "rental": {
+      "title": "Rental",
+      "customer": "Customer",
+      "customerSelect": "Select Customer",
+      "customerId": "Customer ID",
+      "vehicle": "Vehicle",
+      "vehicleSelect": "Select Vehicle",
+      "vehicleId": "Vehicle ID",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "dailyRate": "Daily Rate (TL)",
+      "dailyRatePlaceholder": "0.00",
+      "dailyRateHint": "Automatically filled when vehicle is selected",
+      "totalAmount": "Total Amount (TL)",
+      "totalAmountPlaceholder": "0.00",
+      "totalAmountHint": "Automatically calculated based on dates and daily rate",
+      "actualReturnDate": "Actual Return Date",
+      "lateFee": "Late Fee (TL)",
+      "lateFeePlaceholder": "0.00",
+      "damageFee": "Damage Fee (TL)",
+      "damageFeePlaceholder": "0.00",
+      "kmAtStart": "KM At Start",
+      "kmAtStartPlaceholder": "0",
+      "kmAtReturn": "KM At Return",
+      "kmAtReturnPlaceholder": "0",
+      "pickupLocation": "Pickup Location",
+      "pickupLocationPlaceholder": "Pickup location...",
+      "returnLocation": "Return Location",
+      "returnLocationPlaceholder": "Return location...",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes about the rental..."
+    },
+    "user": {
+      "title": "User",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "First Name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Last Name",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "phoneNumber": "Phone",
+      "phoneNumberPlaceholder": "+905551234567",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters (uppercase/lowercase, number, special character)",
+      "role": "Role",
+      "address": "Address",
+      "addressPlaceholder": "Address",
+      "identityNumber": "Identity Number",
+      "identityNumberPlaceholder": "Identity Number",
+      "birthDate": "Birth Date",
+      "customerInfo": "Customer Information",
+      "licenseNumber": "License Number",
+      "licenseNumberPlaceholder": "License number",
+      "licenseExpiryDate": "License Expiry Date",
+      "licenseClass": "License Class",
+      "licenseClassPlaceholder": "B, B1, etc.",
+      "emergencyContactName": "Emergency Contact Name",
+      "emergencyContactNamePlaceholder": "Emergency contact name",
+      "emergencyContactPhone": "Emergency Contact Phone",
+      "emergencyContactPhonePlaceholder": "0555 123 45 67",
+      "creditScore": "Credit Score",
+      "creditScorePlaceholder": "0",
+      "isVerified": "Verified",
+      "hasInsurance": "Has Insurance",
+      "insuranceCompany": "Insurance Company",
+      "insuranceCompanyPlaceholder": "Insurance company name",
+      "insurancePolicyNumber": "Insurance Policy Number",
+      "insurancePolicyNumberPlaceholder": "Policy number",
+      "specialNotes": "Special Notes",
+      "specialNotesPlaceholder": "Special notes..."
+    },
+    "insurance": {
+      "title": "Insurance",
+      "vehicle": "Vehicle",
+      "vehicleSelect": "Select vehicle",
+      "loadingVehicles": "Loading vehicles...",
+      "policyNumber": "Policy Number",
+      "policyNumberPlaceholder": "Enter policy number",
+      "insuranceCompany": "Insurance Company",
+      "insuranceCompanyPlaceholder": "Enter insurance company name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "endDateError": "End date cannot be before start date",
+      "premiumAmount": "Premium Amount (TL)",
+      "premiumAmountPlaceholder": "0.00",
+      "coverageType": "Coverage Type",
+      "coverageTypePlaceholder": "E.g.: Comprehensive, Traffic, etc.",
+      "coverageLimit": "Coverage Limit (TL)",
+      "coverageLimitPlaceholder": "0.00",
+      "deductible": "Deductible (TL)",
+      "deductiblePlaceholder": "0.00",
+      "coverageDetails": "Coverage Details",
+      "coverageDetailsPlaceholder": "Coverage details...",
+      "contactInfo": "Contact Information",
+      "contactInfoPlaceholder": "Contact information..."
+    },
+    "vehicle": {
+      "title": "Vehicle",
+      "brand": "Brand",
+      "brandPlaceholder": "Enter brand",
+      "model": "Model",
+      "modelPlaceholder": "Enter model",
+      "licensePlate": "License Plate",
+      "licensePlatePlaceholder": "34ABC123",
+      "year": "Year",
+      "yearPlaceholder": "2024",
+      "color": "Color",
+      "colorPlaceholder": "White",
+      "category": "Category",
+      "dailyRentalPrice": "Daily Rental Price (TL)",
+      "dailyRentalPricePlaceholder": "0.00",
+      "seatingCapacity": "Seating Capacity",
+      "seatingCapacityPlaceholder": "5",
+      "fuelType": "Fuel Type",
+      "fuelTypePlaceholder": "Gasoline, Diesel, Electric, Hybrid",
+      "transmission": "Transmission",
+      "transmissionPlaceholder": "Manual, Automatic",
+      "km": "Kilometers",
+      "kmPlaceholder": "0",
+      "description": "Description",
+      "descriptionPlaceholder": "Vehicle description...",
+      "image": "Vehicle Image",
+      "imageHint": "Upload image in JPG, PNG or GIF format (max 5MB)",
+      "hasAirConditioning": "Has Air Conditioning",
+      "hasGPS": "Has GPS",
+      "select": "Select",
+      "features": "Features",
+      "bluetooth": "Bluetooth"
+    }
+  },
+  "messages": {
+    "deleteConfirm": {
+      "rental": {
+        "title": "Delete Rental",
+        "message": "Are you sure you want to delete this rental? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "user": {
+        "title": "Delete User",
+        "message": "Are you sure you want to delete this user?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "insurance": {
+        "title": "Delete Insurance",
+        "message": "Are you sure you want to delete the insurance with policy number {{policyNumber}}? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "vehicle": {
+        "title": "Delete Vehicle",
+        "message": "Are you sure you want to delete the vehicle {{brand}} {{model}}? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    },
+    "success": {
+      "rental": {
+        "deleted": "Rental deleted successfully",
+        "created": "Rental created successfully",
+        "updated": "Rental updated successfully"
+      },
+      "user": {
+        "deleted": "User deleted successfully",
+        "created": "User created successfully",
+        "createdWithCustomer": "User and customer created successfully",
+        "updateNotAvailable": "User update feature is not yet available"
+      },
+      "insurance": {
+        "deleted": "Insurance deleted successfully",
+        "created": "Insurance created successfully",
+        "updated": "Insurance updated successfully"
+      },
+      "vehicle": {
+        "deleted": "Vehicle deleted successfully",
+        "created": "Vehicle created successfully",
+        "updated": "Vehicle updated successfully"
+      }
+    },
+    "modal": {
+      "rental": {
+        "add": "Add New Rental",
+        "edit": "Edit Rental",
+        "details": "Rental Details"
+      },
+      "user": {
+        "add": "Add New User",
+        "edit": "Edit User",
+        "details": "{{firstName}} {{lastName}} - Details"
+      },
+      "insurance": {
+        "add": "Add New Insurance",
+        "edit": "Edit Insurance",
+        "details": "Insurance Details"
+      },
+      "vehicle": {
+        "add": "Add New Vehicle",
+        "edit": "Edit Vehicle",
+        "details": "{{brand}} {{model}} - Details"
+      },
+      "customerSelect": "Select Customer",
+      "vehicleSelect": "Select Vehicle"
+    },
+    "errors": {
+      "statistics": {
+        "vehicle": "Error loading vehicle statistics",
+        "rental": "Error loading rental statistics",
+        "insurance": "Error loading insurance statistics",
+        "user": "Error loading user statistics"
+      },
+      "validation": {
+        "required": "This field is required",
+        "min": "Minimum value must be {{min}}",
+        "max": "Maximum value must be {{max}}",
+        "maxlength": "Maximum {{length}} characters allowed",
+        "invalid": "Invalid value",
+        "invalidFormat": "Invalid format",
+        "dateRange": "End date cannot be before start date",
+        "fillAllRequired": "Please fill in all required fields",
+        "imageRequired": "Please select an image file",
+        "imageSize": "Image size cannot exceed 5MB",
+        "imageUpload": "Error uploading image"
+      },
+      "userForm": {
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
+        "emailRequired": "Email is required",
+        "phoneRequired": "Phone number is required",
+        "passwordRequired": "Password is required",
+        "emailInvalid": "Invalid email format",
+        "passwordMinLength": "Password must be at least 8 characters",
+        "firstNameMaxLength": "First name cannot exceed 50 characters",
+        "lastNameMaxLength": "Last name cannot exceed 50 characters",
+        "emailMaxLength": "Email cannot exceed 100 characters",
+        "addressMaxLength": "Address cannot exceed 200 characters",
+        "identityNumberMaxLength": "Identity number cannot exceed 20 characters",
+        "phoneInvalid": "Invalid phone number format",
+        "passwordPattern": "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character",
+        "minimumAge": "User must be at least 18 years old"
+      },
+      "http": {
+        "connectionError": "Connection error occurred",
+        "serverUnreachable": "Cannot connect to server. Please check your internet connection.",
+        "badRequest": "Invalid request",
+        "forbidden": "You do not have permission for this operation",
+        "notFound": "Record not found",
+        "serverError": "Cannot connect to server. Please try again later.",
+        "unknownError": "An error occurred ({{status}})"
+      }
+    },
+    "dashboard": {
+      "chartLabels": {
+        "rentalCount": "Rental Count",
+        "totalAmount": "Total Amount (TL)"
+      }
+    },
+    "swal": {
+      "defaultTitle": "Are you sure?",
+      "defaultConfirm": "Yes",
+      "defaultCancel": "Cancel",
+      "ok": "OK"
+    },
+    "fuelTypes": {
+      "gasoline": "Gasoline",
+      "diesel": "Diesel",
+      "electric": "Electric",
+      "hybrid": "Hybrid",
+      "lpg": "LPG"
+    },
+    "transmissionTypes": {
+      "manual": "Manual",
+      "automatic": "Automatic",
+      "semiAutomatic": "Semi Automatic"
+    },
+    "details": {
+      "loading": "Loading...",
+      "notFound": {
+        "rental": "Rental details not found",
+        "user": "User details not found",
+        "insurance": "Insurance details not found",
+        "vehicle": "Vehicle details not found"
+      },
+      "loadingError": {
+        "rental": "Error loading rental details",
+        "user": "Error loading user details",
+        "insurance": "Error loading insurance details",
+        "vehicle": "Error loading vehicle details"
+      },
+      "vehicle": {
+        "generalInfo": "General Information",
+        "brand": "Brand:",
+        "model": "Model:",
+        "year": "Year:",
+        "color": "Color:",
+        "category": "Category:",
+        "status": "Status:",
+        "rentalInfo": "Rental Information",
+        "dailyPrice": "Daily Price:",
+        "seatingCapacity": "Seating Capacity:",
+        "person": "person",
+        "technicalInfo": "Technical Information",
+        "fuelType": "Fuel Type:",
+        "transmission": "Transmission:",
+        "km": "Kilometers:",
+        "kmUnit": "km",
+        "features": "Features",
+        "airConditioning": "Air Conditioning",
+        "gps": "GPS",
+        "bluetooth": "Bluetooth",
+        "description": "Description"
+      },
+      "rental": {
+        "loading": "Loading rental details...",
+        "rentalInfo": "Rental Information",
+        "status": "Status:",
+        "customerName": "Customer Name:",
+        "customerEmail": "Customer Email:",
+        "customerPhone": "Customer Phone:",
+        "vehicleInfo": "Vehicle Information",
+        "licensePlate": "License Plate:",
+        "brandModel": "Brand/Model:",
+        "year": "Year:",
+        "color": "Color:",
+        "category": "Category:",
+        "fuelType": "Fuel Type:",
+        "transmission": "Transmission:",
+        "seatingCapacity": "Seating Capacity:",
+        "person": "person",
+        "km": "Kilometers:",
+        "kmUnit": "km",
+        "dateInfo": "Date Information",
+        "startDate": "Start Date:",
+        "endDate": "End Date:",
+        "actualReturnDate": "Actual Return Date:",
+        "createdAt": "Created At:",
+        "updatedAt": "Updated At:",
+        "financialInfo": "Financial Information",
+        "dailyPrice": "Daily Price:",
+        "totalAmount": "Total Amount:",
+        "lateFee": "Late Fee:",
+        "damageFee": "Damage Fee:",
+        "vatIncluded": "* All amounts include VAT",
+        "locationInfo": "Location Information",
+        "pickupLocation": "Pickup Location:",
+        "returnLocation": "Return Location:",
+        "kmInfo": "Kilometer Information",
+        "kmAtStart": "KM At Start:",
+        "kmAtReturn": "KM At Return:",
+        "kmUsed": "KM Used:",
+        "notes": "Notes"
+      },
+      "user": {
+        "loading": "Loading user details...",
+        "personalInfo": "Personal Information",
+        "firstName": "First Name:",
+        "lastName": "Last Name:",
+        "email": "Email:",
+        "phone": "Phone:",
+        "identityNumber": "Identity Number:",
+        "birthDate": "Birth Date:",
+        "address": "Address:",
+        "accountInfo": "Account Information",
+        "role": "Role:",
+        "status": "Status:",
+        "createdAt": "Created At:",
+        "updatedAt": "Updated At:",
+        "customerInfo": "Customer Information",
+        "licenseNumber": "License Number:",
+        "licenseExpiryDate": "License Expiry Date:",
+        "licenseClass": "License Class:",
+        "emergencyContactName": "Emergency Contact Name:",
+        "emergencyContactPhone": "Emergency Contact Phone:",
+        "isVerified": "Is Verified?",
+        "verificationDate": "Verification Date:",
+        "creditScore": "Credit Score:",
+        "hasInsurance": "Has Insurance?",
+        "insuranceCompany": "Insurance Company:",
+        "insurancePolicyNumber": "Policy Number:",
+        "specialNotes": "Special Notes:"
+      },
+      "insurance": {
+        "loading": "Loading insurance details...",
+        "policyInfo": "Policy Information",
+        "policyNumber": "Policy Number:",
+        "insuranceCompany": "Insurance Company:",
+        "status": "Status:",
+        "dateInfo": "Date Information",
+        "startDate": "Start Date:",
+        "endDate": "End Date:",
+        "createdAt": "Created At:",
+        "updatedAt": "Updated At:",
+        "financialInfo": "Financial Information",
+        "premiumAmount": "Premium Amount:",
+        "coverageLimit": "Coverage Limit:",
+        "deductible": "Deductible:",
+        "coverageInfo": "Coverage Information",
+        "coverageType": "Coverage Type:",
+        "coverageDetails": "Coverage Details:",
+        "vehicleInfo": "Vehicle Information",
+        "vehicleId": "Vehicle ID:",
+        "licensePlate": "License Plate:",
+        "brandModel": "Brand/Model:",
+        "contactInfo": "Contact Information",
+        "contact": "Contact:",
+        "notes": "Notes"
+      }
+    },
+    "datepicker": {
+      "placeholder": "Select date",
+      "previousYears": "Previous years",
+      "nextYears": "Next years",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      },
+      "weekDays": {
+        "monday": "Mon",
+        "tuesday": "Tue",
+        "wednesday": "Wed",
+        "thursday": "Thu",
+        "friday": "Fri",
+        "saturday": "Sat",
+        "sunday": "Sun"
+      }
+    },
+    "select": {
+      "customer": {
+        "searchPlaceholder": "Search by name, email, phone or license number...",
+        "searchButton": "Search",
+        "clearButton": "Clear",
+        "loading": "Loading customers...",
+        "notFound": "No customers found",
+        "licensePrefix": "License:",
+        "previous": "Previous",
+        "next": "Next",
+        "pageInfo": "Page {{currentPage}} / {{totalPages}} (Total: {{totalCount}})"
+      },
+      "vehicle": {
+        "searchPlaceholder": "Search by brand, model or license plate...",
+        "searchButton": "Search",
+        "clearButton": "Clear",
+        "loading": "Loading vehicles...",
+        "notFound": "No vehicles found",
+        "pricePerDay": "{{price}} TL/day",
+        "previous": "Previous",
+        "next": "Next",
+        "pageInfo": "Page {{currentPage}} / {{totalPages}} (Total: {{totalCount}})",
+        "categories": {
+          "hatchback": "Hatchback",
+          "sedan": "Sedan",
+          "suv": "SUV",
+          "pickup": "Pickup"
+        },
+        "status": {
+          "available": "Available",
+          "rented": "Rented"
+        }
+      }
+    }
+  }
+}
