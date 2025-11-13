@@ -187,7 +187,6 @@ The frontend will run on `http://localhost:4200` by default.
 Configure the following settings in the `appsettings.Development.json` file:
 
 - **JWT**: JWT token settings
-- **Email**: SMTP server settings (for email sending)
 - **Cloudinary**: Cloudinary account information for image uploads
 - **Cors**: Frontend URLs
 
